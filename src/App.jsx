@@ -1,8 +1,25 @@
 import { Suspense, lazy } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import LoadingSpinner from "./components/LoadingSpinner";
+import { AdminLayout } from "./layouts/AdminLayout";
 import MainLayout from "./layouts/MainLayout";
 import ProfileLayout from "./layouts/ProfileLayout";
+import { StoreLayout } from "./layouts/StoreLayout";
+import ContentManagement from "./pages/Admin/ContentManagement";
+import DashboardAdmin from "./pages/Admin/Dashboard";
+import StoreManagement from "./pages/Admin/StoreManagement";
+import SystemConfiguration from "./pages/Admin/SystemConfiguration";
+import UserManagement from "./pages/Admin/UserManagement";
+import { DashboardStore } from "./pages/StoreOwner/DashboardStore";
+import ManagePaymentsInvoices from "./pages/StoreOwner/ManagePaymentsInvoices";
+import ManagePromotionsStatistics from "./pages/StoreOwner/ManagePromotionsStatistics";
+import { RegisterStoreOwner } from "./pages/StoreOwner/RegisterStoreOwner";
+import { ServiceManagement } from "./pages/StoreOwner/ServiceManagement";
+import { CreateService } from "./pages/StoreOwner/Services/CreateService";
+import { SettingStore } from "./pages/StoreOwner/SettingStore";
+import { CreateBilliardTable } from "./pages/StoreOwner/Tables/CreateBilliardTable";
+import ManageBilliardTables from "./pages/StoreOwner/Tables/ManageBilliardTables";
+import ProtectedRoute from "./routing/ProtectedRoute";
 
 const HomePage = lazy(() => import("./pages/Home/HomePage"));
 const AboutPage = lazy(() => import("./pages/About/AboutPage"));
@@ -48,16 +65,78 @@ function App() {
             <Route path="/quen-mat-khau" element={<ForgotPasswordPage />} />
             <Route path="/tin-tuc/:slug" element={<BlogDetailPage />} />
             <Route path="/billiard" element={<BillardPage />} />
-            <Route path="/billiard/:slug" element={<BillardDetailPage />} />
+            <Route path="/billiard/:id" element={<BillardDetailPage />} />
             <Route path="/otp" element={<OtpPage />} />
-            <Route element={<ProfileLayout />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/setting" element={<Settings />} />
-              <Route path="/bookings" element={<Bookings />} />
-              <Route path="/booking-history" element={<BookingHistory />} />
-              <Route path="/wishlist" element={<Wishlist />} />
+            <Route
+              element={<ProtectedRoute allowedRoles={[1, 2, 3, 4, 5]} />}
+              loader={true}
+            >
+              <Route element={<ProfileLayout />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/setting" element={<Settings />} />
+                <Route path="/bookings" element={<Bookings />} />
+                <Route path="/booking-history" element={<BookingHistory />} />
+                <Route path="/wishlist" element={<Wishlist />} />
+              </Route>
             </Route>
+          </Route>
+          <Route element={<ProtectedRoute allowedRoles={[1]} />}>
+            <Route element={<AdminLayout />}>
+              <Route path="/admin" element={<DashboardAdmin />} />
+              <Route
+                path="/admin/user-management"
+                element={<UserManagement />}
+              />
+              <Route
+                path="/admin/store-management"
+                element={<StoreManagement />}
+              />
+              <Route
+                path="/admin/content-management"
+                element={<ContentManagement />}
+              />
+              <Route
+                path="/admin/system-configuration"
+                element={<SystemConfiguration />}
+              />
+            </Route>
+          </Route>
+          <Route element={<ProtectedRoute allowedRoles={[2]} />}>
+            <Route element={<StoreLayout />}>
+              <Route path="/store" element={<DashboardStore />} />
+              <Route
+                path="/store/manage-services"
+                element={<ServiceManagement />}
+              />
+              <Route
+                path="/store/manage-services/create"
+                element={<CreateService />}
+              />
+              <Route
+                path="/store/manage-tables/create"
+                element={<CreateBilliardTable />}
+              />
+
+              <Route
+                path="/store/manage-tables"
+                element={<ManageBilliardTables />}
+              />
+
+              <Route
+                path="/store/promotions-statistics"
+                element={<ManagePromotionsStatistics />}
+              />
+              <Route
+                path="/store/payments-invoices"
+                element={<ManagePaymentsInvoices />}
+              />
+              <Route path="/store/setting" element={<SettingStore />} />
+            </Route>
+            <Route
+              path="/store/register-update"
+              element={<RegisterStoreOwner />}
+            />
           </Route>
         </Routes>
       </Suspense>

@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, Outlet } from "react-router-dom";
 import { Breadcrumb } from "../components";
 
-const ProfileLayout = ({ children }) => {
+const ProfileLayout = () => {
   return (
     <>
       <Breadcrumb title="Hồ sơ của tôi" items="Hồ sơ của tôi" />
@@ -28,39 +28,44 @@ const ProfileLayout = ({ children }) => {
                 </div>
                 <ul className="user-profile-sidebar-list">
                   <li>
-                    <NavLink to="/dashboard" activeClassName="active">
+                    <NavLink
+                      to="/dashboard"
+                      className={({ isActive }) => (isActive ? "active" : "")}
+                    >
                       <i className="fa fa-gauge-high"></i> Thống kê
                     </NavLink>
                   </li>
                   <li>
-                    <NavLink to="/profile" activeClassName="active">
+                    <NavLink
+                      to="/profile"
+                      className={({ isActive }) => (isActive ? "active" : "")}
+                    >
                       <i className="fa fa-user"></i> Hồ sơ của tôi
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink to="/messages" activeClassName="active">
-                      <i className="fa-solid fa-message"></i> Tin nhắn{" "}
-                      <span className="badge">05</span>
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink to="/bookings" activeClassName="active">
-                      <i className="fa fa-shopping-bag"></i> Đặt bàn của tôi
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink to="/booking-history" activeClassName="active">
-                      <i className="fa fa-clipboard-list"></i> Lịch sử đặt
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink to="/wishlist" activeClassName="active">
-                      <i className="far fa-heart"></i> Danh sách yêu thích
                     </NavLink>
                   </li>
 
                   <li>
-                    <NavLink to="/setting" activeClassName="active">
+                    <NavLink
+                      to="/bookings"
+                      className={({ isActive }) => (isActive ? "active" : "")}
+                    >
+                      <i className="fa fa-shopping-bag"></i> Đặt bàn của tôi
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/booking-history"
+                      className={({ isActive }) => (isActive ? "active" : "")}
+                    >
+                      <i className="fa fa-clipboard-list"></i> Lịch sử đặt
+                    </NavLink>
+                  </li>
+
+                  <li>
+                    <NavLink
+                      to="/setting"
+                      className={({ isActive }) => (isActive ? "active" : "")}
+                    >
                       <i className="fa fa-cog"></i> Cài đặt
                     </NavLink>
                   </li>
@@ -73,7 +78,9 @@ const ProfileLayout = ({ children }) => {
               </div>
             </div>
             <div className="col-lg-9">
-              <div className="user-profile-wrapper">{children}</div>
+              <div className="user-profile-wrapper">
+                <Outlet />
+              </div>
             </div>
           </div>
         </div>

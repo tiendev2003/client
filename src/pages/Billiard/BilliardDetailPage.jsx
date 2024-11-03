@@ -1,6 +1,57 @@
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import { Breadcrumb } from "../../components";
+import StarRating from "../../components/StarRating";
+import { bookTable } from "../../features/book/bookSlice";
+import { fetchCuahangDetail } from "../../features/shop/shopSlice";
+import { formatMoney } from "../../utils/formatMoney";
 
 const BilliardDetailPage = () => {
+  const { id } = useParams();
+  console.log(id);
+  const dispatch = useDispatch();
+  const { cuahangDetail, loading, error } = useSelector((state) => state.shop);
+
+  const [selectedTable, setSelectedTable] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+  const [totalPrice, setTotalPrice] = useState(0);
+
+  useEffect(() => {
+    dispatch(fetchCuahangDetail(id));
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    if (selectedTable) {
+      setTotalPrice(selectedTable.GiaBan * quantity);
+    }
+  }, [selectedTable, quantity]);
+
+  const handleTableSelect = (table) => {
+    setSelectedTable(table);
+  };
+
+  const handleQuantityChange = (amount) => {
+    setQuantity((prevQuantity) => Math.max(1, prevQuantity + amount));
+  };
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+  const handleSubmit = (e) => {
+    if (!selectedTable) {
+      toast.error("Vui lòng chọn bàn trước khi đặt");
+      return;
+    }
+    const id_Ban = selectedTable.id;
+    e.preventDefault();
+    const token = localStorage.getItem("userToken");
+    dispatch(bookTable({ id_Cuahang: id, id_Ban, token }));
+  };
   return (
     <>
       <Breadcrumb title="Billiard" items="Billiard" />
@@ -12,24 +63,24 @@ const BilliardDetailPage = () => {
               <div className="col-lg-8">
                 <div className="billard-detail-content">
                   <div className="billard-detail-slider owl-carousel owl-theme">
-                    <img src="../assets/img/billard/01.jpeg" alt />
-                    <img src="../assets/img/billard/01.jpeg" alt />
-                    <img src="../assets/img/billard/01.jpeg" alt />
+                    <img src="../assets/img/billard/01.jpeg" alt="" />
+                    <img src="../assets/img/billard/01.jpeg" alt="" />
+                    <img src="../assets/img/billard/01.jpeg" alt="" />
                   </div>
                   <div className="billard-detail-header">
                     <div className="billard-detail-header-info">
-                      <h4 className="billard-detail-title">Billard Club</h4>
+                      <h4 className="billard-detail-title">
+                        {cuahangDetail?.TenCuaHang}
+                      </h4>
                       <p className="billard-detail-location">
-                        <i className="fa fa-location-dot"></i> 256 Phan Huy Ích,
-                        P.12, Q.Gò Vấp, TP.HCM
+                        <i className="fa fa-location-dot"></i>{" "}
+                        {cuahangDetail?.DiaChi}
                       </p>
                     </div>
                     <div className="billard-detail-rate">
                       <span className="badge">
-                        <i className="fa fa-star"></i> 5.0
-                      </span>
-                      <span className="billard-detail-rate-review">
-                        (2.5k Lượt xem)
+                        <i className="fa fa-star"></i>{" "}
+                        {cuahangDetail?.DanhGiaTong}
                       </span>
                     </div>
                   </div>
@@ -100,41 +151,28 @@ const BilliardDetailPage = () => {
                     </p>
                   </div>
                   <div className="billard-detail-item">
-                    <h4 className="mb-3">Tiện nghi</h4>
-                    <div className="billard-detail-amenity">
-                      <div className="row">
-                        <div className="col-lg-3">
-                          <div className="billard-detail-amenity-item">
-                            <h6>
-                              <i className="fa fa-wifi"></i> Wifi
-                            </h6>
+                    {cuahangDetail?.dmsp?.map((item, index) => (
+                      <React.Fragment key={index}>
+                        <h4 className="mb-3">{item.TenDMSP}</h4>
+                        <div className="billard-detail-amenity">
+                          <div className="row">
+                            {item?.sanpham?.map((sp, index) => (
+                              <React.Fragment key={index}>
+                                <div className="col-lg-3">
+                                  <div className="billard-detail-amenity-item">
+                                    <h6>
+                                      <i className="fa fa-wifi"></i>{" "}
+                                      {sp?.TenSanPham}
+                                    </h6>
+                                    <p>{formatMoney(sp?.Gia)}</p>
+                                  </div>
+                                </div>
+                              </React.Fragment>
+                            ))}
                           </div>
                         </div>
-                        <div className="col-lg-3">
-                          <div className="billard-detail-amenity-item">
-                            <h6>
-                              <i className="fa-regular fa-snowflake"></i> Máy
-                              lạnh
-                            </h6>
-                          </div>
-                        </div>
-                        <div className="col-lg-3">
-                          <div className="billard-detail-amenity-item">
-                            <h6>
-                              <i className="fa-solid fa-utensils"></i> Đồ ăn
-                            </h6>
-                          </div>
-                        </div>
-                        <div className="col-lg-3">
-                          <div className="billard-detail-amenity-item">
-                            <h6>
-                              <i className="fa-solid fa-wine-bottle"></i> Đồ
-                              uống
-                            </h6>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                      </React.Fragment>
+                    ))}
                   </div>
                   <div className="billard-detail-item">
                     <h4 className="mb-4">Vị trí bản đồ</h4>
@@ -142,7 +180,7 @@ const BilliardDetailPage = () => {
                       <iframe
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.411885563475!2d106.6173706143371!3d10.853426162511526!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3175295b2c8e9a15%3A0xbddc87c74006ae8d!2zR8O0bmcgVmFwcGhhLCBUUEguIE4uIEdvw6AgVmlldA!5e0!3m2!1sen!2s!4v1636509037831!5m2!1sen!2s"
                         style={{ border: 0 }}
-                        allowFullscreen
+                        allowFullScreen
                         loading="lazy"
                       ></iframe>
                     </div>
@@ -248,7 +286,7 @@ const BilliardDetailPage = () => {
                     <div className="billard-detail-rating-box">
                       <div className="billard-detail-review-rating">
                         <div className="billard-detail-rating-count">
-                          <h2>4.5</h2>
+                          <h2> {cuahangDetail?.DanhGiaTong}</h2>
                           <div className="billard-detail-rating-star">
                             <i className="fas fa-star"></i>
                             <i className="fas fa-star"></i>
@@ -256,7 +294,9 @@ const BilliardDetailPage = () => {
                             <i className="fas fa-star"></i>
                             <i className="far fa-star"></i>
                           </div>
-                          <p>Dựa trên 100 Đánh giá</p>
+                          <p>
+                            Dựa trên {cuahangDetail?.danhgia?.length} Đánh giá
+                          </p>
                         </div>
                         <div className="billard-detail-rating-range">
                           <div className="billard-detail-rating-range-item">
@@ -362,136 +402,53 @@ const BilliardDetailPage = () => {
                         </div>
                       </div>
                       <div className="billard-detail-review">
-                        <h5>Hiển thị 1,2k Đánh giá</h5>
-                        <div className="billard-detail-review-item">
-                          <div className="billard-detail-review-author">
-                            <img src="../assets/img/testimonial/04.jpeg" alt />
-                            <div className="billard-detail-review-author-info">
-                              <div>
-                                <h6>Huỳnh Gia Huy</h6>
-                                <span>
-                                  <i className="fa fa-clock"></i> 1 ngày trước
-                                </span>
+                        <h5>
+                          Hiển thị {cuahangDetail?.danhgia?.length} Đánh giá
+                        </h5>
+                        {cuahangDetail?.danhgia?.map((item, index) => (
+                          <React.Fragment key={index}>
+                            <div className="billard-detail-review-item">
+                              <div className="billard-detail-review-author">
+                                <img
+                                  src="../assets/img/testimonial/04.jpeg"
+                                  alt="author"
+                                />
+                                <div className="billard-detail-review-author-info">
+                                  <div>
+                                    <h6>{item.id_TaiKhoan}</h6>
+                                    <span>
+                                      <i className="far fa-clock"></i>{" "}
+                                      {item.DG_ThoiGian}
+                                    </span>
+                                  </div>
+                                  <div className="billard-detail-review-author-rating">
+                                    <StarRating rating={item.DG_Diem} />
+                                  </div>
+                                </div>
                               </div>
-                              <div className="billard-detail-review-author-rating">
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                              </div>
-                            </div>
-                          </div>
-                          <p>
-                            Tôi đã có một trải nghiệm tuyệt vời khi đặt bàn bi-a
-                            tại quán này. Nhân viên rất thân thiện và hỗ trợ
-                            nhiệt tình trong suốt quá trình đặt bàn. Bàn bi-a ở
-                            đây luôn trong tình trạng tốt và sạch sẽ, không gian
-                            thoải mái để thư giãn cùng bạn bè. Tôi cũng rất
-                            thích dịch vụ ăn uống đi kèm, đồ ăn ngon và hợp khẩu
-                            vị. Chắc chắn tôi sẽ quay lại trong lần tới!
-                          </p>
-                          <div className="billard-detail-review-reply">
-                            <a href="#" className="review-reply-btn">
-                              <i className="fa fa-reply"></i>
-                              Trả lời
-                            </a>
-                            <div className="review-reaction">
-                              <a href="#" className="review-like active">
-                                <i className="fa fa-thumbs-up"></i> 15
-                              </a>
-                              <a href="#" className="review-dislike">
-                                <i className="fa fa-thumbs-down"></i> 05
-                              </a>
-                              <a href="#" className="review-love">
-                                <i className="fa fa-heart"></i>
-                                50
-                              </a>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="billard-detail-review-item review-reply-item">
-                          <div className="billard-detail-review-author">
-                            <img src="../assets/img/testimonial/04.jpeg" alt />
-                            <div className="billard-detail-review-author-info">
-                              <div>
-                                <h6>Hiếu Lê</h6>
-                                <span>
-                                  <i className="fa fa-clock"></i> 1 ngày trước
-                                </span>
-                              </div>
-                              <div className="billard-detail-review-author-rating">
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
+                              <p>{item.DG_NoiDung}</p>
+                              <div className="billard-detail-review-reply">
+                                <a href="#" className="review-reply-btn">
+                                  <i className="fa fa-reply"></i>
+                                  Trả lời
+                                </a>
+                                <div className="review-reaction">
+                                  <a href="#" className="review-like">
+                                    <i className="fa fa-thumbs-up"></i>
+                                    15
+                                  </a>
+                                  <a href="#" className="review-dislike">
+                                    <i className="fa fa-thumbs-down"></i> 05
+                                  </a>
+                                  <a href="#" className="review-love active">
+                                    <i className="fa fa-heart"></i> 50
+                                  </a>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          <p>Tôi sẽ đến trải nghiệm Billard Club này</p>
-                          <div className="billard-detail-review-reply">
-                            <a href="#" className="review-reply-btn">
-                              <i className="fa fa-reply"></i>
-                              Trả lời
-                            </a>
-                            <div className="review-reaction">
-                              <a href="#" className="review-like">
-                                <i className="fa fa-thumbs-up"></i>
-                                15
-                              </a>
-                              <a href="#" className="review-dislike active">
-                                <i className="fa fa-thumbs-down"></i> 05
-                              </a>
-                              <a href="#" className="review-love">
-                                <i className="fa fa-heart"></i>
-                                50
-                              </a>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="billard-detail-review-item">
-                          <div className="billard-detail-review-author">
-                            <img src="../assets/img/testimonial/04.jpeg" alt />
-                            <div className="billard-detail-review-author-info">
-                              <div>
-                                <h6>BillardBooking</h6>
-                                <span>
-                                  <i className="far fa-clock"></i> 1 giờ trước
-                                </span>
-                              </div>
-                              <div className="billard-detail-review-author-rating">
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                                <i className="fas fa-star"></i>
-                              </div>
-                            </div>
-                          </div>
-                          <p>
-                            Cảm ơn các bạn đã đánh giá tốt. Hãy đặt qua website
-                            để nhận nhiều ưu đãi
-                          </p>
-                          <div className="billard-detail-review-reply">
-                            <a href="#" className="review-reply-btn">
-                              <i className="fa fa-reply"></i>
-                              Trả lời
-                            </a>
-                            <div className="review-reaction">
-                              <a href="#" className="review-like">
-                                <i className="fa fa-thumbs-up"></i>
-                                15
-                              </a>
-                              <a href="#" className="review-dislike">
-                                <i className="fa fa-thumbs-down"></i> 05
-                              </a>
-                              <a href="#" className="review-love active">
-                                <i className="fa fa-heart"></i> 50
-                              </a>
-                            </div>
-                          </div>
-                        </div>
+                          </React.Fragment>
+                        ))}
+
                         <div className="text-center my-4">
                           <a href="#" className="theme-btn">
                             {" "}
@@ -512,35 +469,35 @@ const BilliardDetailPage = () => {
                                     <input
                                       type="radio"
                                       name="rating"
-                                      value="5"
+                                      defaultValue="5"
                                       id="star-5"
                                     />{" "}
                                     <label htmlFor="star-5">&#9733;</label>
                                     <input
                                       type="radio"
                                       name="rating"
-                                      value="4"
+                                      defaultValue="4"
                                       id="star-4"
                                     />{" "}
                                     <label htmlFor="star-4">&#9733;</label>
                                     <input
                                       type="radio"
                                       name="rating"
-                                      value="3"
+                                      defaultValue="3"
                                       id="star-3"
                                     />{" "}
                                     <label htmlFor="star-3">&#9733;</label>
                                     <input
                                       type="radio"
                                       name="rating"
-                                      value="2"
+                                      defaultValue="2"
                                       id="star-2"
                                     />{" "}
                                     <label htmlFor="star-2">&#9733;</label>
                                     <input
                                       type="radio"
                                       name="rating"
-                                      value="1"
+                                      defaultValue="1"
                                       id="star-1"
                                     />{" "}
                                     <label htmlFor="star-1">&#9733;</label>
@@ -589,16 +546,53 @@ const BilliardDetailPage = () => {
               <div className="col-lg-4">
                 <div className="booking-sidebar billard-detail-side-content">
                   <div className="booking-item">
-                    <div className="billard-detail-price">
-                      <h4 className="billard-detail-price-tag">Nổi bật</h4>
-                      <div className="billard-detail-price-amount">
-                        Giá:<span>90.000đ</span> <del>110.000đ</del>
-                      </div>
-                    </div>
                     <div className="search-form">
                       <form action="#">
                         <div className="tour-search-wrapper">
                           <div className="row">
+                            <div className="col-lg-12">
+                              <div className="form-group passenger-box">
+                                <div className="passenger-class">
+                                  <label>Loại bàn</label>
+
+                                  {cuahangDetail?.dmban?.map((item, index) => (
+                                    <React.Fragment key={index}>
+                                      <div className="form-group-icon">
+                                        <div className="passenger-total">
+                                          <span className="passenger-class-name">
+                                            {item?.TenDMBan}
+                                          </span>
+                                        </div>
+                                      </div>
+                                      <div className="passenger-class-info">
+                                        {item?.ban?.map((ban, index) => (
+                                          <React.Fragment key={index}>
+                                            <div className="form-check">
+                                              <input
+                                                className="form-check-input"
+                                                type="radio"
+                                                name="table"
+                                                onChange={() =>
+                                                  handleTableSelect(ban)
+                                                }
+                                                id="table-type1"
+                                              />
+                                              <label
+                                                className="form-check-label"
+                                                htmlFor="table-type1"
+                                              >
+                                                {ban?.TenBan} -{" "}
+                                                {formatMoney(ban?.GiaBan)}
+                                              </label>
+                                            </div>
+                                          </React.Fragment>
+                                        ))}
+                                      </div>
+                                    </React.Fragment>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
                             <div className="col-lg-12">
                               <div className="form-group passenger-box">
                                 <div className="passenger-class">
@@ -610,6 +604,9 @@ const BilliardDetailPage = () => {
                                           <button
                                             type="button"
                                             className="minus-btn"
+                                            onClick={() =>
+                                              handleQuantityChange(-1)
+                                            }
                                           >
                                             <i className="fa-solid fa-minus"></i>
                                           </button>
@@ -617,12 +614,17 @@ const BilliardDetailPage = () => {
                                             type="text"
                                             name="table"
                                             className="qty-amount passenger-table"
-                                            value="2"
-                                            readOnly
+                                            value={quantity}
+                                            onChange={(e) =>
+                                              setQuantity(e.target.value)
+                                            }
                                           />
                                           <button
                                             type="button"
                                             className="plus-btn"
+                                            onClick={() =>
+                                              handleQuantityChange(1)
+                                            }
                                           >
                                             <i className="fa-soild fa-plus"></i>
                                           </button>
@@ -636,60 +638,12 @@ const BilliardDetailPage = () => {
                             <div className="col-lg-12">
                               <div className="form-group passenger-box">
                                 <div className="passenger-class">
-                                  <label>Loại bàn</label>
+                                  <h4>Tổng tiền: </h4>
                                   <div className="form-group-icon">
                                     <div className="passenger-total">
-                                      <span className="passenger-class-name">
-                                        Pool table
-                                      </span>
-                                    </div>
-                                  </div>
-                                  <div className="passenger-class-info">
-                                    <div className="form-check">
-                                      <input
-                                        className="form-check-input"
-                                        type="radio"
-                                        value="Pool table"
-                                        name="table-type"
-                                        id="table-type1"
-                                      />
-                                      <label
-                                        className="form-check-label"
-                                        htmlFor="table-type1"
-                                      >
-                                        Pool table
-                                      </label>
-                                    </div>
-                                    <div className="form-check">
-                                      <input
-                                        className="form-check-input"
-                                        checked
-                                        type="radio"
-                                        value="Bàn bi-a snooker"
-                                        name="table-type"
-                                        id="table-type2"
-                                      />
-                                      <label
-                                        className="form-check-label"
-                                        htmlFor="table-type2"
-                                      >
-                                        Bàn bi-a snooker
-                                      </label>
-                                    </div>
-                                    <div className="form-check">
-                                      <input
-                                        className="form-check-input"
-                                        type="radio"
-                                        value="Pocket billiards"
-                                        name="table-type"
-                                        id="table-type3"
-                                      />
-                                      <label
-                                        className="form-check-label"
-                                        htmlFor="table-type3"
-                                      >
-                                        Pocket billiards
-                                      </label>
+                                      <div className="passenger-item">
+                                        Tiền bàn : {formatMoney(totalPrice)}
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -697,7 +651,11 @@ const BilliardDetailPage = () => {
                             </div>
                           </div>
                           <div className="billard-detail-side-btn">
-                            <button type="submit" className="theme-btn">
+                            <button
+                              type="button"
+                              className="theme-btn"
+                              onClick={handleSubmit}
+                            >
                               <span className="fa fa-shopping-bag"></span>Đặt
                               ngay
                             </button>
@@ -712,9 +670,6 @@ const BilliardDetailPage = () => {
                       <a href="#">
                         <i className="fa fa-share-nodes"></i> Chia sẻ
                       </a>
-                      <span>
-                        <i className="far fa-eye"></i> 250 Lượt xem
-                      </span>
                     </div>
                   </div>
                 </div>

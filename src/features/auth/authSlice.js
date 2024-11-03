@@ -18,14 +18,16 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
+      console.log("logout");
       localStorage.removeItem("userToken");
+      localStorage.removeItem("userInfor");
       state.loading = false;
       state.userInfo = null;
       state.userToken = null;
       state.error = null;
     },
     setCredentials: (state, { payload }) => {
-      state.userInfo = payload;
+      state.userInfo = payload.data;
     },
   },
   extraReducers: (builder) => {
@@ -49,8 +51,10 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.userInfo = action.payload;
+        state.userInfo = action.payload.user;
         state.userToken = action.payload.token;
+        localStorage.setItem("userToken", action.payload.token);
+        localStorage.setItem("userInfor", JSON.stringify(action.payload.user));
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
@@ -59,6 +63,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout, setCredentials } = authSlice.actions
+export const { logout, setCredentials } = authSlice.actions;
 
-export default authSlice.reducer
+export default authSlice.reducer;

@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Breadcrumb } from "../../components";
 import { fetchCuahangs } from "../../features/shop/shopSlice";
+import { formatMoney } from "../../utils/formatMoney";
 
 const BilliardPage = () => {
   const dispatch = useDispatch();
@@ -371,14 +372,14 @@ const BilliardPage = () => {
                           <div className="billard-price">
                             <span className="billard-price-amount">
                               {/* Assuming price is a property */}
-                              {cuahang.price}{" "}
+                              {formatMoney(cuahang.minGiaBan)}{" "}
                               <span className="billard-price-type">/Giờ</span>
                             </span>
                           </div>
                           <div className="billard-text-btn">
-                            <a href="#">
+                            <Link to={`/billiard/${cuahang.id}`}>
                               Chi tiết <i className="fas fa-arrow-right" />
-                            </a>
+                            </Link>
                           </div>
                         </div>
                       </div>

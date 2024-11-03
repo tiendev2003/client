@@ -25,7 +25,19 @@ const LoginPage = () => {
   });
   useEffect(() => {
     if (userInfo) {
-      navigate("/");
+      switch (userInfo.id_QuyenTK) {
+        case 1:
+          navigate("/admin");
+          break;
+        case 2:
+          navigate("/store");
+          break;
+        case 4:
+          navigate("/profile");
+          break;
+        default:
+          navigate("/notfound");
+      }
     }
   }, [navigate, userInfo]);
 

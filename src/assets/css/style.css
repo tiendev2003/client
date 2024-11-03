@@ -10,15 +10,11 @@ fonts
 ====================== */
 
 @import url("https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700;900&display=swap");
-@import "@bootstrap/bootstrap.min.css";
-@import "@fontawesome/all.css";
 
 /* ===================
 general css
 ====================== */
-.mr-2{
-  margin-right: 0.5rem;
-}
+
 *,
 *:before,
 *:after {
@@ -27,13 +23,6 @@ general css
 
 * {
   scroll-behavior: inherit !important;
-}
-
-.btn-group-sm>.btn,.btn-sm {
-  --bs-btn-padding-y: 0.25rem;
-  --bs-btn-padding-x: 0.5rem;
-  --bs-btn-font-size: 0.875rem;
-  --bs-btn-border-radius: var(--bs-border-radius-sm)
 }
 
 html,
@@ -1922,18 +1911,17 @@ billard css
   color: #7167ff;
 }
 
-.billard-item {
+.billard-slider .billard-item {
   margin-top: 10px;
   margin-bottom: 10px;
   box-shadow: none;
 }
 
-.owl-theme .owl-nav {
+.billard-slider.owl-theme .owl-nav {
   margin-top: 0px;
 }
 
-.slick-slider .slick-prev,
-.slick-slider .slick-next {
+.billard-slider.owl-theme .owl-nav button {
   color: #7167ff;
   font-size: 20px;
   margin: 0;
@@ -1952,39 +1940,26 @@ billard css
   transform: translate(0, -50%);
   transition: all 0.5s ease-in-out;
 }
-.slick-slider .slick-prev:hover,
-.slick-slider .slick-next:hover {
+
+.billard-slider.owl-theme .owl-nav button:hover {
   background: #7167ff;
   color: #fff;
 }
 
-.slick-slider .slick-prev {
-  z-index: 1;
+.billard-slider.owl-theme .owl-nav .owl-prev {
   left: -25px;
 }
 
-.slick-slider .slick-next {
+.billard-slider.owl-theme .owl-nav .owl-next {
   right: -25px;
 }
 
-.slick-dots {
+.billard-slider .owl-dots {
   text-align: center;
   margin-top: 30px;
 }
-.slick-prev:before,
-.slick-next:before {
-  display: none;
-}
 
-.slick-dots li button:before {
-  color: black;
-}
-
-.slick-dots li.slick-active {
-  display: none;
-}
-
-.slick-dots li button:before {
+.billard-slider .owl-dots .owl-dot span {
   background: transparent;
   margin: 5px;
   border: 2px solid #7167ff;
@@ -1995,13 +1970,12 @@ billard css
   transition: all 0.5s ease-in-out;
 }
 
-.slick-dots li.slick-active button:before {
+.billard-slider .owl-dots .owl-dot.active span {
   background: #7167ff;
 }
 
 @media all and (max-width: 767px) {
-  .billard-slider.slick-slider .slick-prev,
-  .slick-slider .slick-next {
+  .billard-slider.owl-theme .owl-nav {
     display: none;
   }
 }
@@ -3559,8 +3533,8 @@ about css
 }
 
 /* ===================
-  feature css 
-  ====================== */
+feature css 
+====================== */
 
 .feature-area {
   position: relative;
@@ -3612,8 +3586,8 @@ about css
 }
 
 /* ===================
-  testimonial css 
-  ====================== */
+testimonial css 
+====================== */
 
 .testimonial-area {
   position: relative;
@@ -3632,7 +3606,6 @@ about css
   text-align: center;
   padding: 25px;
   position: relative;
-  margin: 0 15px; /* Adjust the margin as needed */
 }
 
 .testimonial-quote p {
@@ -3751,8 +3724,8 @@ about css
 }
 
 /* ===================
-  counter css 
-  ====================== */
+counter css 
+====================== */
 
 .counter-area {
   padding: 50px 20px;
@@ -3823,8 +3796,8 @@ about css
 }
 
 /* ===================
-  cta-area css 
-  ====================== */
+cta-area css 
+====================== */
 
 .cta-area {
   position: relative;
@@ -3870,8 +3843,8 @@ about css
 }
 
 /* ========================
-  gallery css 
-  =========================== */
+gallery css 
+=========================== */
 
 .gallery-item {
   position: relative;
@@ -3957,8 +3930,8 @@ about css
 }
 
 /* ===================
-  mission css 
-  ====================== */
+mission css 
+====================== */
 
 .mission-img {
   position: relative;
@@ -4016,8 +3989,8 @@ about css
 }
 
 /* ===================
-  career css 
-  ====================== */
+career css 
+====================== */
 
 .career-item {
   padding: 40px;
@@ -4115,8 +4088,8 @@ about css
 }
 
 /* ===================
-  career single css 
-  ====================== */
+career single css 
+====================== */
 .job-single-img img {
   border-radius: 10px;
   margin-bottom: 10px;
@@ -4157,8 +4130,8 @@ about css
 }
 
 /* ===================
-  blog css 
-  ====================== */
+blog css 
+====================== */
 
 .blog-item {
   margin-bottom: 25px;
@@ -4222,8 +4195,8 @@ about css
 }
 
 /* ===========================
-  blog single css
-  =========================== */
+blog single css
+=========================== */
 
 .blog-thumb-img {
   margin-bottom: 20px;
@@ -4332,7 +4305,7 @@ about css
   align-items: center;
   background: #f5f7fc;
   border-radius: 15px;
-  margin: 25px 0;
+  margin: 50px 0;
   padding: 20px;
 }
 
@@ -4515,8 +4488,8 @@ about css
 }
 
 /* =========================
-  sidebar css
-  ========================= */
+sidebar css
+========================= */
 
 .widget {
   background: #fff;
@@ -4672,8 +4645,8 @@ about css
 }
 
 /* =========================
-  partner css
-  ========================= */
+partner css
+========================= */
 
 .partner-wrapper img {
   background: #fff;
@@ -4685,8 +4658,8 @@ about css
 }
 
 /* ===================
-  contact us css 
-  ====================== */
+contact us css 
+====================== */
 
 .contact-wrapper {
   position: relative;
@@ -4789,8 +4762,8 @@ about css
 }
 
 /* ===================
-  team css 
-  ====================== */
+team css 
+====================== */
 
 .team-area {
   position: relative;
@@ -4938,8 +4911,8 @@ about css
 }
 
 /* ===================
-  faq css 
-  ====================== */
+faq css 
+====================== */
 
 .faq-area .accordion-item {
   border: none;
@@ -5000,8 +4973,8 @@ about css
 }
 
 /* ===================
-  breadcrumb css
-  ====================== */
+breadcrumb css
+====================== */
 
 .site-breadcrumb {
   display: flex;
@@ -5091,8 +5064,8 @@ about css
 }
 
 /* ===================
-  pagination css 
-  ====================== */
+pagination css 
+====================== */
 
 .pagination {
   display: flex;
@@ -5127,8 +5100,8 @@ about css
 }
 
 /* ===================
-  auth css 
-  ====================== */
+auth css 
+====================== */
 
 .login-form {
   padding: 30px 40px;
@@ -5311,8 +5284,8 @@ about css
 }
 
 /* ===================
-  user profile css 
-  ====================== */
+user profile css 
+====================== */
 
 .header-account img {
   width: 60px;
@@ -6016,8 +5989,8 @@ about css
 }
 
 /* ===================
-  error css 
-  ====================== */
+error css 
+====================== */
 
 .error-wrapper {
   text-align: center;
@@ -6055,8 +6028,8 @@ about css
 }
 
 /* ===================
-  terms/privacy css 
-  ====================== */
+terms/privacy css 
+====================== */
 
 .terms-content:not(:last-child) {
   margin-bottom: 54px;
@@ -6085,8 +6058,8 @@ about css
 }
 
 /* ===================
-  footer css 
-  ====================== */
+footer css 
+====================== */
 
 .footer-area {
   background: #f5f7fc;
@@ -6395,25 +6368,3 @@ about css
     margin-top: 20px;
   }
 }
-
-/* css for select option  */
-.select {
-  padding: 2px 3px;
-  border-radius: 5px;
-  margin: 5px;
-}
-.select option {
-  padding: 2px 3px;
-  border-radius: 5px;
-  margin: 5px;
-
-}
- 
-.select option:hover {
-  background-color: #f1f1f1;
-}
-
-.select option:checked {
-  background-color: #f1f1f1;
-}
-

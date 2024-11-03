@@ -1,7 +1,22 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { useGetUserDetailsQuery } from "../features/auth/authServices";
+import { setCredentials } from "../features/auth/authSlice";
 import Navigation from "./Navigation";
 
 const Header = () => {
+  const { userInfo } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
+  // automatically authenticate user if token is found
+  const { data, isFetching } = useGetUserDetailsQuery("userDetails", {
+    pollingInterval: 900000, // 15mins
+  });
+
+  useEffect(() => {
+    if (data) dispatch(setCredentials(data));
+  }, [data, dispatch]);
   return (
     <header className="header">
       <div className="header-top">
@@ -42,20 +57,28 @@ const Header = () => {
             </div>
             <div className="col-md-5">
               <div className="header-top-right">
-                <div className="lang">
+                {/* <div className="lang">
                   <select name="lang" className="select">
                     <option data-display="VN">VN</option>
                     <option value={2}>ENG</option>
                   </select>
-                </div>
+                </div> */}
                 <div className="account">
-                  <Link to="/dang-nhap">
-                    <i className="fa-solid fa-arrow-right-to-bracket" /> Đăng
-                    nhập
-                  </Link>
-                  <Link to="/dang-ky">
-                    <i className="fa-solid fa-user-tie" /> Đăng ký
-                  </Link>
+                  {userInfo ? (
+                    <Link to="/profile">
+                      <i className="fa-solid fa-user" /> {userInfo.TenNguoiDung}
+                    </Link>
+                  ) : (
+                    <>
+                      <Link to="/dang-nhap">
+                        <i className="fa-solid fa-arrow-right-to-bracket" />{" "}
+                        Đăng nhập
+                      </Link>
+                      <Link to="/dang-ky">
+                        <i className="fa-solid fa-user-tie" /> Đăng ký
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

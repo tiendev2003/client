@@ -8,24 +8,27 @@ import Destination from "./Destination";
 import Download from "./Download";
 import Footer from "./Footer";
 import Header from "./Header";
+import { HeaderAdmin } from "./HeaderAdmin.jsx";
 import Hero from "./Hero";
 import LoadingSpinner from "./LoadingSpinner";
 import Navigation from "./Navigation";
 import Search from "./Search.jsx";
+import { SidebarAdmin } from "./SidebarAdmin.jsx";
 import Testimonial from "./Testimonial";
 export {
     Banner,
     BillardPopular,
     BillardPromotion,
-    BillardTag, BlogItem, Breadcrumb,
+    BillardTag,
+    BlogItem,
+    Breadcrumb,
     Destination,
     Download,
-    Footer,
-    Header,
+    Footer, Header,
+    HeaderAdmin,
     Hero,
     LoadingSpinner,
     Navigation,
-    Search,
-    Testimonial
+    Search, SidebarAdmin, Testimonial
 };
 

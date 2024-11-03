@@ -1,11 +1,15 @@
 // Navigation.js
 import { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import logoDark from "../assets/img/logo/logo-dark.png";
 import logo from "../assets/img/logo/logo.png";
+import { logout } from "../features/auth/authSlice.js";
 import { handleScroll } from "../utils/script.js";
 const Navigation = () => {
   const navbarRef = useRef(null);
+  const { userInfo } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const onScroll = () => handleScroll(navbarRef);
@@ -56,17 +60,31 @@ const Navigation = () => {
                 </a>
                 <ul className="dropdown-menu fade-down">
                   <li>
-                    <Link className="dropdown-item" to="/billiard?badge=Quán mới">
+                    <Link className="dropdown-item" to="/billiard?badge=">
+                      Tất cả
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      className="dropdown-item"
+                      to="/billiard?badge=Quán mới"
+                    >
                       Quán mới
                     </Link>
                   </li>
                   <li>
-                    <Link className="dropdown-item" to="/billiard?badge=Nổi bật">
+                    <Link
+                      className="dropdown-item"
+                      to="/billiard?badge=Nổi bật"
+                    >
                       Quán hot
                     </Link>
                   </li>
                   <li>
-                    <Link className="dropdown-item" to="/billiard?badge=Đang khuyến mãi">
+                    <Link
+                      className="dropdown-item"
+                      to="/billiard?badge=Đang khuyến mãi"
+                    >
                       Khuyến mãi
                     </Link>
                   </li>
@@ -116,7 +134,7 @@ const Navigation = () => {
               <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle"
-                  href="#"
+                  to="#"
                   data-bs-toggle="dropdown"
                 >
                   Chính sách
@@ -140,13 +158,85 @@ const Navigation = () => {
                 </ul>
               </li>
             </ul>
-            <div className="header-nav-right"> 
-              {/* user auth */}
-              <div className="header-btn">
-                <Link to="/dang-ky" className="theme-btn mt-2">
-                  Đăng ký ngay
-                </Link>
-              </div>
+            <div className="header-nav-right">
+              {userInfo ? (
+                <div className="header-account">
+                  <div className="dropdown">
+                    <div
+                      data-bs-toggle="dropdown"
+                      aria-expanded="true"
+                      className=""
+                    >
+                      <img src={userInfo.AnhDaiDien_NguoiDung} alt="" />
+                    </div>
+                    <ul
+                      className="dropdown-menu dropdown-menu-end  "
+                      data-bs-popper="static"
+                    >
+                      <li>
+                        <Link
+                          className="dropdown-item"
+                          to={`${
+                            userInfo.id_QuyenTK == 2
+                              ? "/store"
+                              : userInfo.id_QuyenTK == 1
+                              ? "/admin"
+                              : "/dashboard"
+                          } `}
+                        >
+                          <i className="fa fa-gauge-high"></i> Dashboard
+                        </Link>
+                      </li>
+                      <li>
+                        <Link className="dropdown-item" to="/profile">
+                          <i className="far fa-user"></i> My Profile
+                        </Link>
+                      </li>
+                      <li>
+                        <Link className="dropdown-item" to="/">
+                          <i className="fa fa-shopping-bag"></i> My Booking
+                        </Link>
+                      </li>
+                      <li>
+                        <Link className="dropdown-item" to="/">
+                          <i className="fa fa-clipboard-list"></i> Booking
+                          History
+                        </Link>
+                      </li>
+                      <li>
+                        <Link className="dropdown-item" to="/">
+                          <i className="fa fa-heart"></i> My Wishlist
+                        </Link>
+                      </li>
+                      <li>
+                        <Link className="dropdown-item" to="/">
+                          <i className="fa fa-wallet"></i> My Wallet
+                        </Link>
+                      </li>
+                      <li>
+                        <Link className="dropdown-item" to="/">
+                          <i className="fa fa-cog"></i> Settings
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          className="dropdown-item"
+                          to="#"
+                          onClick={() => dispatch(logout())}
+                        >
+                          <i className="fa fa-sign-out"></i> Log Out
+                        </Link>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              ) : (
+                <div className="header-btn">
+                  <Link to={"/dang-ky"} className="theme-btn mt-2">
+                    Đăng ký ngay
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>
