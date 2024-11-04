@@ -7,7 +7,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 const ProfileBookingPage = () => {
   const dispatch = useDispatch();
-  const { bookings, loading, error } = useSelector((state) => state.booking);
+  const { bookings, loading } = useSelector((state) => state.booking);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   useEffect(() => {
@@ -17,9 +17,7 @@ const ProfileBookingPage = () => {
     return <div>Loading...</div>;
   }
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+ 
   const handleCancelBooking = (id) => async () => {
     try {
       await dispatch(cancelBooking(id)).unwrap();
