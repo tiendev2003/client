@@ -10,7 +10,7 @@ const Header = () => {
   const dispatch = useDispatch();
 
   // automatically authenticate user if token is found
-  const { data, isFetching } = useGetUserDetailsQuery("userDetails", {
+  const { data } = useGetUserDetailsQuery("userDetails", {
     pollingInterval: 900000, // 15mins
   });
 

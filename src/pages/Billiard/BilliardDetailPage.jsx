@@ -1,23 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import Slider from "react-slick";
 import { toast } from "react-toastify";
 import { Breadcrumb } from "../../components";
 import StarRating from "../../components/StarRating";
 import { bookTable } from "../../features/book/bookSlice";
 import { fetchCuahangDetail } from "../../features/shop/shopSlice";
 import { formatMoney } from "../../utils/formatMoney";
-
 const BilliardDetailPage = () => {
   const { id } = useParams();
   console.log(id);
   const dispatch = useDispatch();
   const { cuahangDetail, loading, error } = useSelector((state) => state.shop);
+  var settings = {
+    infinite: true,
+    speed: 500,
 
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: false,
+    draggable: true,
+    nextArrow: (
+      <div className="slick-next">
+        <i className="fa fa-long-arrow-right"></i>
+      </div>
+    ),
+    prevArrow: (
+      <div className="slick-prev">
+        <i className="fa fa-long-arrow-left"></i>
+      </div>
+    ),
+  };
   const [selectedTable, setSelectedTable] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
-
   useEffect(() => {
     dispatch(fetchCuahangDetail(id));
   }, [dispatch, id]);
@@ -35,23 +52,41 @@ const BilliardDetailPage = () => {
   const handleQuantityChange = (amount) => {
     setQuantity((prevQuantity) => Math.max(1, prevQuantity + amount));
   };
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     if (!selectedTable) {
       toast.error("Vui lòng chọn bàn trước khi đặt");
       return;
     }
     const id_Ban = selectedTable.id;
     e.preventDefault();
-    const token = localStorage.getItem("userToken");
-    dispatch(bookTable({ id_Cuahang: id, id_Ban, token }));
+    const userInfo = localStorage.getItem("userToken");
+    if (!userInfo) {
+      toast.error("Vui lòng đăng nhập trước khi đặt bàn");
+      return;
+    }
+    try {
+      await dispatch(bookTable({ id_Cuahang: id, id_Ban })).unwrap();
+      toast.success("Đặt bàn thành công");
+    } catch (error) {
+      console.log(error);
+      toast.error("Đặt bàn thất bại");
+    }
   };
+  const groupedData = cuahangDetail?.ban?.reduce((result, ban) => {
+    const { id, TenDMBan } = ban.dmban;
+
+    if (!result[id]) {
+      result[id] = {
+        TenDMBan,
+        bans: [],
+      };
+    }
+
+    result[id].bans.push(ban);
+    return result;
+  }, {});
+
   return (
     <>
       <Breadcrumb title="Billiard" items="Billiard" />
@@ -62,11 +97,14 @@ const BilliardDetailPage = () => {
             <div className="row">
               <div className="col-lg-8">
                 <div className="billard-detail-content">
-                  <div className="billard-detail-slider owl-carousel owl-theme">
-                    <img src="../assets/img/billard/01.jpeg" alt="" />
-                    <img src="../assets/img/billard/01.jpeg" alt="" />
-                    <img src="../assets/img/billard/01.jpeg" alt="" />
-                  </div>
+                  <Slider {...settings} className="billard-detail-slider">
+                    {cuahangDetail?.hinhanh?.map((hinh, index) => (
+                      <div key={index} className="billard-detail-slider-item">
+                        <img src={hinh?.HinhAnh_URL} alt="billard" />
+                      </div>
+                    ))}
+                  </Slider>
+
                   <div className="billard-detail-header">
                     <div className="billard-detail-header-info">
                       <h4 className="billard-detail-title">
@@ -104,7 +142,7 @@ const BilliardDetailPage = () => {
                           </div>
                           <div className="billard-detail-feature-content">
                             <h6>khu vực</h6>
-                            <span>Việt Nam</span>
+                            <span>{cuahangDetail?.phuong_xa}</span>
                           </div>
                         </div>
                       </div>
@@ -115,7 +153,7 @@ const BilliardDetailPage = () => {
                           </div>
                           <div className="billard-detail-feature-content">
                             <h6>Địa điểm</h6>
-                            <span>Hồ Chí Minh</span>
+                            <span>{cuahangDetail?.tinh_thanhpho}</span>
                           </div>
                         </div>
                       </div>
@@ -132,6 +170,38 @@ const BilliardDetailPage = () => {
                       </div>
                     </div>
                   </div>
+                  {groupedData &&
+                    Object.values(groupedData)?.map((danhMuc, index) => (
+                      <div key={index} className="listing-item">
+                        <h2 className="mb-3">{danhMuc.TenDMBan}</h2>
+                        <div className="listing-amenity">
+                          <div className="row">
+                            {danhMuc.bans.map((ban, idx) => (
+                              <div className="col-lg-4" key={idx}>
+                                <div className="listing-amenity-item">
+                                  <div className="form-check mb-2">
+                                    <input
+                                      className="form-check-input"
+                                      type="radio"
+                                      name="table"
+                                      onChange={() => handleTableSelect(ban)}
+                                      id={`table-${ban.id}`}
+                                    />
+                                    <label
+                                      className="form-check-label"
+                                      htmlFor={`table-${ban.id}`}
+                                    >
+                                      {ban?.TenBan} - {formatMoney(ban?.GiaBan)}
+                                    </label>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+
                   <div className="billard-detail-item">
                     <h4 className="mb-3"> Mô tả </h4>
                     <p>
@@ -153,7 +223,7 @@ const BilliardDetailPage = () => {
                   <div className="billard-detail-item">
                     {cuahangDetail?.dmsp?.map((item, index) => (
                       <React.Fragment key={index}>
-                        <h4 className="mb-3">{item.TenDMSP}</h4>
+                        <h4 className="my-2">{item.TenDMSP}</h4>
                         <div className="billard-detail-amenity">
                           <div className="row">
                             {item?.sanpham?.map((sp, index) => (
@@ -547,102 +617,43 @@ const BilliardDetailPage = () => {
                 <div className="booking-sidebar billard-detail-side-content">
                   <div className="booking-item">
                     <div className="search-form">
-                      <form action="#">
-                        <div className="tour-search-wrapper">
-                          <div className="row">
-                            <div className="col-lg-12">
-                              <div className="form-group passenger-box">
-                                <div className="passenger-class">
-                                  <label>Loại bàn</label>
-
-                                  {cuahangDetail?.dmban?.map((item, index) => (
-                                    <React.Fragment key={index}>
-                                      <div className="form-group-icon">
-                                        <div className="passenger-total">
-                                          <span className="passenger-class-name">
-                                            {item?.TenDMBan}
-                                          </span>
-                                        </div>
-                                      </div>
-                                      <div className="passenger-class-info">
-                                        {item?.ban?.map((ban, index) => (
-                                          <React.Fragment key={index}>
-                                            <div className="form-check">
-                                              <input
-                                                className="form-check-input"
-                                                type="radio"
-                                                name="table"
-                                                onChange={() =>
-                                                  handleTableSelect(ban)
-                                                }
-                                                id="table-type1"
-                                              />
-                                              <label
-                                                className="form-check-label"
-                                                htmlFor="table-type1"
-                                              >
-                                                {ban?.TenBan} -{" "}
-                                                {formatMoney(ban?.GiaBan)}
-                                              </label>
-                                            </div>
-                                          </React.Fragment>
-                                        ))}
-                                      </div>
-                                    </React.Fragment>
-                                  ))}
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-lg-12">
-                              <div className="form-group passenger-box">
-                                <div className="passenger-class">
-                                  <label>Số lượng</label>
-                                  <div className="form-group-icon">
-                                    <div className="passenger-total">
-                                      <div className="passenger-item">
-                                        <div className="passenger-qty">
-                                          <button
-                                            type="button"
-                                            className="minus-btn"
-                                            onClick={() =>
-                                              handleQuantityChange(-1)
-                                            }
-                                          >
-                                            <i className="fa-solid fa-minus"></i>
-                                          </button>
-                                          <input
-                                            type="text"
-                                            name="table"
-                                            className="qty-amount passenger-table"
-                                            value={quantity}
-                                            onChange={(e) =>
-                                              setQuantity(e.target.value)
-                                            }
-                                          />
-                                          <button
-                                            type="button"
-                                            className="plus-btn"
-                                            onClick={() =>
-                                              handleQuantityChange(1)
-                                            }
-                                          >
-                                            <i className="fa-soild fa-plus"></i>
-                                          </button>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-lg-12">
-                              <div className="form-group passenger-box">
-                                <div className="passenger-class">
-                                  <h4>Tổng tiền: </h4>
-                                  <div className="form-group-icon">
-                                    <div className="passenger-total">
-                                      <div className="passenger-item">
-                                        Tiền bàn : {formatMoney(totalPrice)}
+                      <div className="tour-search-wrapper">
+                        <div className="row">
+                          <div className="col-lg-12">
+                            <div className="form-group passenger-box">
+                              <div className="passenger-class">
+                                <label>Số lượng</label>
+                                <div className="form-group-icon">
+                                  <div className="passenger-total">
+                                    <div className="passenger-item">
+                                      <div className="passenger-qty">
+                                        <button
+                                          type="button"
+                                          className="minus-btn"
+                                          onClick={() =>
+                                            handleQuantityChange(-1)
+                                          }
+                                        >
+                                          <i className="fa-solid fa-minus"></i>
+                                        </button>
+                                        <input
+                                          type="text"
+                                          name="table"
+                                          className="qty-amount passenger-table"
+                                          value={quantity}
+                                          onChange={(e) =>
+                                            setQuantity(e.target.value)
+                                          }
+                                        />
+                                        <button
+                                          type="button"
+                                          className="plus-btn"
+                                          onClick={() =>
+                                            handleQuantityChange(1)
+                                          }
+                                        >
+                                          <i className="fa-soild fa-plus"></i>
+                                        </button>
                                       </div>
                                     </div>
                                   </div>
@@ -650,21 +661,31 @@ const BilliardDetailPage = () => {
                               </div>
                             </div>
                           </div>
-                          <div className="billard-detail-side-btn">
-                            <button
-                              type="button"
-                              className="theme-btn"
-                              onClick={handleSubmit}
-                            >
-                              <span className="fa fa-shopping-bag"></span>Đặt
-                              ngay
-                            </button>
-                            <a href="#" className="border-btn">
-                              <i className="far fa-heart"></i> Thêm yêu thích
-                            </a>
+                          <div className="col-lg-12">
+                            <div className="form-group passenger-box">
+                              <div className="passenger-class">
+                                <h4>Tổng tiền: </h4>
+                                <div className="form-group-icon">
+                                  <div className="passenger-total">
+                                    <div className="passenger-item">
+                                      Tiền bàn : {formatMoney(totalPrice)}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </form>
+                        <div className="billard-detail-side-btn">
+                          <button
+                            type="button"
+                            className="theme-btn"
+                            onClick={handleSubmit}
+                          >
+                            <span className="fa fa-shopping-bag"></span>Đặt ngay
+                          </button>
+                        </div>
+                      </div>
                     </div>
                     <div className="billard-detail-side-share">
                       <a href="#">

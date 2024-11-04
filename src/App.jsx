@@ -14,13 +14,16 @@ import { DashboardStore } from "./pages/StoreOwner/DashboardStore";
 import ManagePaymentsInvoices from "./pages/StoreOwner/ManagePaymentsInvoices";
 import ManagePromotionsStatistics from "./pages/StoreOwner/ManagePromotionsStatistics";
 import { RegisterStoreOwner } from "./pages/StoreOwner/RegisterStoreOwner";
-import { ServiceManagement } from "./pages/StoreOwner/ServiceManagement";
+import { CreateSanPham } from "./pages/StoreOwner/Sanpham/CreateSanPham";
+import { EditSanpham } from "./pages/StoreOwner/Sanpham/EditSanpham";
+import { ManageSanpham } from "./pages/StoreOwner/Sanpham/ManageSanpham";
 import { CreateService } from "./pages/StoreOwner/Services/CreateService";
+import { ServiceManagement } from "./pages/StoreOwner/Services/ServiceManagement";
 import { SettingStore } from "./pages/StoreOwner/SettingStore";
 import { CreateBilliardTable } from "./pages/StoreOwner/Tables/CreateBilliardTable";
 import ManageBilliardTables from "./pages/StoreOwner/Tables/ManageBilliardTables";
 import ProtectedRoute from "./routing/ProtectedRoute";
-
+ 
 const HomePage = lazy(() => import("./pages/Home/HomePage"));
 const AboutPage = lazy(() => import("./pages/About/AboutPage"));
 const BlogPage = lazy(() => import("./pages/Blog/BlogPage"));
@@ -44,9 +47,9 @@ const Dashboard = lazy(() => import("./pages/User/DashboardPage"));
 const Profile = lazy(() => import("./pages/User/ProfilePage"));
 const Settings = lazy(() => import("./pages/User/ProfileSettingPage"));
 const Bookings = lazy(() => import("./pages/User/ProfileBookingPage"));
-const BookingHistory = lazy(() => import("./pages/User/BookingHistoryPage"));
 const Wishlist = lazy(() => import("./pages/User/ProfileWishlistPage"));
-function App() {
+const BookingsDetail= lazy(() => import("./pages/User/ProfileBookingDetail"));
+ function App() {
   return (
     <Router>
       <Suspense fallback={<LoadingSpinner />}>
@@ -76,8 +79,8 @@ function App() {
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/setting" element={<Settings />} />
                 <Route path="/bookings" element={<Bookings />} />
-                <Route path="/booking-history" element={<BookingHistory />} />
                 <Route path="/wishlist" element={<Wishlist />} />
+                <Route path="/bookings/:id" element={<BookingsDetail />} />
               </Route>
             </Route>
           </Route>
@@ -116,6 +119,15 @@ function App() {
               <Route
                 path="/store/manage-tables/create"
                 element={<CreateBilliardTable />}
+              />
+              <Route path="/store/manage-sanpham" element={<ManageSanpham />} />
+              <Route
+                path="/store/manage-sanpham/create"
+                element={<CreateSanPham />}
+              />
+              <Route
+                path="/store/manage-sanpham/edit/:id"
+                element={<EditSanpham />}
               />
 
               <Route

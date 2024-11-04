@@ -757,3 +757,11 @@ footer css
     justify-content: space-between;
   }
 }
+
+lable {
+  color: #4F4B8B;
+  margin: 0px;
+  font-weight: 600;
+  font-family: 'Barlow', sans-serif;
+  line-height: 1.2;
+}

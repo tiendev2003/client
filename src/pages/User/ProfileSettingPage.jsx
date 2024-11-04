@@ -1,30 +1,92 @@
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { changePassword, updateUserInfo } from "../../features/user/userSlice";
+
 const ProfileSettingPage = () => {
+  const { userInfo } = useSelector((state) => state.auth);
+  const [userData, setUserData] = useState({
+    TenTaiKhoan: userInfo.TenTaiKhoan,
+    TenNguoiDung: userInfo.TenNguoiDung,
+    Email: userInfo.Email,
+    SDT: userInfo.SDT,
+  });
+  const dispatch = useDispatch();
+
+  const [passwordData, setPasswordData] = useState({
+    old_password: "",
+    new_password: "",
+  });
+
+  const handleUserChange = (e) => {
+    const { name, value } = e.target;
+    setUserData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target;
+    setPasswordData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleUserSubmit = (e) => {
+    e.preventDefault();
+    dispatch(updateUserInfo(userData))
+      .unwrap()
+      .then(() => {
+        toast.success("User information updated successfully");
+      })
+      .catch((err) => {
+        toast.error(err.message || "Failed to update user information");
+      });
+  };
+
+  const handlePasswordSubmit = (e) => {
+    e.preventDefault();
+    dispatch(changePassword(passwordData))
+      .unwrap()
+      .then(() => {
+        toast.success("Password changed successfully");
+      })
+      .catch((err) => {
+        toast.error(err.message || "Failed to change password");
+      });
+  };
   return (
     <>
       <div className="col-lg-12 mb-4">
         <div className="user-profile-card">
           <h4 className="user-profile-card-title">Update Profile Info</h4>
           <div className="user-profile-form">
-            <form action="#">
+          <form onSubmit={handleUserSubmit}>
               <div className="row">
                 <div className="col-md-6">
                   <div className="form-group">
-                    <label>First Name</label>
+                    <label>Tên tài khoản</label>
                     <input
                       type="text"
                       className="form-control"
-                      value="Antoni"
+                      name="TenTaiKhoan"
+                      value={userData.TenTaiKhoan}
+                      onChange={handleUserChange}
                       placeholder="First Name"
                     />
                   </div>
                 </div>
                 <div className="col-md-6">
                   <div className="form-group">
-                    <label>Last Name</label>
+                    <label>Tên người dùng</label>
                     <input
                       type="text"
                       className="form-control"
-                      value="Jonson"
+                      value={userData.TenNguoiDung}
+                      onChange={handleUserChange}
+                      name="TenNguoiDung"
                       placeholder="Last Name"
                     />
                   </div>
@@ -35,36 +97,29 @@ const ProfileSettingPage = () => {
                     <input
                       type="text"
                       className="form-control"
-                      value="jonson@example.com"
+                      name="Email"
+                      value={userData.Email}
+                      onChange={handleUserChange}
                       placeholder="Email"
                     />
                   </div>
                 </div>
                 <div className="col-md-6">
                   <div className="form-group">
-                    <label>Phone</label>
+                    <label>Số điện thoại</label>
                     <input
                       type="text"
                       className="form-control"
-                      value="+2 134 562 458"
+                      value={userData.SDT}
+                      onChange={handleUserChange}
                       placeholder="Phone"
-                    />
-                  </div>
-                </div>
-                <div className="col-md-12">
-                  <div className="form-group">
-                    <label>Address</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value="New York, USA"
-                      placeholder="Address"
+                      name="SDT"
                     />
                   </div>
                 </div>
               </div>
               <button type="button" className="theme-btn mt-4">
-                Update Profile Info <i className="far fa-user"></i>
+                Cập nhật thông tin<i className="far fa-user"></i>
               </button>
             </form>
           </div>
@@ -72,36 +127,44 @@ const ProfileSettingPage = () => {
       </div>
       <div className="col-lg-12">
         <div className="user-profile-card">
-          <h4 className="user-profile-card-title">Change Password</h4>
+          <h4 className="user-profile-card-title">Thay đổi mật khẩu</h4>
           <div className="col-lg-12">
             <div className="user-profile-form">
-              <form action="#">
+              <form onSubmit={handlePasswordSubmit}>
                 <div className="form-group">
-                  <label>Old Password</label>
+                  <label>Mật khẩu cũ</label>
                   <input
                     type="password"
                     className="form-control"
                     placeholder="Old Password"
+                    value={passwordData.old_password}
+                    onChange={handlePasswordChange}
                   />
                 </div>
                 <div className="form-group">
-                  <label>New Password</label>
+                  <label>Mật khẩu mới</label>
                   <input
                     type="password"
                     className="form-control"
                     placeholder="New Password"
+                    value={passwordData.new_password}
+                    onChange={handlePasswordChange}
+                    name="new_password"
                   />
                 </div>
                 <div className="form-group">
-                  <label>Re-Type Password</label>
+                  <label>Nhập lại mật khẩu</label>
                   <input
                     type="password"
                     className="form-control"
                     placeholder="Re-Type Password"
+                    name="confirm_password"
+                    value={passwordData.confirm_password}
+                    onChange={handlePasswordChange}
                   />
                 </div>
                 <button type="button" className="theme-btn mt-4">
-                  Change Password <i className="far fa-key"></i>
+                  Thay đổi <i className="fa fa-key"></i>
                 </button>
               </form>
             </div>

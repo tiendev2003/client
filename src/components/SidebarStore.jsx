@@ -17,6 +17,7 @@ export const SidebarStore = ({ isOpen }) => {
           </button>
           <input type="file" className="profile-img-file" />
         </div>
+
         <h4>{userInfo.TenNguoiDung}</h4>
         <p>
           <a href="#" className="__cf_email__">
@@ -74,7 +75,28 @@ export const SidebarStore = ({ isOpen }) => {
             </ul>
           </div>
         </li>
-
+        <li className="profile-menu">
+          <a
+            href="#profile-menu-3"
+            data-bs-toggle="collapse"
+            aria-expanded="true"
+            aria-controls="profile-menu-3"
+            className="collapsed"
+          >
+            <i className="fa-solid fa-table"></i> Quản lý sản phẩm
+            <i className="fa-solid fa-caret-down profile-menu-angle"></i>
+          </a>
+          <div className="collapse" id="profile-menu-3">
+            <ul className="profile-menu-list">
+              <li>
+                <Link to="/store/manage-sanpham/create">Thêm sản phẩm</Link>
+              </li>
+              <li>
+                <Link to="/store/manage-sanpham">Danh sách sản phẩm</Link>
+              </li>
+            </ul>
+          </div>
+        </li>
         <li>
           <Link to="/store/promotions-statistics">
             <i className="fa-solid fa-tags"></i> Quản lý chương trình khuyến mãi

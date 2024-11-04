@@ -24,7 +24,7 @@ export const fetchCuahangDetail = createAsyncThunk(
   "shop/fetchCuahangDetail",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axiosClient.get(`/store-details/id-cua-hang=${id}`);
+      const response = await axiosClient.get(`/store-details/${id}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.message);

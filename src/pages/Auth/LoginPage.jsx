@@ -25,7 +25,9 @@ const LoginPage = () => {
   });
   useEffect(() => {
     if (userInfo) {
+      console.log(userInfo);
       switch (userInfo.id_QuyenTK) {
+       
         case 1:
           navigate("/admin");
           break;

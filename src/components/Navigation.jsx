@@ -167,7 +167,13 @@ const Navigation = () => {
                       aria-expanded="true"
                       className=""
                     >
-                      <img src={userInfo.AnhDaiDien_NguoiDung} alt="" />
+                      <img
+                        src={
+                          userInfo.AnhDaiDien_NguoiDung ||
+                          "/img/account/user.jpg"
+                        }
+                        alt=""
+                      />
                     </div>
                     <ul
                       className="dropdown-menu dropdown-menu-end  "
@@ -193,28 +199,13 @@ const Navigation = () => {
                         </Link>
                       </li>
                       <li>
-                        <Link className="dropdown-item" to="/">
+                        <Link className="dropdown-item" to="/bookings">
                           <i className="fa fa-shopping-bag"></i> My Booking
                         </Link>
                       </li>
+
                       <li>
-                        <Link className="dropdown-item" to="/">
-                          <i className="fa fa-clipboard-list"></i> Booking
-                          History
-                        </Link>
-                      </li>
-                      <li>
-                        <Link className="dropdown-item" to="/">
-                          <i className="fa fa-heart"></i> My Wishlist
-                        </Link>
-                      </li>
-                      <li>
-                        <Link className="dropdown-item" to="/">
-                          <i className="fa fa-wallet"></i> My Wallet
-                        </Link>
-                      </li>
-                      <li>
-                        <Link className="dropdown-item" to="/">
+                        <Link className="dropdown-item" to="/setting">
                           <i className="fa fa-cog"></i> Settings
                         </Link>
                       </li>

@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export const ServiceManagement = () => {
   return (
     <div className="user-profile-card user-profile-listing">
@@ -14,9 +16,9 @@ export const ServiceManagement = () => {
               <i className="fa fa-search"></i>
             </div>
           </div>
-          <a href="#" className="theme-btn">
+          <Link to  ="create" className="theme-btn">
             <span className="fa fa-plus-circle"></span>Thêm dịch vụ
-          </a>
+          </Link>
         </div>
       </div>
       <div className="col-lg-12">
@@ -25,9 +27,6 @@ export const ServiceManagement = () => {
             <thead>
               <tr>
                 <th>Listing Info</th>
-                <th>Type</th>
-                <th>Views</th>
-                <th>Publish On</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
@@ -35,45 +34,29 @@ export const ServiceManagement = () => {
             <tbody>
               <tr>
                 <td>
-                  <div className="table-listing-info">
-                    <a href="#">
-                      <img src="assets/img/listing/01.jpg" alt="" />
-                      <div className="table-listing-content">
-                        <h6>Roltek Hotel &amp; Resort</h6>
-                        <p>
-                          <i className="fa fa-location-dot"></i> 25/B Milford
-                          Road, NY
-                        </p>
-                        <span>$11,245</span>
-                      </div>
-                    </a>
-                  </div>
-                </td>
-                <td>
-                  <h6>Hotel</h6>
-                </td>
-                <td>
                   <h6>45k</h6>
-                </td>
-                <td>
-                  <h6>Sep 21, 2024</h6>
                 </td>
                 <td>
                   <span className="badge bg-success">Active</span>
                 </td>
+
                 <td>
-                  <a href="#" className="btn btn-outline-secondary btn-sm">
+                  <Link href="#" className="btn btn-info btn-sm mr-2">
                     <i className="far fa-eye"></i>
-                  </a>
-                  <a href="#" className="btn btn-outline-secondary btn-sm">
+                  </Link>
+
+                  <Link
+                    to={`/edit-table/${2}`}
+                    className="btn btn-primary btn-sm mr-2"
+                  >
                     <i className="fa fa-pen"></i>
-                  </a>
-                  <a href="#" className="btn btn-outline-secondary btn-sm">
+                  </Link>
+
+                  <a href="#" className="btn btn-danger btn-sm">
                     <i className="far fa-trash-can"></i>
                   </a>
                 </td>
               </tr>
-           
             </tbody>
           </table>
         </div>

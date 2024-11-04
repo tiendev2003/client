@@ -1,4 +1,43 @@
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { historyBook, cancelBooking } from "../../features/book/bookSlice";
+import { formatMoney } from "../../utils/formatMoney";
+import { toast } from "react-toastify";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 const ProfileBookingPage = () => {
+  const dispatch = useDispatch();
+  const { bookings, loading, error } = useSelector((state) => state.booking);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  useEffect(() => {
+    dispatch(historyBook());
+  }, [dispatch]);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+  const handleCancelBooking = (id) => async () => {
+    try {
+      await dispatch(cancelBooking(id)).unwrap();
+      toast.success("Booking canceled successfully");
+    } catch (error) {
+      toast.error("Failed to cancel booking");
+      console.error("Failed to cancel booking", error);
+    }
+  };
+  const tlength = (bookings && bookings.length) || 0;
+  const totalPages = Math.ceil(tlength / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentBookings = !bookings
+    ? []
+    : bookings.slice(startIndex, startIndex + itemsPerPage);
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
   return (
     <div className="user-profile-card">
       <h4 className="user-profile-card-title">My Booking</h4>
@@ -7,35 +46,57 @@ const ProfileBookingPage = () => {
           <thead>
             <tr>
               <th>No</th>
-              <th>Booking ID</th>
-              <th>Type</th>
-              <th>Date</th>
-              <th>Price</th>
-              <th>Status</th>
+              <th>Bàn id</th>
+              <th>Cửa hàng</th>
+              <th>Ngày đặt</th>
+              <th>Email</th>
+              <th>Giá</th>
+              <th>Trạng thái</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>08.</td>
-              <td>
-                <b>#12453</b>
-              </td>
-              <td>Flight</td>
-              <td>Oct 22, 2024</td>
-              <td>$11,569</td>
-              <td>
-                <span className="badge badge-success">Confirmed</span>
-              </td>
-              <td>
-                <a href="#" className="btn btn-outline-secondary btn-sm mr-2  ">
-                  <i className="far fa-eye"></i>
-                </a>
-                <a href="#" className="btn btn-outline-danger btn-sm">
-                  Cancel
-                </a>
-              </td>
-            </tr>
+            {currentBookings &&
+              currentBookings.map((booking, index) => (
+                <tr key={booking.id_DonDatBan}>
+                  <td>{index + 1}</td>
+                  <td>{booking.ChiTietDatBan[0].id_Ban}</td>
+                  <td>{booking.CuaHang.TenCuaHang || "N/A"}</td>
+                  <td>{new Date(booking.ThoiGianTao).toLocaleDateString()}</td>
+                  <td>{booking.CuaHang.Email}</td>
+                  <td>
+                    {formatMoney(booking.ChiTietDatBan[0].ThongTinBan.GiaBan)}
+                  </td>
+                  <td>
+                    <span
+                      className={`badge badge-${
+                        booking.TrangThai === 1 ? "success" : "danger"
+                      }`}
+                    >
+                      {booking.TrangThai === 1 ? "Confirmed" : "Pending"}
+                    </span>
+                  </td>
+                  <td>
+                    <Link
+                      to={`/bookings/${booking.id_DonDatBan}`}
+                      className="btn btn-outline-secondary btn-sm mr-2"
+                    >
+                      <i className="far fa-eye"></i>
+                    </Link>
+                    <button
+                      onClick={handleCancelBooking(booking.id_DonDatBan)}
+                      className="btn btn-outline-danger btn-sm"
+                    >
+                      Cancel
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            {!currentBookings && (
+              <tr>
+                <td colSpan="8">No bookings found</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
@@ -43,34 +104,46 @@ const ProfileBookingPage = () => {
       <div className="pagination-area my-3">
         <div aria-label="Page navigation example">
           <ul className="pagination mt-0">
-            <li className="page-item">
-              <a className="page-link" href="#" aria-label="Previous">
+            <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+              <button
+                className="page-link"
+                onClick={() => handlePageChange(currentPage - 1)}
+                aria-label="Previous"
+              >
                 <span aria-hidden="true">
                   <i className="fa fa-angle-double-left"></i>
                 </span>
-              </a>
+              </button>
             </li>
-            <li className="page-item active">
-              <a className="page-link" href="#">
-                1
-              </a>
-            </li>
-            <li className="page-item">
-              <a className="page-link" href="#">
-                2
-              </a>
-            </li>
-            <li className="page-item">
-              <a className="page-link" href="#">
-                3
-              </a>
-            </li>
-            <li className="page-item">
-              <a className="page-link" href="#" aria-label="Next">
+            {Array.from({ length: totalPages }, (_, index) => (
+              <li
+                key={index + 1}
+                className={`page-item ${
+                  currentPage === index + 1 ? "active" : ""
+                }`}
+              >
+                <button
+                  className="page-link"
+                  onClick={() => handlePageChange(index + 1)}
+                >
+                  {index + 1}
+                </button>
+              </li>
+            ))}
+            <li
+              className={`page-item ${
+                currentPage === totalPages ? "disabled" : ""
+              }`}
+            >
+              <button
+                className="page-link"
+                onClick={() => handlePageChange(currentPage + 1)}
+                aria-label="Next"
+              >
                 <span aria-hidden="true">
                   <i className="fa fa-angle-double-right"></i>
                 </span>
-              </a>
+              </button>
             </li>
           </ul>
         </div>

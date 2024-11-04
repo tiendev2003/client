@@ -1,8 +1,10 @@
 import PropTypes from "prop-types";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { Breadcrumb } from "../components";
+import { useSelector } from "react-redux";
 
 const ProfileLayout = () => {
+  const {userInfo} = useSelector((state) => state.auth);
   return (
     <>
       <Breadcrumb title="Hồ sơ của tôi" items="Hồ sơ của tôi" />
@@ -13,16 +15,16 @@ const ProfileLayout = () => {
               <div className="user-profile-sidebar">
                 <div className="user-profile-sidebar-top">
                   <div className="user-profile-img">
-                    <img src="../assets/img//testimonial/04.jpeg" alt="" />
+                    <img src={userInfo.AnhDaiDien_NguoiDung ||   "/img/account/user.jpg"} alt="" />
                     <button type="button" className="profile-img-btn">
                       <i className="fa fa-camera"></i>
                     </button>
                     <input type="file" className="profile-img-file" />
                   </div>
-                  <h4>Huỳnh Gia Huy</h4>
+                  <h4>{userInfo.TenNguoiDung}</h4>
                   <p>
                     <a href="#" className="__cf_email__">
-                      huynhgiahuy@gmail.com
+                      {userInfo.Email}
                     </a>
                   </p>
                 </div>
@@ -50,14 +52,6 @@ const ProfileLayout = () => {
                       className={({ isActive }) => (isActive ? "active" : "")}
                     >
                       <i className="fa fa-shopping-bag"></i> Đặt bàn của tôi
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      to="/booking-history"
-                      className={({ isActive }) => (isActive ? "active" : "")}
-                    >
-                      <i className="fa fa-clipboard-list"></i> Lịch sử đặt
                     </NavLink>
                   </li>
 

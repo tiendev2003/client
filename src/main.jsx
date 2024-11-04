@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import App from "./App.jsx";
 import "./assets/css/style-admin.css";
 import store from "./store.js";
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
