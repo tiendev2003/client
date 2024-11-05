@@ -2,11 +2,11 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { changePassword, updateUserInfo } from "../../features/user/userSlice";
-
+ 
 const ProfileSettingPage = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const [userData, setUserData] = useState({
-    TenTaiKhoan: userInfo.TenTaiKhoan,
+    TenTaiKhoan: userInfo.TenTaiKhoan || "",
     TenNguoiDung: userInfo.TenNguoiDung,
     Email: userInfo.Email,
     SDT: userInfo.SDT,
@@ -35,6 +35,7 @@ const ProfileSettingPage = () => {
   };
 
   const handleUserSubmit = (e) => {
+    console.log(userData);
     e.preventDefault();
     dispatch(updateUserInfo(userData))
       .unwrap()
@@ -63,7 +64,7 @@ const ProfileSettingPage = () => {
         <div className="user-profile-card">
           <h4 className="user-profile-card-title">Update Profile Info</h4>
           <div className="user-profile-form">
-          <form onSubmit={handleUserSubmit}>
+            <form onSubmit={handleUserSubmit}>
               <div className="row">
                 <div className="col-md-6">
                   <div className="form-group">
@@ -118,7 +119,7 @@ const ProfileSettingPage = () => {
                   </div>
                 </div>
               </div>
-              <button type="button" className="theme-btn mt-4">
+              <button type="submit" className="theme-btn mt-4">
                 Cập nhật thông tin<i className="far fa-user"></i>
               </button>
             </form>
@@ -137,6 +138,7 @@ const ProfileSettingPage = () => {
                     type="password"
                     className="form-control"
                     placeholder="Old Password"
+                    name="old_password"
                     value={passwordData.old_password}
                     onChange={handlePasswordChange}
                   />
@@ -163,7 +165,7 @@ const ProfileSettingPage = () => {
                     onChange={handlePasswordChange}
                   />
                 </div>
-                <button type="button" className="theme-btn mt-4">
+                <button type="submit" className="theme-btn mt-4">
                   Thay đổi <i className="fa fa-key"></i>
                 </button>
               </form>

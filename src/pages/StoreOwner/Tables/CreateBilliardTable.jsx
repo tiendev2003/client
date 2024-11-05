@@ -1,16 +1,28 @@
-import React, { useState } from 'react';
-
+import   { useState } from "react";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { getDichVu } from "./../../../features/dichvu/dichvuSlice";
+import { getDanhMucs } from "./../../../features/danhMucBan/danhMucBanSlice";
+import { toast } from "react-toastify";
+import { createBanForStore } from "./../../../features/banforstore/banForStoreSlice";
+import { Link } from "react-router-dom";
 export const CreateBilliardTable = () => {
-  const [formData, setFormData] = useState({
-    TenBan: '',
-    GiaBan: '',
-    HangBan: '',
-    id_DMBan: '',
-    id_DichVu: '',
-    TrangThai: '0',
-    id_CuaHang: '',
-  });
+  const dispatch = useDispatch();
 
+  const [formData, setFormData] = useState({
+    TenBan: "",
+    GiaBan: "",
+    HangBan: "",
+    id_DMBan: "",
+    id_DichVu: "",
+  });
+  const { loading } = useSelector((state) => state.banforstore);
+  const { dichvus } = useSelector((state) => state.dichvu);
+  const { danhMucs } = useSelector((state) => state.danhMucBan);
+  useEffect(() => {
+    dispatch(getDichVu(12));
+  }, [dispatch]);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -19,28 +31,45 @@ export const CreateBilliardTable = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    dispatch(getDanhMucs());
+  }, [dispatch]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log(formData);
+    try {
+      await dispatch(createBanForStore(formData)).unwrap();
+      toast.success("Danh mục bàn đã được thêm thành công");
+    } catch (err) {
+      toast.error(err.message || "Thêm danh mục bàn thất bại");
+    }
   };
 
   return (
     <div className="user-profile-card add-listing">
-      <h4 className="user-profile-card-title">Thêm bàn</h4>
+      <div className="user-profile-card-header">
+        <h4 className="user-profile-card-title">Thêm bàn</h4>
+        <div className="user-profile-card-header-right">
+          <ul className="breadcrumb-menu d-flex gap-3">
+            <li>
+              <Link to="/store/manage-tables">Danh sách </Link>
+            </li>
+            /<li className="active">Thêm bàn</li>
+          </ul>
+        </div>
+      </div>
       <div className="col-lg-12">
         <div className="add-listing-form">
-          <h5 className="mb-4">Basic Information</h5>
           <form onSubmit={handleSubmit}>
             <div className="row align-items-center">
               <div className="col-lg-6">
                 <div className="form-group">
-                  <label>Table Name</label>
+                  <label>Tên bàn</label>
                   <input
                     type="text"
                     name="TenBan"
                     className="form-control"
-                    placeholder="Enter table name"
+                    placeholder="Bàn ..."
                     value={formData.TenBan}
                     onChange={handleChange}
                     required
@@ -49,12 +78,12 @@ export const CreateBilliardTable = () => {
               </div>
               <div className="col-lg-6">
                 <div className="form-group">
-                  <label>Table Price</label>
+                  <label>Giá bàn / Giờ</label>
                   <input
                     type="number"
                     name="GiaBan"
                     className="form-control"
-                    placeholder="Enter table price"
+                    placeholder="222222"
                     value={formData.GiaBan}
                     onChange={handleChange}
                     required
@@ -63,7 +92,7 @@ export const CreateBilliardTable = () => {
               </div>
               <div className="col-lg-6">
                 <div className="form-group">
-                  <label>Table Brand</label>
+                  <label>Hãng bàn</label>
                   <input
                     type="text"
                     name="HangBan"
@@ -76,62 +105,52 @@ export const CreateBilliardTable = () => {
               </div>
               <div className="col-lg-6">
                 <div className="form-group">
-                  <label>Table Category ID</label>
-                  <input
-                    type="number"
+                  <label>Danh mục bàn</label>
+                  <select
                     name="id_DMBan"
+                    type="number"
                     className="form-control"
-                    placeholder="Enter table category ID"
                     value={formData.id_DMBan}
                     onChange={handleChange}
                     required
-                  />
-                </div>
-              </div>
-              <div className="col-lg-6">
-                <div className="form-group">
-                  <label>Service ID</label>
-                  <input
-                    type="number"
-                    name="id_DichVu"
-                    className="form-control"
-                    placeholder="Enter service ID"
-                    value={formData.id_DichVu}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-              </div>
-              <div className="col-lg-6">
-                <div className="form-group">
-                  <label>Status</label>
-                  <select
-                    name="TrangThai"
-                    className="form-control"
-                    value={formData.TrangThai}
-                    onChange={handleChange}
                   >
-                    <option value="0">Inactive</option>
-                    <option value="1">Active</option>
+                    <option value="" disabled>
+                      Chọn danh mục
+                    </option>
+                    {danhMucs.map((danhMuc) => (
+                      <option key={danhMuc.id} value={danhMuc.id}>
+                        {danhMuc.TenDMBan}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
               <div className="col-lg-6">
                 <div className="form-group">
-                  <label>Store ID</label>
-                  <input
+                  <label>Dịch vụ</label>
+                  <select
+                    name="id_DichVu"
                     type="number"
-                    name="id_CuaHang"
                     className="form-control"
-                    placeholder="Enter store ID"
-                    value={formData.id_CuaHang}
+                    value={formData.id_DichVu}
                     onChange={handleChange}
-                  />
+                    required
+                  >
+                    <option value="" disabled>
+                      Chọn danh mục
+                    </option>
+                    {dichvus.map((dichvu) => (
+                      <option key={dichvu.id} value={dichvu.id}>
+                        {dichvu.Ten_DV}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
+
               <div className="col-lg-12">
-                <button type="submit" className="theme-btn">
-                  Thêm bàn
+                <button type="submit" className="theme-btn" disabled={loading}>
+                  {loading ? "Đang thêm..." : "Thêm bàn"}
                 </button>
               </div>
             </div>

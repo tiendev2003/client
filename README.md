@@ -1,86 +1,137 @@
-# API Router cho Hệ thống Quản lý Quán Bida
+# Hệ thống Website Đặt Bàn Bi-a
 
-## 1. Router cho Người Dùng
+## Mục lục
+- [Giới thiệu](#giới-thiệu)
+- [Cấu trúc Router](#cấu-trúc-router)
+- [Bảo mật](#bảo-mật)
 
-### Quản Lý Quán Bida
-- `GET /clubs` - Lấy danh sách tất cả các quán bida.
-- `GET /clubs/{id}` - Xem chi tiết một quán bida cụ thể.
-- `GET /clubs/{id}/tables` - Xem danh sách các bàn tại một quán bida cụ thể.
-- `POST /clubs/{id}/reserve` - Đặt bàn tại một quán bida.
-- `GET /reservations` - Xem lịch sử đặt bàn của người dùng.
-- `DELETE /reservations/{reservationId}` - Hủy một đặt bàn cụ thể.
-- `GET /search` - Tìm kiếm quán bida theo tên, địa điểm hoặc tiêu chí khác.
 
-### Quản Lý Tài Khoản Người Dùng
-- `POST /users/register` - Đăng ký tài khoản người dùng mới.
-- `POST /users/login` - Đăng nhập người dùng.
-- `GET /users/profile` - Xem thông tin tài khoản người dùng hiện tại.
-- `PUT /users/profile` - Cập nhật thông tin tài khoản người dùng.
-- `PUT /users/password` - Thay đổi mật khẩu của người dùng.
-- `DELETE /users/delete` - Xóa tài khoản người dùng.
+## Giới thiệu
+Hệ thống website đặt bàn bi-a là nền tảng kết nối người chơi bi-a với các câu lạc bộ/quán bi-a. 
+Hệ thống cho phép đặt bàn trực tuyến, quản lý đặt bàn, và tương tác giữa người chơi và chủ quán.
 
-### Bình Luận và Đánh Giá
-- `POST /clubs/{id}/comment` - Đăng bình luận, đánh giá cho một quán bida.
-- `GET /clubs/{id}/comments` - Lấy danh sách bình luận, đánh giá của một quán bida.
-- `PUT /comments/{commentId}` - Chỉnh sửa bình luận của người dùng.
-- `DELETE /comments/{commentId}` - Xóa bình luận của người dùng.
+## Cấu trúc Router
 
-## 2. Router cho Chủ Quán
+### 1. Khách vãng lai
+#### Trang thông tin
+- `/gioi-thieu`: Trang giới thiệu về website
+- `/lien-he`: Thông tin liên hệ và hỗ trợ
+- `/tin-tuc`: Tin tức và blog về billiard
+- `/huong-dan-su-dung`: Hướng dẫn sử dụng website
+- `/dieu-khoan-su-dung`: Điều khoản và điều kiện
+- `/chinh-sach-bao-mat`: Chính sách bảo mật
 
-### Quản Lý Tài Khoản Chủ Quán
-- `POST /owners/register` - Đăng ký làm chủ quán.
-- `POST /owners/login` - Đăng nhập cho chủ quán.
-- `GET /owners/profile` - Xem thông tin tài khoản của chủ quán hiện tại.
-- `PUT /owners/profile` - Cập nhật thông tin tài khoản chủ quán.
-- `PUT /owners/password` - Thay đổi mật khẩu của chủ quán.
-- `DELETE /owners/delete` - Xóa tài khoản chủ quán.
+#### Tìm kiếm và xem quán
+- `/tim-quan`: Tìm kiếm quán billiard
+- `/tim-quan/bo-loc`: Bộ lọc tìm kiếm nâng cao
+- `/quan/:id-:slug`: Thông tin chi tiết quán
+- `/quan/:id/ban-do`: Vị trí quán trên bản đồ
+- `/quan/:id/danh-gia`: Xem đánh giá và bình luận
 
-### Quản Lý Quán Bida của Chủ Quán
-- `POST /owners/clubs` - Thêm một quán bida mới.
-- `PUT /owners/clubs/{id}` - Cập nhật thông tin của một quán bida.
-- `DELETE /owners/clubs/{id}` - Xóa một quán bida.
-- `GET /owners/clubs/{id}/tables` - Xem danh sách bàn tại quán của chủ quán.
-- `POST /owners/clubs/{id}/tables` - Thêm bàn mới vào quán.
-- `PUT /owners/clubs/{id}/tables/{tableId}` - Cập nhật thông tin một bàn.
-- `DELETE /owners/clubs/{id}/tables/{tableId}` - Xóa một bàn.
-- `PUT /owners/clubs/{id}/tables/{tableId}/status` - Thay đổi trạng thái của bàn (vd: đang sử dụng, trống).
-- `GET /owners/clubs/{id}/reservations` - Xem danh sách các bàn đã đặt tại quán.
-- `PUT /owners/reservations/{reservationId}/status` - Cập nhật trạng thái đặt bàn (vd: xác nhận, hủy).
+#### Đăng ký & Đăng nhập
+- `/dang-ky`: Đăng ký tài khoản mới
+- `/dang-nhap`: Đăng nhập hệ thống
+- `/quen-mat-khau`: Khôi phục mật khẩu
 
-### Quản Lý Chương Trình Khuyến Mãi cho Quán
-- `POST /owners/clubs/{id}/promotions` - Thêm chương trình khuyến mãi cho quán.
-- `GET /owners/clubs/{id}/promotions` - Xem danh sách các chương trình khuyến mãi hiện có tại quán.
-- `PUT /owners/clubs/{id}/promotions/{promotionId}` - Cập nhật chương trình khuyến mãi.
-- `DELETE /owners/clubs/{id}/promotions/{promotionId}` - Xóa chương trình khuyến mãi.
+### 2. Khách hàng đã đăng ký
+#### Quản lý tài khoản
+- `/thong-tin-ca-nhan`: Cập nhật thông tin cá nhân
+- `/doi-mat-khau`: Thay đổi mật khẩu
+- `/xac-thuc-2-buoc`: Bảo mật 2 lớp
+- `/dang-xuat`: Đăng xuất
 
-### Thống Kê Đặt Bàn cho Chủ Quán
-- `GET /owners/clubs/{id}/statistics/reservations` - Lấy thống kê đặt bàn theo ngày, tuần, tháng.
-- `GET /owners/clubs/{id}/statistics/earnings` - Lấy thống kê doanh thu từ đặt bàn theo ngày, tuần, tháng.
+#### Đặt bàn & Thanh toán
+- `/dat-ban`: Đặt bàn mới
+- `/huy-dat-ban/:id`: Hủy đặt bàn
+- `/lich-su-dat-ban`: Lịch sử đặt bàn
+- `/thanh-toan`: Thanh toán trực tuyến
+- `/lich-su-thanh-toan`: Lịch sử thanh toán
 
-### Quản Lý Phản Hồi, Đánh Giá của Khách Hàng
-- `GET /owners/clubs/{id}/comments` - Xem danh sách các bình luận, đánh giá cho quán.
-- `PUT /owners/comments/{commentId}/status` - Ẩn/bỏ ẩn bình luận vi phạm hoặc không phù hợp.
+#### Tương tác & Tiện ích
+- `/danh-gia-quan/:id`: Đánh giá và bình luận
+- `/quan/:id/chi-duong`: Chỉ đường đến quán
+- `/uu-dai-cua-toi`: Ưu đãi và điểm thưởng
+- `/yeu-thich`: Danh sách quán yêu thích
+- `/thong-bao`: Thông báo hệ thống
+- `/ho-tro`: Gửi yêu cầu hỗ trợ
 
-## 3. Router cho Quản Trị Hệ Thống (Admin)
+<!-- #### Tính năng xã hội
+- `/chia-se/:id`: Chia sẻ thông tin quán
+- `/moi-ban-be`: Giới thiệu bạn bè
+- `/khuyen-mai-gioi-thieu`: Ưu đãi giới thiệu -->
 
-### Quản Lý Quán Bida
-- `GET /admin/clubs` - Xem danh sách tất cả các quán bida.
-- `DELETE /admin/clubs/{id}` - Xóa một quán vi phạm quy định.
+### 3. Quản lý cửa hàng
+#### Quản lý tài khoản
+- `/quan-ly/dang-nhap`: Đăng nhập
+- `/quan-ly/dang-xuat`: Đăng xuất
+- `/quan-ly/cap-nhat-thong-tin-quan`: Cập nhật thông tin quán
 
-### Quản Lý Người Dùng
-- `GET /admin/users` - Xem danh sách tất cả người dùng.
-- `DELETE /admin/users/{id}` - Xóa tài khoản người dùng vi phạm quy định.
-- `PUT /admin/users/{id}/status` - Cập nhật trạng thái tài khoản người dùng (vd: khóa tài khoản).
+#### Quản lý hoạt động
+- `/quan-ly/quan-ly-ban`: Quản lý bàn billiard
+- `/quan-ly/cap-nhat-tinh-trang-ban`: Cập nhật trạng thái bàn
+- `/quan-ly/xac-nhan-dat-ban/:id`: Xác nhận đặt bàn
+- `/quan-ly/quan-ly-khuyen-mai`: Quản lý khuyến mãi
+<!-- - `/quan-ly/phan-hoi-danh-gia`: Phản hồi đánh giá -->
+- `/quan-ly/quan-ly-thanh-toan`: Quản lý thanh toán
 
-### Quản Lý Chủ Quán
-- `GET /admin/owners` - Xem danh sách tất cả chủ quán.
-- `DELETE /admin/owners/{id}` - Xóa tài khoản chủ quán vi phạm quy định.
-- `PUT /admin/owners/{id}/status` - Cập nhật trạng thái tài khoản chủ quán (vd: khóa tài khoản).
+#### Báo cáo & Thống kê
+- `/quan-ly/thong-ke-dat-ban`: Thống kê đặt bàn
+- `/quan-ly/bao-cao-doanh-thu`: Báo cáo doanh thu
+- `/quan-ly/sao-ke`: Sao kê thanh toán
 
-### Quản Lý Đặt Bàn
-- `GET /admin/reservations` - Xem danh sách tất cả các bàn đã đặt trên hệ thống.
-- `DELETE /admin/reservations/{reservationId}` - Hủy đặt bàn vi phạm quy định.
+<!-- #### Quản lý nhân sự
+- `/quan-ly/nhan-vien`: Quản lý nhân viên
+- `/quan-ly/lich-lam-viec`: Quản lý ca làm việc -->
 
-### Quản Lý Bình Luận và Đánh Giá
-- `GET /admin/comments` - Xem danh sách tất cả bình luận trên hệ thống.
-- `PUT /admin/comments/{commentId}/status` - Ẩn/bỏ ẩn bình luận vi phạm.
+#### Quản lý kho
+- `/quan-ly/kho`: Quản lý kho và thiết bị
+
+### 4. Quản trị viên
+#### Quản lý hệ thống
+- `/quan-tri/dang-nhap`: Đăng nhập
+- `/quan-tri/dang-xuat`: Đăng xuất
+- `/quan-tri/quan-ly-tai-khoan`: Quản lý tài khoản
+- `/quan-tri/quan-ly-quyen`: Quản lý phân quyền
+<!-- - `/quan-tri/cau-hinh-he-thong`: Cấu hình hệ thống -->
+
+#### Quản lý nội dung
+- `/quan-tri/quan-ly-quan`: Quản lý danh sách quán
+- `/quan-tri/phe-duyet-quan`: Phê duyệt quán mới
+- `/quan-tri/quan-ly-noi-dung`: Quản lý nội dung
+<!-- - `/quan-tri/he-thong-thong-bao`: Quản lý thông báo -->
+
+<!-- #### Báo cáo & Giám sát
+- `/quan-tri/thong-ke`: Báo cáo thống kê
+- `/quan-tri/nhat-ky-he-thong`: Xem log hệ thống
+- `/quan-tri/bao-cao-loi`: Quản lý báo cáo lỗi
+- `/quan-tri/sao-luu`: Sao lưu dữ liệu -->
+
+### 5. API Endpoints
+- Prefix: `/api/v1/`
+- Ví dụ: 
+  - `/api/v1/auth/login`
+  - `/api/v1/bookings`
+  - `/api/v1/clubs`
+
+### 6. Error Pages
+- `/404`: Trang không tìm thấy
+- `/403`: Không có quyền truy cập
+- `/500`: Lỗi server
+- `/bao-tri`: Trang bảo trì
+
+## Bảo mật
+1. Authentication & Authorization
+   - JWT hoặc session-based authentication
+   - Middleware kiểm tra quyền truy cập
+   - Xác thực 2 lớp cho tài khoản quan trọng
+
+2. Bảo vệ Forms & API
+   - CSRF token cho forms
+   - Rate limiting cho API
+   - Input validation và sanitization
+   - XSS protection
+
+3. Logging & Monitoring
+   - Audit logging cho hoạt động quan trọng
+   - Error logging
+   - Performance monitoring

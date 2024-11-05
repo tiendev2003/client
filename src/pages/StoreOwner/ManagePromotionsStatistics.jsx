@@ -9,7 +9,7 @@ const ManagePromotionsStatistics = () => {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Search..."
+                placeholder="Tìm kiếm ..."
               />
               <i className="fa fa-search"></i>
             </div>

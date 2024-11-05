@@ -12,7 +12,7 @@ const BilliardDetailPage = () => {
   const { id } = useParams();
   console.log(id);
   const dispatch = useDispatch();
-  const { cuahangDetail, loading, error } = useSelector((state) => state.shop);
+  const { cuahangDetail } = useSelector((state) => state.shop);
   var settings = {
     infinite: true,
     speed: 500,
@@ -33,25 +33,21 @@ const BilliardDetailPage = () => {
     ),
   };
   const [selectedTable, setSelectedTable] = useState(null);
-  const [quantity, setQuantity] = useState(1);
-  const [totalPrice, setTotalPrice] = useState(0);
+   const [totalPrice, setTotalPrice] = useState(0);
   useEffect(() => {
     dispatch(fetchCuahangDetail(id));
   }, [dispatch, id]);
 
   useEffect(() => {
     if (selectedTable) {
-      setTotalPrice(selectedTable.GiaBan * quantity);
+      setTotalPrice(selectedTable.GiaBan);
     }
-  }, [selectedTable, quantity]);
+  }, [selectedTable]);
 
   const handleTableSelect = (table) => {
     setSelectedTable(table);
   };
-
-  const handleQuantityChange = (amount) => {
-    setQuantity((prevQuantity) => Math.max(1, prevQuantity + amount));
-  };
+ 
 
   const handleSubmit = async (e) => {
     if (!selectedTable) {
@@ -95,16 +91,17 @@ const BilliardDetailPage = () => {
         <div className="container">
           <div className="billard-detail-wrapper">
             <div className="row">
+              <div className="col-lg-12">
+                <Slider {...settings} className="billard-detail-slider">
+                  {cuahangDetail?.hinhanh?.map((hinh, index) => (
+                    <div key={index} className="billard-detail-slider-item">
+                      <img src={hinh?.HinhAnh_URL} alt="billard" />
+                    </div>
+                  ))}
+                </Slider>
+              </div>
               <div className="col-lg-8">
                 <div className="billard-detail-content">
-                  <Slider {...settings} className="billard-detail-slider">
-                    {cuahangDetail?.hinhanh?.map((hinh, index) => (
-                      <div key={index} className="billard-detail-slider-item">
-                        <img src={hinh?.HinhAnh_URL} alt="billard" />
-                      </div>
-                    ))}
-                  </Slider>
-
                   <div className="billard-detail-header">
                     <div className="billard-detail-header-info">
                       <h4 className="billard-detail-title">
@@ -186,6 +183,8 @@ const BilliardDetailPage = () => {
                                       name="table"
                                       onChange={() => handleTableSelect(ban)}
                                       id={`table-${ban.id}`}
+                                      disabled={ban.TrangThai === 0}
+                                      
                                     />
                                     <label
                                       className="form-check-label"
@@ -613,54 +612,31 @@ const BilliardDetailPage = () => {
                   </div>
                 </div>
               </div>
-              <div className="col-lg-4">
+              <div
+                className="col-lg-4"
+                style={{
+                  position: "sticky",
+                }}
+              >
+                <div className="booking-sidebar billard-detail-side-content mb-4">
+                  <h4 className="booking-title">Bàn đã chọn</h4>
+                  {selectedTable ? (
+                    <div className="selected-table-info">
+                      <p>Tên bàn: {selectedTable.TenBan}</p>
+                      <p>Giá: {formatMoney(selectedTable.GiaBan)}</p>
+                      {/* loại bàn */}
+                      <p>Loại bàn: {selectedTable.dmban.TenDMBan}</p>
+                    </div>
+                  ) : (
+                    <p>Chưa chọn bàn nào</p>
+                  )}
+                </div>
                 <div className="booking-sidebar billard-detail-side-content">
                   <div className="booking-item">
                     <div className="search-form">
                       <div className="tour-search-wrapper">
                         <div className="row">
-                          <div className="col-lg-12">
-                            <div className="form-group passenger-box">
-                              <div className="passenger-class">
-                                <label>Số lượng</label>
-                                <div className="form-group-icon">
-                                  <div className="passenger-total">
-                                    <div className="passenger-item">
-                                      <div className="passenger-qty">
-                                        <button
-                                          type="button"
-                                          className="minus-btn"
-                                          onClick={() =>
-                                            handleQuantityChange(-1)
-                                          }
-                                        >
-                                          <i className="fa-solid fa-minus"></i>
-                                        </button>
-                                        <input
-                                          type="text"
-                                          name="table"
-                                          className="qty-amount passenger-table"
-                                          value={quantity}
-                                          onChange={(e) =>
-                                            setQuantity(e.target.value)
-                                          }
-                                        />
-                                        <button
-                                          type="button"
-                                          className="plus-btn"
-                                          onClick={() =>
-                                            handleQuantityChange(1)
-                                          }
-                                        >
-                                          <i className="fa-soild fa-plus"></i>
-                                        </button>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
+                         
                           <div className="col-lg-12">
                             <div className="form-group passenger-box">
                               <div className="passenger-class">

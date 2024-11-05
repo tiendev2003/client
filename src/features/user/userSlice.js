@@ -12,7 +12,10 @@ export const updateUserInfo = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.put("/users/update", userData, {
-        noAuth: true,
+        header: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+        },
       });
       return response.data;
     } catch (error) {
@@ -29,10 +32,29 @@ export const changePassword = createAsyncThunk(
         "/users/changePassword",
         passwordData,
         {
-          noAuth: true,
+          header: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+          },
         }
       );
       return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const uploadAvatar = createAsyncThunk(
+  "user/uploadImage",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post("/upload", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return response.data.data.url;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -67,7 +89,21 @@ const userSlice = createSlice({
       .addCase(changePassword.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(uploadAvatar.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      }
+      )
+      .addCase(uploadAvatar.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userInfo = action.payload.data;
+      })
+      .addCase(uploadAvatar.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
+
   },
 });
 

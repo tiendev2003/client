@@ -6,6 +6,7 @@ import {
   deleteProduct,
 } from "../../../features/sanpham/sanphamSlice";
 import { toast } from "react-toastify";
+import { formatMoney } from './../../../utils/formatMoney';
 
 export const ManageSanpham = () => {
   const dispatch = useDispatch();
@@ -66,7 +67,7 @@ export const ManageSanpham = () => {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Search..."
+                placeholder="Tìm kiếm ..."
                 value={searchTerm}
                 onChange={handleSearchChange}
               />
@@ -103,7 +104,7 @@ export const ManageSanpham = () => {
                       />
                     </td>
                     <td>{product.TenSanPham}</td>
-                    <td>{product.Gia}</td>
+                    <td>{formatMoney(product.Gia)}</td>
                     <td>{product.SoLuong}</td>
                     <td>
                       <span className="badge bg-success">Active</span>

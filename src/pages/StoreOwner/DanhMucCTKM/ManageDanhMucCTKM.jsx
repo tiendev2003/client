@@ -1,24 +1,24 @@
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
-import {
-  getDichVu,
-  deleteDichVu,
-} from "./../../../features/dichvu/dichvuSlice";
-import React from "react";
 import { toast } from "react-toastify";
-export const ServiceManagement = () => {
+import {
+  getDanhMucKhuyenMai,
+  deleteDanhMuc,
+} from "./../../../features/danhmuckm/danhMucKhuyenMaiSlice";
+
+export const ManageDanhMucCTKM = () => {
   const dispatch = useDispatch();
-  const { dichvus } = useSelector((state) => state.dichvu);
+  const { danhMucKhuyenMais } = useSelector((state) => state.danhMucKhuyenMai);
+  const { userInfo } = useSelector((state) => state.auth);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-
-  const servicesPerPage = 10;
+  const itemsPerPage = 10;
 
   useEffect(() => {
-    dispatch(getDichVu(12));
-  }, [dispatch]);
+    dispatch(getDanhMucKhuyenMai(userInfo.cuahang.id));
+  }, [dispatch, userInfo.cuahang.id]);
+
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -26,27 +26,39 @@ export const ServiceManagement = () => {
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
+
   const handleDelete = async (id) => {
-    try {
-      await dispatch(deleteDichVu(id)).unwrap();
-      toast.success("Dịch vụ đã được xóa thành công");
-    } catch (err) {
-      toast.error(err.message || "Xóa dịch vụ thất bại");
+    if (window.confirm("Bạn có chắc chắn muốn xóa danh mục này không?")) {
+      try {
+        await dispatch(deleteDanhMuc(
+          {
+            id: userInfo.cuahang.id,
+            idDanhMuc: id,
+          }
+        )).unwrap();
+        toast.success("Danh mục đã được xóa thành công");
+      } catch (err) {
+        toast.error(err.message || "Xóa danh mục thất bại");
+      }
     }
   };
+  const filteredDanhMucs = danhMucKhuyenMais.filter((danhMuc) =>
+    danhMuc.TenDMCTKM.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-  const filteredServices = dichvus.filter((service) =>
-    service.Ten_DV.toLowerCase().includes(searchQuery.toLowerCase())
+  const totalPages = Math.ceil(filteredDanhMucs.length / itemsPerPage);
+  const currentDanhMucs = filteredDanhMucs.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
   );
-  const totalPages = Math.ceil(filteredServices.length / servicesPerPage);
-  const currentServices = filteredServices.slice(
-    (currentPage - 1) * servicesPerPage,
-    currentPage * servicesPerPage
-  );
+  console.log(filteredDanhMucs);
+
   return (
     <div className="user-profile-card user-profile-listing">
       <div className="user-profile-card-header">
-        <h4 className="user-profile-card-title">Dịch vụ của cửa hàng</h4>
+        <h4 className="user-profile-card-title">
+          Danh mục chương trình khuyến mãi
+        </h4>
         <div className="user-profile-card-header-right">
           <div className="user-profile-search">
             <div className="form-group">
@@ -61,7 +73,7 @@ export const ServiceManagement = () => {
             </div>
           </div>
           <Link to="create" className="theme-btn">
-            <span className="fa fa-plus-circle"></span>Thêm dịch vụ
+            <span className="fa fa-plus-circle"></span>Thêm danh mục
           </Link>
         </div>
       </div>
@@ -70,60 +82,46 @@ export const ServiceManagement = () => {
           <table className="table text-nowrap">
             <thead>
               <tr>
-                <th className="">ID</th>
-                <th>Tên dịch vụ</th>
+                <th>ID</th>
+                <th>Tên danh mục</th>
                 <th>Trạng thái</th>
                 <th>Hành động</th>
               </tr>
             </thead>
             <tbody>
-              {currentServices &&
-                currentServices.map((dichvu, index) => (
-                  <React.Fragment key={index}>
-                    <tr>
-                      <td>
-                        <h6>{index + 1}</h6>
-                      </td>
-                      <td>
-                        <h6>{dichvu?.Ten_DV}</h6>
-                      </td>
-                      <td>
-                        <span
-                          className={`badge ${
-                            dichvu.TrangThai == 1 ? "bg-success" : "bg-danger"
-                          }`}
-                        >
-                          {dichvu?.TrangThai == 1
-                            ? "Hoạt động"
-                            : "Không hoạt động"}
-                        </span>
-                      </td>
-                      <td>
-                        <Link href="#" className="btn btn-info btn-sm mr-2">
-                          <i className="far fa-eye"></i>
-                        </Link>
-
-                        <Link
-                          to={`edit/${dichvu?.id}`}
-                          className="btn btn-primary btn-sm mr-2"
-                        >
-                          <i className="fa fa-pen"></i>
-                        </Link>
-
-                        <button
-                          onClick={() => handleDelete(dichvu?.id)}
-                          className="btn btn-danger btn-sm"
-                        >
-                          <i className="far fa-trash-can"></i>
-                        </button>
-                      </td>
-                    </tr>
-                  </React.Fragment>
-                ))}
+              {currentDanhMucs.map((danhMuc, index) => (
+                <tr key={danhMuc.id}>
+                  <td>{danhMuc?.id}</td>
+                  <td>{danhMuc?.TenDMCTKM}</td>
+                  <td>
+                    <span
+                      className={`badge ${
+                        danhMuc?.TrangThai ? "bg-success" : "bg-danger"
+                      }`}
+                    >
+                      {danhMuc?.TrangThai ? "Active" : "Inactive"}
+                    </span>
+                  </td>
+                  <td>
+                    <Link
+                      to={`edit/${danhMuc.id}`}
+                      className="btn btn-primary btn-sm mr-2"
+                    >
+                      <i className="fa fa-pen"></i>
+                    </Link>
+                    <button
+                      onClick={() => handleDelete(danhMuc.id)}
+                      className="btn btn-danger btn-sm"
+                    >
+                      <i className="far fa-trash-can"></i>
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
-        {filteredServices && (
+        {filteredDanhMucs.length > 0 && (
           <div className="pagination-area my-3">
             <div aria-label="Page navigation example">
               <ul className="pagination mt-0">

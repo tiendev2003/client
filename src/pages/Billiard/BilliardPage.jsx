@@ -11,15 +11,16 @@ const BilliardPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const itemsPerPage = 9;
   const query = new URLSearchParams(location.search);
   const pageQuery = parseInt(query.get("page")) || 1;
   const badgeQuery = query.get("badge") || "";
   const ratingQuery = parseInt(query.get("rating")) || 0;
+  const [sortOption, setSortOption] = useState("1");
 
   const [currentPage, setCurrentPage] = useState(pageQuery);
   const [selectedBadge, setSelectedBadge] = useState(badgeQuery);
   const [selectedRating, setSelectedRating] = useState(ratingQuery);
-  const itemsPerPage = 9;
 
   useEffect(() => {
     dispatch(fetchCuahangs());
@@ -44,8 +45,44 @@ const BilliardPage = () => {
     return acc;
   }, {});
 
-  // Filter items based on badge and rating
-  const filteredCuahangs = cuahangs.filter((cuahang) => {
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    navigate(
+      `?page=${pageNumber}${selectedBadge ? `&badge=${selectedBadge}` : ""}${
+        selectedRating ? `&rating=${selectedRating}` : ""
+      }`
+    );
+  };
+
+  const handleRatingChange = (rating) => {
+    setSelectedRating(rating);
+    navigate(
+      `?rating=${rating}${selectedBadge ? `&badge=${selectedBadge}` : ""}`
+    );
+  };
+  const handleReset = () => {
+    setSelectedBadge("");
+    setSelectedRating("");
+    navigate("/billiard");
+  };
+  const handleSortChange = (e) => {
+    setSortOption(e.target.value);
+  };
+
+  const sortedCuahangs = [...cuahangs].sort((a, b) => {
+    if (sortOption === "2") {
+      return  b.DanhGiaTong - a.DanhGiaTong;
+    }
+    if (sortOption === "3") {
+      return a.minGiaBan - b.minGiaBan;
+    }
+    if (sortOption === "4") {
+      return b.minGiaBan - a.minGiaBan;
+    }
+    return 0;
+  });
+
+  const filteredCuahangs = sortedCuahangs.filter((cuahang) => {
     const ratingMatch =
       selectedRating === 5
         ? cuahang.DanhGiaTong === 5
@@ -57,7 +94,6 @@ const BilliardPage = () => {
     );
   });
 
-  // Calculate the current items to display
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredCuahangs.slice(
@@ -65,31 +101,8 @@ const BilliardPage = () => {
     indexOfLastItem
   );
 
-  // Calculate total pages
   const totalPages = Math.ceil(filteredCuahangs.length / itemsPerPage);
-
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-    navigate(
-      `?page=${pageNumber}${selectedBadge ? `&badge=${selectedBadge}` : ""}${
-        selectedRating ? `&rating=${selectedRating}` : ""
-      }`
-    );
-  };
-
-  const handleBadgeChange = (badge) => {
-    setSelectedBadge(badge);
-    navigate(
-      `?badge=${badge}${selectedRating ? `&rating=${selectedRating}` : ""}`
-    );
-  };
-
-  const handleRatingChange = (rating) => {
-    setSelectedRating(rating);
-    navigate(
-      `?rating=${rating}${selectedBadge ? `&badge=${selectedBadge}` : ""}`
-    );
-  };
+  console.log(currentItems);
   return (
     <>
       <Breadcrumb title="Billard Club" items="Billard Club" />
@@ -97,8 +110,17 @@ const BilliardPage = () => {
       <div className="billard-grid py-120">
         <div className="container">
           <div className="row">
-            <div className="col-lg-4 col-xl-3 mb-4">
+            <div className="col-lg-4 col-xl-3 mb-4  ">
               <div className="booking-sidebar">
+                <div className="booking-item w-100">
+                  <button
+                    type="button"
+                    className="theme-btn w-100"
+                    onClick={handleReset}
+                  >
+                    Reset
+                  </button>
+                </div>
                 <div className="booking-item">
                   <h4 className="booking-title">Vị trí</h4>
                   <div className="facility">
@@ -322,17 +344,13 @@ const BilliardPage = () => {
             <div className="col-lg-8 col-xl-9">
               <div className="col-md-12">
                 <div className="booking-sort">
-                  <h5>{filteredCuahangs.length} Kết quả tìm thấy</h5>
+                  <h5>{currentItems.length} Kết quả tìm thấy</h5>
                   <div className="col-md-3 booking-sort-box">
-                    <select
-                      className="select"
-                      value={selectedBadge}
-                      onChange={(e) => handleBadgeChange(e.target.value)}
-                    >
-                      <option value="">Tất cả</option>
-                      <option value="Đang khuyến mãi">Đang khuyến mãi</option>
-                      <option value="Quán mới">Quán mới</option>
-                      <option value="Nổi bật">Nổi bật</option>
+                    <select className="select" onChange={handleSortChange}>
+                      <option value="1">Sắp xếp theo mặc định</option>
+                      <option value="2">Sắp xếp theo Phổ biến</option>
+                      <option value="3">Sắp xếp theo Giá thấp</option>
+                      <option value="4">Sắp xếp theo Giá cao</option>
                     </select>
                   </div>
                 </div>
@@ -344,14 +362,15 @@ const BilliardPage = () => {
                   <div key={cuahang.id} className="col-md-6 col-lg-4">
                     <div className="billard-item">
                       <div className="billard-img">
+                        <span className="badge badge-discount">
+                          {cuahang.badge}
+                        </span>
                         <img
                           src={cuahang.AnhDaiDien_CuaHang}
                           alt={cuahang.TenCuaHang}
                         />
-                        <a href="#" className="add-wishlist">
-                          <i className="far fa-heart" />
-                        </a>
                       </div>
+
                       <div className="billard-content">
                         <h4 className="billard-title">
                           <a href="#">{cuahang.TenCuaHang}</a>
@@ -363,9 +382,6 @@ const BilliardPage = () => {
                         <div className="billard-rate">
                           <span className="badge">
                             <i className="fa fa-star" /> {cuahang.DanhGiaTong}
-                          </span>
-                          <span className="billard-rate-review">
-                            {cuahang.badge}
                           </span>
                         </div>
                         <div className="billard-bottom">

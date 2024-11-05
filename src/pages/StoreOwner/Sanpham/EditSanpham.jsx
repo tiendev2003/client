@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
+import { getDanhMucs } from "../../../features/danhmucsanpham/danhMucSanPhamSlice";
+import { getDichVu } from "../../../features/dichvu/dichVuSlice";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchProductById,
@@ -10,13 +12,18 @@ import {
 export const EditSanpham = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { product, loading, error } = useSelector((state) => state.products);
+  const { product, loading } = useSelector((state) => state.products);
+  const { userInfo } = useSelector((state) => state.auth);
+  const { danhMucs } = useSelector((state) => state.danhMucSanPham);
+  const { dichvus } = useSelector((state) => state.dichvu);
 
   const [formData, setFormData] = useState({
     TenSanPham: "",
     Gia: "",
     SoLuong: "",
     HinhAnh: null,
+    id_DMSP: "",
+    id_DichVu: "",
   });
   const fileInputRef = useRef(null);
   useEffect(() => {
@@ -26,9 +33,17 @@ export const EditSanpham = () => {
         Gia: product.Gia,
         SoLuong: product.SoLuong,
         HinhAnh: product.HinhAnh,
+        id_DMSP: product.id_DMSP,
+        id_DichVu: product.id_DichVu,
       });
     }
   }, [product]);
+  
+  useEffect(() => {
+    dispatch(getDanhMucs(userInfo.cuahang.id));
+    dispatch(getDichVu(userInfo.cuahang.id));
+  }, [dispatch, userInfo.cuahang.id]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -162,7 +177,46 @@ export const EditSanpham = () => {
                   </div>
                 </div>
               </div>
-
+              <div className="col-lg-6">
+                <div className="form-group">
+                  <label>Danh mục sản phẩm</label>
+                  <select
+                    name="id_DMSP"
+                    className="form-control"
+                    value={formData.id_DMSP}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="" disabled >Chọn danh mục</option>
+                    {danhMucs.map((danhMuc) => (
+                      <option key={danhMuc.id} value={danhMuc.id}>
+                        {danhMuc.TenDMSP}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="col-lg-6">
+                <div className="form-group">
+                  <label>Dịch vụ</label>
+                  <select
+                    name="id_DichVu"
+                    className="form-control"
+                    value={formData.id_DichVu}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="" disabled  >
+                      Chọn dịch vụ
+                    </option>
+                    {dichvus.map((dichvu) => (
+                      <option key={dichvu.id} value={dichvu.id}>
+                        {dichvu.Ten_DV}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
               <div className="col-lg-12">
                 <button type="submit" className="theme-btn" disabled={loading}>
                   {loading ? "Loading..." : "Cập nhật"}

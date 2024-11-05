@@ -23,7 +23,7 @@ import { SettingStore } from "./pages/StoreOwner/SettingStore";
 import { CreateBilliardTable } from "./pages/StoreOwner/Tables/CreateBilliardTable";
 import ManageBilliardTables from "./pages/StoreOwner/Tables/ManageBilliardTables";
 import ProtectedRoute from "./routing/ProtectedRoute";
- 
+
 const HomePage = lazy(() => import("./pages/Home/HomePage"));
 const AboutPage = lazy(() => import("./pages/About/AboutPage"));
 const BlogPage = lazy(() => import("./pages/Blog/BlogPage"));
@@ -48,8 +48,22 @@ const Profile = lazy(() => import("./pages/User/ProfilePage"));
 const Settings = lazy(() => import("./pages/User/ProfileSettingPage"));
 const Bookings = lazy(() => import("./pages/User/ProfileBookingPage"));
 const Wishlist = lazy(() => import("./pages/User/ProfileWishlistPage"));
-const BookingsDetail= lazy(() => import("./pages/User/ProfileBookingDetail"));
- function App() {
+const BookingsDetail = lazy(() => import("./pages/User/ProfileBookingDetail"));
+import { EditService } from "./pages/StoreOwner/Services/EditService";
+import { CreateDanhMucSanPham } from "./pages/StoreOwner/DanhMucSanPham/CreateDanhMucSanPham";
+import { ManageDanhMucSanPham } from "./pages/StoreOwner/DanhMucSanPham/ManageDanhMucSanPham";
+import { EditDanhMucSanPham } from "./pages/StoreOwner/DanhMucSanPham/EditDanhMucSanPham";
+import { EditDanhMucCTKM } from "./pages/StoreOwner/DanhMucCTKM/EditDanhMucCTKM";
+import { ManageCTKM } from "./pages/StoreOwner/CTKM/ManageCTKM";
+import { CreateCTKM } from "./pages/StoreOwner/CTKM/CreateCTKM";
+import { ManageDanhMucCTKM } from "./pages/StoreOwner/DanhMucCTKM/ManageDanhMucCTKM";
+import { CreateDanhMucCTKM } from "./pages/StoreOwner/DanhMucCTKM/CreateDanhMucCTKM";
+import { EditCTKM } from "./pages/StoreOwner/CTKM/EditCTKM";
+import { EditDanhMucBan } from "./pages/StoreOwner/DanhMucBan/EditDanhMucBan";
+import { ManageDanhMucBan } from "./pages/StoreOwner/DanhMucBan/ManageDanhMucBan";
+import { CreateDanhMucBan } from "./pages/StoreOwner/DanhMucBan/CreateDanhMucBan";
+import { EditBilliardTable } from './pages/StoreOwner/Tables/EditBilliardTable';
+function App() {
   return (
     <Router>
       <Suspense fallback={<LoadingSpinner />}>
@@ -108,18 +122,85 @@ const BookingsDetail= lazy(() => import("./pages/User/ProfileBookingDetail"));
           <Route element={<ProtectedRoute allowedRoles={[2]} />}>
             <Route element={<StoreLayout />}>
               <Route path="/store" element={<DashboardStore />} />
+              {/* dịch vụ */}
               <Route
                 path="/store/manage-services"
                 element={<ServiceManagement />}
               />
               <Route
+                path="/store/manage-services/edit/:id"
+                element={<EditService />}
+              />
+              <Route
                 path="/store/manage-services/create"
                 element={<CreateService />}
               />
+              {/* danh mục sản phẩm */}
+              <Route
+                path="/store/manage-category-sanpham/create"
+                element={<CreateDanhMucSanPham />}
+              />
+              <Route
+                path="/store/manage-category-sanpham"
+                element={<ManageDanhMucSanPham />}
+              />
+              <Route
+                path="/store/manage-category-sanpham/edit/:id"
+                element={<EditDanhMucSanPham />}
+              />
+              {/* danh mục ctkm */}
+              <Route
+                path="/store/manage-category-ctkm/create"
+                element={<CreateDanhMucCTKM />}
+              />
+              <Route
+                path="/store/manage-category-ctkm"
+                element={<ManageDanhMucCTKM />}
+              />
+              <Route
+                path="/store/manage-category-ctkm/edit/:id"
+                element={<EditDanhMucCTKM />}
+              />
+              {/* ctkm */}
+              <Route
+                path="/store/manage-ctkm/create"
+                element={<CreateCTKM />}
+              />
+              <Route path="/store/manage-ctkm" element={<ManageCTKM />} />
+              <Route
+                path="/store/manage-ctkm/edit/:id"
+                element={<EditCTKM />}
+              />
+              {/* danh mục bàn */}
+              <Route
+                path="/store/manage-category-table/create"
+                element={<CreateDanhMucBan />}
+              />
+              <Route
+                path="/store/manage-category-table"
+                element={<ManageDanhMucBan />}
+              />
+              <Route
+                path="/store/manage-category-table/edit/:id"
+                element={<EditDanhMucBan />}
+              />
+              {/* bàn */}
+
               <Route
                 path="/store/manage-tables/create"
                 element={<CreateBilliardTable />}
               />
+
+              <Route
+                path="/store/manage-tables/edit/:id"
+                element={<EditBilliardTable />}
+              />
+              <Route
+                path="/store/manage-tables"
+                element={<ManageBilliardTables />}
+              />
+
+              {/* sản phẩm */}
               <Route path="/store/manage-sanpham" element={<ManageSanpham />} />
               <Route
                 path="/store/manage-sanpham/create"
@@ -130,10 +211,7 @@ const BookingsDetail= lazy(() => import("./pages/User/ProfileBookingDetail"));
                 element={<EditSanpham />}
               />
 
-              <Route
-                path="/store/manage-tables"
-                element={<ManageBilliardTables />}
-              />
+              {/* thống kê */}
 
               <Route
                 path="/store/promotions-statistics"

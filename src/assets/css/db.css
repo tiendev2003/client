@@ -456,7 +456,7 @@ footer css
 
 .dash-sidebar {
   width: 260px;
-  height: 100vh;
+  min-height: 100vh;
   position: fixed;
   top: -10px;
   left: 0;

@@ -1,10 +1,37 @@
 import PropTypes from "prop-types";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { Breadcrumb } from "../components";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { uploadAvatar ,updateUserInfo} from "./../features/user/userSlice";
+import { toast } from "react-toastify";
+import { useRef } from "react";
 
 const ProfileLayout = () => {
-  const {userInfo} = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const fileInputRef = useRef(null);
+
+  const { userInfo, loading } = useSelector((state) => state.auth);
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("image", file);
+
+      try {
+       const url= await dispatch(uploadAvatar(formData)).unwrap();
+       const data= await dispatch(updateUserInfo({
+        image_url: url,
+       })).unwrap();
+        window.location.reload();
+        toast.success("Ảnh đại diện đã được cập nhật thành công");
+      } catch (err) {
+        toast.error(err.message || "Cập nhật ảnh đại diện thất bại");
+      }
+    }
+  };
+  const handleImageUploadClick = () => {
+    fileInputRef.current.click();
+  };
   return (
     <>
       <Breadcrumb title="Hồ sơ của tôi" items="Hồ sơ của tôi" />
@@ -15,11 +42,32 @@ const ProfileLayout = () => {
               <div className="user-profile-sidebar">
                 <div className="user-profile-sidebar-top">
                   <div className="user-profile-img">
-                    <img src={userInfo.AnhDaiDien_NguoiDung ||   "/img/account/user.jpg"} alt="" />
-                    <button type="button" className="profile-img-btn">
+                    {
+                      loading && (
+                        <div className="spinner-border text-primary" role="status">
+                          <span className="visually-hidden">Loading...</span>
+                        </div>
+                      )
+                    }
+                    <img
+                      src={
+                        userInfo.AnhDaiDien_NguoiDung || "/img/account/user.jpg"
+                      }
+                      alt=""
+                    />
+                    <button
+                      type="button"
+                      className="profile-img-btn"
+                      onClick={handleImageUploadClick}
+                    >
                       <i className="fa fa-camera"></i>
                     </button>
-                    <input type="file" className="profile-img-file" />
+                    <input
+                      type="file"
+                      className="profile-img-file"
+                      ref={fileInputRef}
+                      onChange={handleFileChange}
+                    />
                   </div>
                   <h4>{userInfo.TenNguoiDung}</h4>
                   <p>

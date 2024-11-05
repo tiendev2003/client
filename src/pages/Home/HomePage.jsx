@@ -17,7 +17,7 @@ const HomePage = () => {
       <BillardPromotion />
       <Destination />
       <BillardPopular />
-      <BillardTag />
+      {/* <BillardTag /> */}
       <Testimonial />
       <Download />
       <BlogItem />

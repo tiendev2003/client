@@ -1,16 +1,37 @@
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import {
+  getDichVuById,
+  updateDichVu,
+} from "./../../../features/dichvu/dichvuSlice";
 import { toast } from "react-toastify";
-import { createDichVu } from "./../../../features/dichvu/dichvuSlice";
-import { Link } from 'react-router-dom';
-export const CreateService = () => {
+import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+export const EditService = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { dichvu, loading } = useSelector((state) => state.dichvu);
+
   const [formData, setFormData] = useState({
     Ten_DV: "",
     TrangThai: 1,
   });
-  const dispatch = useDispatch();
-  const { loading } = useSelector((state) => state.dichvu);
+  
+  useEffect(() => {
+    dispatch(getDichVuById(id));
+  }, [dispatch, id]);
+
+    useEffect(() => {
+    if (dichvu) {
+        setFormData({
+            Ten_DV: dichvu.Ten_DV,
+            TrangThai: dichvu.TrangThai,
+        });
+    }
+    }, [dichvu]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -18,29 +39,21 @@ export const CreateService = () => {
       [name]: value,
     }));
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await dispatch(createDichVu(formData)).unwrap();
-      toast.success("Dịch vụ được thêm thành công");
+        console.log(formData)
+      await dispatch(updateDichVu({ id, ...formData })).unwrap();
+      toast.success("Dịch vụ được cập nhật thành công");
+      navigate("/store/manage-services");
     } catch (err) {
-      toast.error(err.message || "Thêm dịch vụ thất bại");
+      toast.error(err.message || "Cập nhật dịch vụ thất bại");
     }
   };
+
   return (
     <div className="user-profile-card add-listing">
-      <div className="user-profile-card-header">
-        <h4 className="user-profile-card-title">Thêm dịch vụ</h4>
-        <div className="user-profile-card-header-right">
-          <ul className="breadcrumb-menu d-flex gap-3">
-            <li>
-              <Link to="/store/manage-services">Danh sách dịch vụ</Link>
-            </li>
-            /<li className="active">Thêm dịch vụ</li>
-          </ul>
-        </div>
-      </div>
+      <h4 className="user-profile-card-title">Thêm dịch vụ</h4>
       <div className="col-lg-12">
         <div className="add-listing-form">
           <form onSubmit={handleSubmit}>
@@ -50,11 +63,11 @@ export const CreateService = () => {
                   <label>Tên dịch vụ</label>
                   <input
                     type="text"
-                    value={formData.Ten_DV}
-                    onChange={handleChange}
                     name="Ten_DV"
                     className="form-control"
                     placeholder="Thuê bàn bi-a"
+                    value={formData.Ten_DV}
+                    onChange={handleChange}
                     required
                   />
                 </div>
@@ -76,7 +89,7 @@ export const CreateService = () => {
 
               <div className="col-lg-12">
                 <button type="submit" className="theme-btn" disabled={loading}>
-                  {loading ? "Đang thêm..." : "Thêm dịch vụ"}
+                  {loading ? "Đang cập nhật..." : "Cập nhật dịch vụ"}
                 </button>
               </div>
             </div>
