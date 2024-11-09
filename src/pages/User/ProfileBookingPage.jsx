@@ -8,11 +8,19 @@ import { formatMoney } from "../../utils/formatMoney";
 const ProfileBookingPage = () => {
   const dispatch = useDispatch();
   const { bookings, loading } = useSelector((state) => state.booking);
+  const [onChanging, setOnChanging] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   useEffect(() => {
     dispatch(historyBook());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (onChanging) {
+      dispatch(historyBook());
+    }
+  }, [onChanging, dispatch]);
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -24,7 +32,10 @@ const ProfileBookingPage = () => {
     } catch (error) {
       toast.error("Failed to cancel booking");
       console.error("Failed to cancel booking", error);
+    }finally{
+      setOnChanging(!onChanging);
     }
+    
   };
   
   const tlength = (bookings && bookings.length) || 0;

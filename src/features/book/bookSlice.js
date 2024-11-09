@@ -116,7 +116,7 @@ const bookSlice = createSlice({
       })
       .addCase(bookTable.fulfilled, (state, action) => {
         state.loading = false;
-        state.bookings = action.payload;
+     
       })
       .addCase(bookTable.rejected, (state, action) => {
         state.loading = false;
