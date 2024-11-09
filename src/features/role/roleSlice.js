@@ -22,13 +22,11 @@ export const createRole = createAsyncThunk(
   "roles/createRole",
   async (data, { rejectWithValue }) => {
     try {
-      console.log(data)
       const response = await axiosInstance.post("/quyenTK/store", data, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("userToken")}`,
         },
       });
-      console.log(response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -57,11 +55,13 @@ export const updateRole = createAsyncThunk(
   "roles/updateRole",
   async (data, { rejectWithValue }) => {
     try {
+      console.log(data);
       const response = await axiosInstance.put(`/quyenTK/update/1`, data, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("userToken")}`,
         },
       });
+      console.log(response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -111,7 +111,7 @@ const roleSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(createRole.fulfilled, (state, action) => {
-      state.roles.push(action.payload);
+      
       state.loading = false;
     });
     builder.addCase(createRole.rejected, (state, action) => {

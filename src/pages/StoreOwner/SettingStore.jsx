@@ -12,6 +12,8 @@ export const SettingStore = () => {
   const [ward, setWard] = useState([]);
   const [onChangeImage, setOnChangeImage] = useState(false);
   const [onChangeImageGPKD, setOnChangeImageGPKD] = useState(false);
+  const [multipleImagePreview, setMultipleImagePreview] = useState([]);
+  const [multipleImage, setMultipleImage] = useState([]);
 
   const [selectedProvince, setSelectedProvince] = useState();
   const [selectedDistrict, setSelectedDistrict] = useState();
@@ -395,6 +397,47 @@ export const SettingStore = () => {
               <div className="col-lg-6">
                 <div className="form-group">
                   <label>Ảnh giấy phép kinh doanh</label>
+                  <div className="listing-upload-wrapper">
+                    <div
+                      className="listing-img-upload"
+                      onClick={handleImageUploadClickGPKD}
+                    >
+                      <span>
+                        {formData.AnhGPKD ? (
+                          <div className="image-preview">
+                            <img
+                              src={formData.AnhGPKD}
+                              alt="Preview"
+                              style={{
+                                width: "100px",
+                                height: "100px",
+                                marginTop: "10px",
+                              }}
+                            />
+                          </div>
+                        ) : (
+                          <>
+                            <i className="far fa-images"></i> Upload listing
+                            Images
+                          </>
+                        )}
+                      </span>
+                    </div>
+                    <input
+                      type="file"
+                      className="listing-img-file"
+                      id="gallery-photo-add"
+                      ref={fileInputRefGPKD}
+                      name="AnhGPKD"
+                      onChange={handleFileChange}
+                      multiple
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="col-lg-12">
+              <div className="form-group">
+                  <label>Danh sách ảnh của quán</label>
                   <div className="listing-upload-wrapper">
                     <div
                       className="listing-img-upload"
