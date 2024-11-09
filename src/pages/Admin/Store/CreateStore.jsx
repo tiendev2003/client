@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { uploadImage } from "../../../features/sanpham/sanphamSlice";
+import { createStore } from "../../../features/shop/shopSlice";
 
 const CreateStore = () => {
   const dispatch = useDispatch();
@@ -10,19 +11,19 @@ const CreateStore = () => {
   const fileInputRefGPKD = useRef(null);
   const fileInputRefGallery = useRef(null);
   const [formData, setFormData] = useState({
-    TenNguoiDung: "",
-    TenTaiKhoan: "",
-    Email: "",
-    MatKhau: "",
-    SDT: "",
-    TenCuaHang: "",
-    DiaChi: "",
-    SDT_CuaHang: "",
-    Email_CuaHang: "",
-    MaSoThue: "",
-    tinh_thanhpho: "",
-    quan_huyen: "",
-    phuong_xa: "",
+    TenNguoiDung: "Trần Văn B",
+    TenTaiKhoan: "tranvanb",
+    Email: "tranvanb@example.com",
+    MatKhau: "matkhau123",
+    SDT: "0912345678",
+    TenCuaHang: "Billiards Bảo Bình",
+    DiaChi: "35 Phạm Ngọc Thạch, Phường 6, Quận 3",
+    SDT_CuaHang: "0902345678",
+    Email_CuaHang: "baobinhbilliards@example.com",
+    MaSoThue: "123456789",
+    tinh_thanhpho: "Hồ Chí Minh",
+    quan_huyen: "Quận 3",
+    phuong_xa: "Phường 6",
     AnhDaiDien_CuaHang: "",
     AnhGPKD: "",
   });
@@ -36,8 +37,6 @@ const CreateStore = () => {
   const [selectedWard, setSelectedWard] = useState("");
   const [onChangeImage, setOnChangeImage] = useState(false);
   const [onChangeImageGPKD, setOnChangeImageGPKD] = useState(false);
-  const [multipleImagePreview, setMultipleImagePreview] = useState([]);
-  const [multipleImage, setMultipleImage] = useState([]);
 
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -115,44 +114,32 @@ const CreateStore = () => {
           AnhGPKD: AnhGPKD,
         };
       }
-      const gallery = [];
-      for (let i = 0; i < multipleImage.length; i++) {
-        const image = await dispatch(uploadImage(multipleImage[i])).unwrap();
-        gallery.push(image);
-      }
       updatedFormData = {
         ...updatedFormData,
-        gallery,
+        tinh_thanhpho:  province.find((item) => item.code.toString() === selectedProvince).name,
+        quan_huyen:  district.find((item) => item.code.toString() === selectedDistrict).name,
+        phuong_xa:  ward.find((item) => item.code.toString() === selectedWard).name,
       };
+      
       console.log(updatedFormData);
+      await dispatch(createStore(updatedFormData)).unwrap();
 
       toast.success("Cửa hàng đã được tạo thành công");
     } catch (err) {
+      console.log(err);
       toast.error(err.message || "Tạo cửa hàng thất bại");
     } finally {
       setLoading(false);
+      setOnChangeImage(false);
+      setOnChangeImageGPKD(false);
     }
   };
   const handleImageUploadClick = () => {
     fileInputRef.current.click();
-    setOnChangeImage(true);
   };
 
   const handleImageUploadClickGPKD = () => {
     fileInputRefGPKD.current.click();
-    setOnChangeImageGPKD(true);
-  };
-  const handleFileChangeGallery = (e) => {
-    setMultipleImagePreview([]);
-    setMultipleImage([]);
-    console.log(e.target.files);
-    for (let i = 0; i < e.target.files.length; i++) {
-      setMultipleImage((prevData) => [...prevData, e.target.files[i]]);
-      setMultipleImagePreview((prevData) => [
-        ...prevData,
-        URL.createObjectURL(e.target.files[i]),
-      ]);
-    }
   };
 
   const handleFileChange = (e) => {
@@ -160,6 +147,12 @@ const CreateStore = () => {
       ...prevData,
       [e.target.name]: e.target.files[0],
     }));
+    if (e.target.name === "AnhDaiDien_CuaHang") {
+      setOnChangeImage(true);
+    }
+    if (e.target.name === "AnhGPKD") {
+      setOnChangeImageGPKD(true);
+    }
   };
   return (
     <div className="user-profile-card add-listing">
@@ -168,7 +161,7 @@ const CreateStore = () => {
         <div className="user-profile-card-header-right">
           <ul className="breadcrumb-menu d-flex gap-3">
             <li>
-              <Link to="/store/manage-store">Danh sách</Link>
+              <Link to="/admin/management-store">Danh sách</Link>
             </li>
             /<li className="active">Tạo cửa hàng</li>
           </ul>
@@ -458,7 +451,7 @@ const CreateStore = () => {
                       <span>
                         {onChangeImageGPKD && (
                           <img
-                            src={URL.createObjectURL(formData.AnhGPKD)}
+                            src={URL.createObjectURL(formData.AnhGPKD ?? "")}
                             alt="Preview"
                             style={{
                               width: "100px",
@@ -499,7 +492,7 @@ const CreateStore = () => {
                   </div>
                 </div>
               </div>
-              {/*  mutiple image */}
+              {/*   
               <div className="col-lg-12">
                 <div className="form-group">
                   <label>Gallery</label>
@@ -546,6 +539,7 @@ const CreateStore = () => {
                   </div>
                 </div>
               </div>
+               */}
               <div className="col-lg-12">
                 <button type="submit" className="theme-btn" disabled={loading}>
                   {loading ? "Đang thêm..." : "Thêm cửa hàng"}

@@ -47,12 +47,12 @@ export const addProduct = createAsyncThunk(
   "products/addProduct",
   async (productData, { rejectWithValue }) => {
     try {
+      console.log(productData);
       const response = await axiosInstance.post(
-        `/SanPham/store/1`,
+        `/SanPham/store/${productData.cuahangid}`,
         productData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${localStorage.getItem("userToken")}`,
           },
         }
@@ -127,7 +127,7 @@ const productSlice = createSlice({
         state.loading = false;
         state.products = [];
         state.error = null;
-       })
+      })
       .addCase(uploadImage.pending, (state) => {
         state.loading = true;
         state.error = null;

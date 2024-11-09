@@ -9,17 +9,15 @@ const initialState = {
 
 export const fetchOrders = createAsyncThunk(
   "order/fetchOrders",
-  async ({ rejectWithValue }) => {
+  async (data, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(
-        "/numberOfInvoice-cuahang/getAll",
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("userToken")}`,
-          },
-        }
-      );
+      const response = await axiosInstance.get(`/getAllOrder/${data}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+        },
+      });
+      console.log(response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);

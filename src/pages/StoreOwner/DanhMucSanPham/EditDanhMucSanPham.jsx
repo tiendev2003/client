@@ -1,11 +1,7 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useParams, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import {
   getDanhMucById,
   updateDanhMuc,
@@ -25,10 +21,12 @@ export const EditDanhMucSanPham = () => {
   const { userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    dispatch(getDanhMucById({
-      id,
-      idDanhMuc: userInfo.cuahang.id,
-    }));
+    dispatch(
+      getDanhMucById({
+        id: userInfo.cuahang.id,
+        idDanhMuc: id,
+      })
+    );
   }, [dispatch, id, userInfo.cuahang.id]);
 
   const { danhMuc } = useSelector((state) => state.danhMucSanPham);
@@ -37,7 +35,7 @@ export const EditDanhMucSanPham = () => {
     if (danhMuc) {
       setFormData({
         TenDMSP: danhMuc.TenDMSP,
-        TrangThai: danhMuc.TrangThai
+        TrangThai: danhMuc.TrangThai,
       });
     }
   }, [danhMuc]);

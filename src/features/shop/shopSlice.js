@@ -73,6 +73,24 @@ export const activeStore = createAsyncThunk(
 );
 
 
+//  create store
+export const createStore = createAsyncThunk(
+  "shop/createStore",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.post(`/create-store`, data,{
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+        },
+      });
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    } 
+  }
+);
+
 const shopSlice = createSlice({
   name: "shop",
   initialState,

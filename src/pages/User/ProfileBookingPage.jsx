@@ -77,13 +77,16 @@ const ProfileBookingPage = () => {
                     {formatMoney(booking.ChiTietDatBan[0].ThongTinBan.GiaBan)}
                   </td>
                   <td>
-                    <span
-                      className={`badge badge-${
-                        booking.TrangThai === 1 ? "success" : "danger"
-                      }`}
-                    >
-                      {booking.TrangThai === 1 ? "Xác nhận" : "Đã hủy"}
-                    </span>
+                    {/* 3 trạng thái là chờ xác nhận, hủy và xác nhận sử dụng 3 badge khác nhau */}
+                    {booking.TrangThai === 1 && (
+                      <span className="badge badge-warning">Pending</span>
+                    )}
+                    {booking.TrangThai === 2 && (
+                      <span className="badge badge-success">Confirmed</span>
+                    )}
+                    {booking.TrangThai === 0 && (
+                      <span className="badge badge-danger">Canceled</span>
+                    )}
                   </td>
                   <td>
                     <Link

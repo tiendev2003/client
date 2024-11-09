@@ -1,17 +1,24 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchOrders } from "../../../features/orders/orderSlice";
 
 const ManagementOrder = () => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const dispatch = useDispatch();
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const { orders } = useSelector((state) => state.orders);
+  const { userInfo } = useSelector((state) => state.auth);
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
-
+  useEffect(() => {
+    dispatch(fetchOrders(userInfo.cuahang.id));
+  }, [dispatch, userInfo.cuahang.id]);
+  console.log(orders);
   return (
     <div className="user-profile-card user-profile-listing">
       <div className="user-profile-card-header">
-        <h4 className="user-profile-card-title">Danh mục sản phẩm</h4>
+        <h4 className="user-profile-card-title">Danh mục đơn đặt hàng</h4>
         <div className="user-profile-card-header-right">
           <div className="user-profile-search">
             <div className="form-group">
@@ -25,9 +32,6 @@ const ManagementOrder = () => {
               <i className="fa fa-search"></i>
             </div>
           </div>
-          <Link to="create" className="theme-btn">
-            <span className="fa fa-plus-circle"></span>Thêm danh mục
-          </Link>
         </div>
       </div>
       <div className="col-lg-12">

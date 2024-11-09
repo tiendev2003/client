@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -60,6 +60,7 @@ export const CreateSanPham = () => {
         HinhAnh: imageUrl,
         cuahangid: userInfo.cuahang.id,
       };
+      console.log(productData);
       await dispatch(addProduct(productData)).unwrap();
       toast.success("Product added successfully");
     } catch (err) {
