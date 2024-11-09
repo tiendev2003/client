@@ -1,35 +1,17 @@
-import   { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { getDanhMucById, updateDanhMuc } from '../../../features/danhMucBan/danhMucBanSlice';
-import { Link } from 'react-router-dom';
-  
-export const EditDanhMucBan = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { danhMuc, loading } = useSelector((state) => state.danhMucBan);
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { createRole } from "../../../features/role/roleSlice";
 
+const CreateRole = () => {
   const [formData, setFormData] = useState({
-    TenDMBan: "",
-    TrangThai: 0,
+    TenQ: "",
+    TrangThai: 1,
   });
 
-  useEffect(() => {
-    dispatch(getDanhMucById(id));
-  }, [dispatch, id]);
-
-  useEffect(() => {
-    if (danhMuc) {
-      setFormData((prevData) => ({
-        ...prevData,
-        TenDMBan: danhMuc.TenDMBan,
-          TrangThai: danhMuc.TrangThai
-      }));
-    }
-  }, [danhMuc]);
-  
+  const dispatch = useDispatch();
+  const { loading } = useSelector((state) => state.role);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -42,24 +24,23 @@ export const EditDanhMucBan = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await dispatch(updateDanhMuc({ id, ...formData })).unwrap();
-      toast.success("Danh mục bàn đã được cập nhật thành công");
-      navigate("/store/manage-category-table");
+      await dispatch(createRole(formData)).unwrap();
+      toast.success("Quyền đã được thêm thành công");
     } catch (err) {
-      toast.error(err.message || "Cập nhật danh mục bàn thất bại");
+      toast.error(err.message || "Thêm quyền thất bại");
     }
   };
 
   return (
     <div className="user-profile-card add-listing">
       <div className="user-profile-card-header">
-        <h4 className="user-profile-card-title">Sửa danh mục bàn</h4>
+        <h4 className="user-profile-card-title">Thêm quyền</h4>
         <div className="user-profile-card-header-right">
           <ul className="breadcrumb-menu d-flex gap-3">
             <li>
-              <Link to="/store/manage-category-table">Danh sách </Link>
+              <Link to="/admin/management-role">Danh sách</Link>
             </li>
-            /<li className="active">Sửa danh mục bàn</li>
+            /<li className="active">Thêm quyền</li>
           </ul>
         </div>
       </div>
@@ -69,13 +50,13 @@ export const EditDanhMucBan = () => {
             <div className="row align-items-center">
               <div className="col-lg-6">
                 <div className="form-group">
-                  <label>Tên danh mục bàn</label>
+                  <label>Tên quyền</label>
                   <input
                     type="text"
-                    name="TenDMBan"
+                    name="TenQ"
                     className="form-control"
-                    placeholder="Tên danh mục bàn"
-                    value={formData.TenDMBan}
+                    placeholder="Tên quyền"
+                    value={formData.TenQ}
                     onChange={handleChange}
                     required
                   />
@@ -97,7 +78,7 @@ export const EditDanhMucBan = () => {
               </div>
               <div className="col-lg-12">
                 <button type="submit" className="theme-btn" disabled={loading}>
-                  {loading ? "Đang cập nhật..." : "Cập nhật danh mục bàn"}
+                  {loading ? "Đang thêm..." : "Thêm quyền"}
                 </button>
               </div>
             </div>
@@ -107,3 +88,5 @@ export const EditDanhMucBan = () => {
     </div>
   );
 };
+
+export default CreateRole;

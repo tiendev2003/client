@@ -88,7 +88,7 @@ export const getDanhMucById = createAsyncThunk(
   "danhMucKhuyenMai/getDanhMucById",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/dmctkm/update/${data.id}/${data.idDanhMuc}`, {
+      const response = await axiosInstance.get(`/dmctkm/detail/${data.id}/${data.idDanhMuc}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("userToken")}`,

@@ -7,11 +7,9 @@ import ProfileLayout from "./layouts/ProfileLayout";
 import { StoreLayout } from "./layouts/StoreLayout";
 import ContentManagement from "./pages/Admin/ContentManagement";
 import DashboardAdmin from "./pages/Admin/Dashboard";
-import StoreManagement from "./pages/Admin/StoreManagement";
 import SystemConfiguration from "./pages/Admin/SystemConfiguration";
-import UserManagement from "./pages/Admin/UserManagement";
+import UserManagement from "./pages/Admin/Users/UserManagement";
 import { DashboardStore } from "./pages/StoreOwner/DashboardStore";
-import ManagePaymentsInvoices from "./pages/StoreOwner/ManagePaymentsInvoices";
 import ManagePromotionsStatistics from "./pages/StoreOwner/ManagePromotionsStatistics";
 import { RegisterStoreOwner } from "./pages/StoreOwner/RegisterStoreOwner";
 import { CreateSanPham } from "./pages/StoreOwner/Sanpham/CreateSanPham";
@@ -23,6 +21,29 @@ import { SettingStore } from "./pages/StoreOwner/SettingStore";
 import { CreateBilliardTable } from "./pages/StoreOwner/Tables/CreateBilliardTable";
 import ManageBilliardTables from "./pages/StoreOwner/Tables/ManageBilliardTables";
 import ProtectedRoute from "./routing/ProtectedRoute";
+
+import CreateRole from "./pages/Admin/Roles/CreateRole";
+import EditRole from "./pages/Admin/Roles/EditRole";
+import ManagementRole from "./pages/Admin/Roles/ManagementRole";
+import CreateStore from "./pages/Admin/Store/CreateStore";
+import EditStore from "./pages/Admin/Store/EditStore";
+import StoreManagement from "./pages/Admin/Store/StoreManagement";
+import ManagementOrder from "./pages/StoreOwner/Orders/ManagementOrder";
+
+import { CreateCTKM } from "./pages/StoreOwner/CTKM/CreateCTKM";
+import { EditCTKM } from "./pages/StoreOwner/CTKM/EditCTKM";
+import { ManageCTKM } from "./pages/StoreOwner/CTKM/ManageCTKM";
+import { CreateDanhMucBan } from "./pages/StoreOwner/DanhMucBan/CreateDanhMucBan";
+import { EditDanhMucBan } from "./pages/StoreOwner/DanhMucBan/EditDanhMucBan";
+import { ManageDanhMucBan } from "./pages/StoreOwner/DanhMucBan/ManageDanhMucBan";
+import { CreateDanhMucCTKM } from "./pages/StoreOwner/DanhMucCTKM/CreateDanhMucCTKM";
+import { EditDanhMucCTKM } from "./pages/StoreOwner/DanhMucCTKM/EditDanhMucCTKM";
+import { ManageDanhMucCTKM } from "./pages/StoreOwner/DanhMucCTKM/ManageDanhMucCTKM";
+import { CreateDanhMucSanPham } from "./pages/StoreOwner/DanhMucSanPham/CreateDanhMucSanPham";
+import { EditDanhMucSanPham } from "./pages/StoreOwner/DanhMucSanPham/EditDanhMucSanPham";
+import { ManageDanhMucSanPham } from "./pages/StoreOwner/DanhMucSanPham/ManageDanhMucSanPham";
+import { EditService } from "./pages/StoreOwner/Services/EditService";
+import { EditBilliardTable } from "./pages/StoreOwner/Tables/EditBilliardTable";
 
 const HomePage = lazy(() => import("./pages/Home/HomePage"));
 const AboutPage = lazy(() => import("./pages/About/AboutPage"));
@@ -49,20 +70,6 @@ const Settings = lazy(() => import("./pages/User/ProfileSettingPage"));
 const Bookings = lazy(() => import("./pages/User/ProfileBookingPage"));
 const Wishlist = lazy(() => import("./pages/User/ProfileWishlistPage"));
 const BookingsDetail = lazy(() => import("./pages/User/ProfileBookingDetail"));
-import { EditService } from "./pages/StoreOwner/Services/EditService";
-import { CreateDanhMucSanPham } from "./pages/StoreOwner/DanhMucSanPham/CreateDanhMucSanPham";
-import { ManageDanhMucSanPham } from "./pages/StoreOwner/DanhMucSanPham/ManageDanhMucSanPham";
-import { EditDanhMucSanPham } from "./pages/StoreOwner/DanhMucSanPham/EditDanhMucSanPham";
-import { EditDanhMucCTKM } from "./pages/StoreOwner/DanhMucCTKM/EditDanhMucCTKM";
-import { ManageCTKM } from "./pages/StoreOwner/CTKM/ManageCTKM";
-import { CreateCTKM } from "./pages/StoreOwner/CTKM/CreateCTKM";
-import { ManageDanhMucCTKM } from "./pages/StoreOwner/DanhMucCTKM/ManageDanhMucCTKM";
-import { CreateDanhMucCTKM } from "./pages/StoreOwner/DanhMucCTKM/CreateDanhMucCTKM";
-import { EditCTKM } from "./pages/StoreOwner/CTKM/EditCTKM";
-import { EditDanhMucBan } from "./pages/StoreOwner/DanhMucBan/EditDanhMucBan";
-import { ManageDanhMucBan } from "./pages/StoreOwner/DanhMucBan/ManageDanhMucBan";
-import { CreateDanhMucBan } from "./pages/StoreOwner/DanhMucBan/CreateDanhMucBan";
-import { EditBilliardTable } from './pages/StoreOwner/Tables/EditBilliardTable';
 function App() {
   return (
     <Router>
@@ -100,15 +107,38 @@ function App() {
           </Route>
           <Route element={<ProtectedRoute allowedRoles={[1]} />}>
             <Route element={<AdminLayout />}>
-              <Route path="/admin" element={<DashboardAdmin />} />
+              <Route path="/admin/dashboard" element={<DashboardAdmin />} />
               <Route
-                path="/admin/user-management"
+                path="/admin/management-user"
                 element={<UserManagement />}
               />
+
               <Route
-                path="/admin/store-management"
+                path="/admin/management-store"
                 element={<StoreManagement />}
               />
+              <Route
+                path="/admin/management-store/create"
+                element={<CreateStore />}
+              />
+              <Route
+                path="/admin/management-store/edit/:id"
+                element={<EditStore />}
+              />
+
+              <Route
+                path="/admin/management-role"
+                element={<ManagementRole />}
+              />
+              <Route
+                path="/admin/management-role/create"
+                element={<CreateRole />}
+              />
+              <Route
+                path="/admin/management-role/edit/:id"
+                element={<EditRole />}
+              />
+
               <Route
                 path="/admin/content-management"
                 element={<ContentManagement />}
@@ -217,10 +247,7 @@ function App() {
                 path="/store/promotions-statistics"
                 element={<ManagePromotionsStatistics />}
               />
-              <Route
-                path="/store/payments-invoices"
-                element={<ManagePaymentsInvoices />}
-              />
+              <Route path="/store/order" element={<ManagementOrder />} />
               <Route path="/store/setting" element={<SettingStore />} />
             </Route>
             <Route

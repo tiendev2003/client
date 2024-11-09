@@ -186,7 +186,7 @@ const Navigation = () => {
                             userInfo.id_QuyenTK == 2
                               ? "/store"
                               : userInfo.id_QuyenTK == 1
-                              ? "/admin"
+                              ? "/admin/dashboard"
                               : "/dashboard"
                           } `}
                         >

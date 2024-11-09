@@ -17,6 +17,7 @@ export const EditDanhMucSanPham = () => {
 
   const [formData, setFormData] = useState({
     TenDMSP: "",
+    TrangThai: 1,
   });
 
   const dispatch = useDispatch();
@@ -36,6 +37,7 @@ export const EditDanhMucSanPham = () => {
     if (danhMuc) {
       setFormData({
         TenDMSP: danhMuc.TenDMSP,
+        TrangThai: danhMuc.TrangThai
       });
     }
   }, [danhMuc]);
@@ -81,7 +83,7 @@ export const EditDanhMucSanPham = () => {
         <div className="add-listing-form">
           <form onSubmit={handleSubmit}>
             <div className="row align-items-center">
-              <div className="col-lg-12">
+              <div className="col-lg-6">
                 <div className="form-group">
                   <label>Tên danh mục sản phẩm</label>
                   <input
@@ -93,6 +95,20 @@ export const EditDanhMucSanPham = () => {
                     placeholder="Thuê bàn bi-a"
                     required
                   />
+                </div>
+              </div>
+              <div className="col-lg-6">
+                <div className="form-group">
+                  <label>Trạng thái</label>
+                  <select
+                    name="TrangThai"
+                    value={formData.TrangThai}
+                    onChange={handleChange}
+                    className="form-control"
+                  >
+                    <option value={1}>Hoạt động</option>
+                    <option value={0}>Không hoạt động</option>
+                  </select>
                 </div>
               </div>
 

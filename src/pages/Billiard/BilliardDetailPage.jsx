@@ -6,13 +6,17 @@ import { toast } from "react-toastify";
 import { Breadcrumb } from "../../components";
 import StarRating from "../../components/StarRating";
 import { bookTable } from "../../features/book/bookSlice";
+import {
+  createDanhgia,
+  updateDanhGia,
+} from "../../features/danhgia/danhgiaSlice";
 import { fetchCuahangDetail } from "../../features/shop/shopSlice";
 import { formatMoney } from "../../utils/formatMoney";
 const BilliardDetailPage = () => {
   const { id } = useParams();
-  console.log(id);
   const dispatch = useDispatch();
   const { cuahangDetail } = useSelector((state) => state.shop);
+  const { userInfo } = useSelector((state) => state.auth);
   var settings = {
     infinite: true,
     speed: 500,
@@ -33,10 +37,23 @@ const BilliardDetailPage = () => {
     ),
   };
   const [selectedTable, setSelectedTable] = useState(null);
-   const [totalPrice, setTotalPrice] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [rating, setRating] = useState(0);
+  const [image, setImage] = useState(null);
+  const [reviewContent, setReviewContent] = useState("");
+  const [onChange, setOnChange] = useState(false);
+  const [editingReviewId, setEditingReviewId] = useState(null);
+ 
   useEffect(() => {
     dispatch(fetchCuahangDetail(id));
   }, [dispatch, id]);
+
+  useEffect(() => {
+    if (onChange) {
+      dispatch(fetchCuahangDetail(id));
+      setOnChange(!onChange);
+    }
+  }, [onChange, dispatch, id]);
 
   useEffect(() => {
     if (selectedTable) {
@@ -47,8 +64,23 @@ const BilliardDetailPage = () => {
   const handleTableSelect = (table) => {
     setSelectedTable(table);
   };
- 
 
+  const handleRatingChange = (e) => {
+    setRating(e.target.value);
+  };
+
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]);
+  };
+
+  const handleReviewContentChange = (e) => {
+    setReviewContent(e.target.value);
+  };
+  const handleEditClick = (reviewId, currentRating, currentContent) => {
+    setEditingReviewId(reviewId);
+    setRating(currentRating);
+    setReviewContent(currentContent);
+  };
   const handleSubmit = async (e) => {
     if (!selectedTable) {
       toast.error("Vui lòng chọn bàn trước khi đặt");
@@ -82,7 +114,32 @@ const BilliardDetailPage = () => {
     result[id].bans.push(ban);
     return result;
   }, {});
+  const handleRating = async (e) => {
+    e.preventDefault();
+    //  formData
+    const formData = new FormData();
+    formData.append("DG_Diem", rating);
+    formData.append("DG_NoiDung", reviewContent);
+    formData.append("id", id);
+    formData.append("HinhAnh", image);
 
+    try {
+      if (editingReviewId) {
+        formData.append("id", editingReviewId);
+        await dispatch(updateDanhGia(formData)).unwrap();
+        setEditingReviewId(null);
+        setOnChange(!onChange);
+        toast.success("Sửa đánh giá thành công");
+        return;
+      }
+      await dispatch(createDanhgia(formData)).unwrap();
+      setOnChange(!onChange);
+      toast.success("Đánh giá thành công");
+    } catch (error) {
+      console.log(error);
+      toast.error("Đánh giá thất bại");
+    }
+  };
   return (
     <>
       <Breadcrumb title="Billiard" items="Billiard" />
@@ -184,7 +241,6 @@ const BilliardDetailPage = () => {
                                       onChange={() => handleTableSelect(ban)}
                                       id={`table-${ban.id}`}
                                       disabled={ban.TrangThai === 0}
-                                      
                                     />
                                     <label
                                       className="form-check-label"
@@ -476,15 +532,32 @@ const BilliardDetailPage = () => {
                         </h5>
                         {cuahangDetail?.danhgia?.map((item, index) => (
                           <React.Fragment key={index}>
-                            <div className="billard-detail-review-item">
+                            <div
+                              className="billard-detail-review-item "
+                              style={{
+                                cursor:
+                                  userInfo.id === item.id_TaiKhoan
+                                    ? "pointer"
+                                    : "default",
+                              }}
+                              onClick={() => {
+                                if (userInfo.id === item.id_TaiKhoan) {
+                                  handleEditClick(
+                                    item.id,
+                                    item.DG_Diem,
+                                    item.DG_NoiDung
+                                  );
+                                } 
+                              }}
+                            >
                               <div className="billard-detail-review-author">
                                 <img
-                                  src="../assets/img/testimonial/04.jpeg"
+                                  src={item.taikhoan.AnhDaiDien_NguoiDung}
                                   alt="author"
                                 />
                                 <div className="billard-detail-review-author-info">
                                   <div>
-                                    <h6>{item.id_TaiKhoan}</h6>
+                                    <h6>{item.taikhoan.TenNguoiDung}</h6>
                                     <span>
                                       <i className="far fa-clock"></i>{" "}
                                       {item.DG_ThoiGian}
@@ -496,39 +569,15 @@ const BilliardDetailPage = () => {
                                 </div>
                               </div>
                               <p>{item.DG_NoiDung}</p>
-                              <div className="billard-detail-review-reply">
-                                <a href="#" className="review-reply-btn">
-                                  <i className="fa fa-reply"></i>
-                                  Trả lời
-                                </a>
-                                <div className="review-reaction">
-                                  <a href="#" className="review-like">
-                                    <i className="fa fa-thumbs-up"></i>
-                                    15
-                                  </a>
-                                  <a href="#" className="review-dislike">
-                                    <i className="fa fa-thumbs-down"></i> 05
-                                  </a>
-                                  <a href="#" className="review-love active">
-                                    <i className="fa fa-heart"></i> 50
-                                  </a>
-                                </div>
-                              </div>
                             </div>
                           </React.Fragment>
                         ))}
-
-                        <div className="text-center my-4">
-                          <a href="#" className="theme-btn">
-                            {" "}
-                            <span className="fa fa-sync-alt"></span>
-                            Tải thêm
-                          </a>
-                        </div>
                       </div>
                       <div className="billard-detail-review-form">
-                        <h4>Để lại đánh giá</h4>
-                        <form action="#">
+                        <h4>
+                          {editingReviewId ? "Sửa đánh giá" : "Để lại đánh giá"}
+                        </h4>
+                        <form onSubmit={handleRating}>
                           <div className="col-lg-12">
                             <div className="form-group mb-3">
                               <label className="star-label">Chất lượng</label>
@@ -538,73 +587,71 @@ const BilliardDetailPage = () => {
                                     <input
                                       type="radio"
                                       name="rating"
-                                      defaultValue="5"
+                                      value="5"
                                       id="star-5"
-                                    />{" "}
+                                      onChange={handleRatingChange}
+                                    />
                                     <label htmlFor="star-5">&#9733;</label>
                                     <input
                                       type="radio"
                                       name="rating"
-                                      defaultValue="4"
+                                      value="4"
                                       id="star-4"
-                                    />{" "}
+                                      onChange={handleRatingChange}
+                                    />
                                     <label htmlFor="star-4">&#9733;</label>
                                     <input
                                       type="radio"
                                       name="rating"
-                                      defaultValue="3"
+                                      value="3"
                                       id="star-3"
-                                    />{" "}
+                                      onChange={handleRatingChange}
+                                    />
                                     <label htmlFor="star-3">&#9733;</label>
                                     <input
                                       type="radio"
                                       name="rating"
-                                      defaultValue="2"
+                                      value="2"
                                       id="star-2"
-                                    />{" "}
+                                      onChange={handleRatingChange}
+                                    />
                                     <label htmlFor="star-2">&#9733;</label>
                                     <input
                                       type="radio"
                                       name="rating"
-                                      defaultValue="1"
+                                      value="1"
                                       id="star-1"
-                                    />{" "}
+                                      onChange={handleRatingChange}
+                                    />
                                     <label htmlFor="star-1">&#9733;</label>
                                   </div>
                                 </div>
                               </div>
                             </div>
                           </div>
-                          <div className="row">
-                            <div className="col-lg-6">
-                              <div className="form-group">
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  placeholder="Nhập tên*"
-                                />
-                              </div>
-                            </div>
-                            <div className="col-lg-6">
-                              <div className="form-group">
-                                <input
-                                  type="email"
-                                  className="form-control"
-                                  placeholder="Nhập Email*"
-                                />
-                              </div>
-                            </div>
+                          <div className="form-group">
+                            <input
+                              type="file"
+                              className="form-control"
+                              placeholder="Hình ảnh"
+                              name="image"
+                              onChange={handleImageChange}
+                            />
                           </div>
+
                           <div className="form-group">
                             <textarea
                               className="form-control"
                               cols="30"
                               rows="5"
+                              name="DG_NoiDung"
+                              value={reviewContent}
+                              onChange={handleReviewContentChange}
                               placeholder="Nhận xét*"
                             ></textarea>
                           </div>
-                          <button className="theme-btn" type="button">
-                            Gửi đánh giá
+                          <button className="theme-btn" type="submit">
+                            {editingReviewId ? "Lưu đánh giá" : "Gửi đánh giá"}
                           </button>
                         </form>
                       </div>
@@ -636,7 +683,6 @@ const BilliardDetailPage = () => {
                     <div className="search-form">
                       <div className="tour-search-wrapper">
                         <div className="row">
-                         
                           <div className="col-lg-12">
                             <div className="form-group passenger-box">
                               <div className="passenger-class">

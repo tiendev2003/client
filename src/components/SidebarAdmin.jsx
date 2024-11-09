@@ -1,12 +1,16 @@
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { logout } from "../features/auth/authSlice";
 
 export const SidebarAdmin = ({ isOpen }) => {
   const dispatch = useDispatch();
   const { userInfo } = useSelector((state) => state.auth);
+  const location = useLocation();
 
+  const isActive = (path) => {
+    return location.pathname === path;
+  };
   return (
     <>
       <aside className={`sidebar dash-sidebar ${isOpen ? "open" : "closed"}`}>
@@ -27,50 +31,54 @@ export const SidebarAdmin = ({ isOpen }) => {
         </div>
         <ul className="dash-sidebar-list">
           <li>
-            <Link to="/admin" className="active">
+            <Link
+              to="/admin/dashboard"
+              className={isActive("/admin/dashboard") ? "active" : ""}
+            >
               <i className="fa fa-gauge-high"></i> Báo cáo &amp; Thống kê
             </Link>
           </li>
-
-          <li className="profile-menu">
-            <a
-              href="#profile-menu-1"
-              data-bs-toggle="collapse"
-              aria-expanded="true"
-              aria-controls="profile-menu-1"
-              className="collapsed"
+          <li>
+            <Link
+              to="/admin/management-user"
+              className={isActive("/admin/management-user") ? "active" : ""}
             >
-              <i className="fa-solid fa-users"></i> Quản lí tài khoản{" "}
-              <i className="fa-solid fa-caret-down profile-menu-angle"></i>
-            </a>
-            <div className="collapse" id="profile-menu-1">
-              <ul className="profile-menu-list">
-                <li>
-                  <Link to="/admin/user-management/create">Tạo tài khoản</Link>
-                </li>
-                <li>
-                  <Link to="/admin/user-management">Danh sách tài khoản</Link>
-                </li>
-              </ul>
-            </div>
+              <i className="fa fa-users"></i> Quản lí tài khoản
+            </Link>
           </li>
+
           <li className="profile-menu">
             <a
               href="#profile-menu-2"
               data-bs-toggle="collapse"
               aria-expanded="true"
               aria-controls="profile-menu-2"
+              className="collapsed"
             >
               <i className="fa-solid fa-shop"></i> Quản lí cửa hàng
               <i className="fa-solid fa-caret-down profile-menu-angle"></i>
             </a>
-            <div className="collapse show" id="profile-menu-2">
+            <div className="collapse  " id="profile-menu-2">
               <ul className="profile-menu-list">
                 <li>
-                  <Link to="/admin/store-management/create">Thêm cửa hàng</Link>
+                  <Link
+                    to="/admin/management-store/create"
+                    exact
+                    className={
+                      isActive("/admin/management-store/create") ? "active" : ""
+                    }
+                  >
+                    Thêm cửa hàng
+                  </Link>
                 </li>
                 <li>
-                  <Link to="/admin/store-management">
+                  <Link
+                    to="/admin/management-store"
+                    exact
+                    className={
+                      isActive("/admin/management-store") ? "active" : ""
+                    }
+                  >
                     Phê duyệt cửa hàng mới
                   </Link>
                 </li>
@@ -78,15 +86,43 @@ export const SidebarAdmin = ({ isOpen }) => {
             </div>
           </li>
 
-          <li>
-            <Link to="/admin/content-management">
-              <i className="fa fa-file-alt"></i> Quản lý nội dung
-            </Link>
-          </li>
-          <li>
-            <Link to="/admin/system-configuration">
-              <i className="fa fa-cog"></i> Cấu hình hệ thống
-            </Link>
+          <li className="profile-menu">
+            <a
+              href="#profile-menu-3"
+              data-bs-toggle="collapse"
+              aria-expanded="true"
+              aria-controls="profile-menu-3"
+              className="collapsed"
+            >
+              <i className="fa-solid fa-shop"></i> Quản lí quyền
+              <i className="fa-solid fa-caret-down profile-menu-angle"></i>
+            </a>
+            <div className="collapse" id="profile-menu-3">
+              <ul className="profile-menu-list">
+                <li>
+                  <Link
+                    to="/admin/management-role/create"
+                    exact
+                    className={
+                      isActive("/admin/management-role/create") ? "active" : ""
+                    }
+                  >
+                    Thêm quyền
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/admin/management-role"
+                    exact
+                    className={
+                      isActive("/admin/management-role") ? "active" : ""
+                    }
+                  >
+                    Danh sách quyền
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </li>
 
           <li>

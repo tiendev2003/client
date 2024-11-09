@@ -17,6 +17,7 @@ export const EditDanhMucCTKM = () => {
 
   const [formData, setFormData] = useState({
     TenDMCTKM: "",
+    TrangThai: 1,
   });
   const { userInfo } = useSelector((state) => state.auth);
   const { danhMucKhuyenMai, loading } = useSelector(
@@ -25,8 +26,8 @@ export const EditDanhMucCTKM = () => {
   useEffect(() => {
     dispatch(
       getDanhMucById({
-        id,
-        idDanhMuc: userInfo.cuahang.id,
+        idDanhMuc:id,
+        id: userInfo.cuahang.id,
       })
     );
   }, [dispatch, id, userInfo.cuahang.id]);
@@ -35,6 +36,7 @@ export const EditDanhMucCTKM = () => {
       setFormData((prevData) => ({
         ...prevData,
         TenDMCTKM: danhMucKhuyenMai.TenDMCTKM,
+        TrangThai: danhMucKhuyenMai.TrangThai,
       }));
     }
   }, [danhMucKhuyenMai]);
@@ -50,7 +52,11 @@ export const EditDanhMucCTKM = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await dispatch(updateDanhMuc(formData)).unwrap();
+      await dispatch(updateDanhMuc({
+        idDanhMuc: id,
+        id: userInfo.cuahang.id,
+        ...formData,
+      })).unwrap();
       toast.success("Sửa thành công");
       navigate("/store/manage-category-ctkm");
     } catch (err) {
@@ -75,7 +81,7 @@ export const EditDanhMucCTKM = () => {
         <div className="add-listing-form">
           <form onSubmit={handleSubmit}>
             <div className="row align-items-center">
-              <div className="col-lg-12">
+              <div className="col-lg-6">
                 <div className="form-group">
                   <label>Tên danh mục khuyến mãi</label>
                   <input
@@ -87,6 +93,20 @@ export const EditDanhMucCTKM = () => {
                     placeholder="Thuê bàn bi-a"
                     required
                   />
+                </div>
+              </div>
+              <div className="col-lg-6">
+                <div className="form-group">
+                  <label>Trạng thái</label>
+                  <select
+                    name="TrangThai"
+                    value={formData.TrangThai}
+                    onChange={handleChange}
+                    className="form-control"
+                  >
+                    <option value={1}>Hoạt động</option>
+                    <option value={0}>Không hoạt động</option>
+                  </select>
                 </div>
               </div>
 

@@ -49,6 +49,7 @@ export const createCTKM = createAsyncThunk(
 export const updateCTKM = createAsyncThunk(
   "ctkm/updateCTKM",
   async (data, { rejectWithValue }) => {
+    console.log(data)
     try {
       const response = await axiosInstance.put(
         `/ctkm/update/${data.id}/${data.idCtkm}`,
@@ -83,6 +84,24 @@ export const deleteCTKM = createAsyncThunk(
     }
   }
 );
+
+export const getCTKMById = createAsyncThunk(
+  "ctkm/getCTKMById",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(`/ctkm/detail/${data.id}/${data.idCTKM}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const ctkmSlice = createSlice({
   name: "ctkm",
   initialState,
@@ -136,6 +155,18 @@ const ctkmSlice = createSlice({
         state.ctkms = state.ctkms.filter((ctkm) => ctkm.id !== action.payload);
       })
       .addCase(deleteCTKM.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(getCTKMById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getCTKMById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.ctkm = action.payload.data;
+      })
+      .addCase(getCTKMById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

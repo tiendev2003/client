@@ -32,6 +32,47 @@ export const fetchCuahangDetail = createAsyncThunk(
   }
 );
 
+export const updateStore = createAsyncThunk(
+  "shop/updateStore",
+  async (data, { rejectWithValue }) => {
+    console.log(data);
+    try {
+      const response = await axiosClient.put(`/store/update/${data.id}`, data);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// đóng băng cửa hàng
+export const blockStore = createAsyncThunk(
+  "shop/blockStore",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.post(`/freezeStore/${id}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// kích hoạt cửa hàng
+
+export const activeStore = createAsyncThunk(
+  "shop/activeStore",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.post(`/unfreezeStore/${id}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+
 const shopSlice = createSlice({
   name: "shop",
   initialState,
@@ -63,7 +104,44 @@ const shopSlice = createSlice({
       .addCase(fetchCuahangDetail.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+      .addCase(updateStore.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateStore.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+      })
+      .addCase(updateStore.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(blockStore.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(blockStore.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+      })
+      .addCase(blockStore.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(activeStore.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(activeStore.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+      })
+      .addCase(activeStore.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload
+      })
+      
   },
 });
 

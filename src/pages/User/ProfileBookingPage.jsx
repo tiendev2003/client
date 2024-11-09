@@ -1,10 +1,10 @@
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { historyBook, cancelBooking } from "../../features/book/bookSlice";
-import { formatMoney } from "../../utils/formatMoney";
-import { toast } from "react-toastify";
-import { useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { cancelBooking, historyBook } from "../../features/book/bookSlice";
+import { formatMoney } from "../../utils/formatMoney";
+
 const ProfileBookingPage = () => {
   const dispatch = useDispatch();
   const { bookings, loading } = useSelector((state) => state.booking);
@@ -17,7 +17,6 @@ const ProfileBookingPage = () => {
     return <div>Loading...</div>;
   }
 
- 
   const handleCancelBooking = (id) => async () => {
     try {
       await dispatch(cancelBooking(id)).unwrap();
@@ -27,6 +26,7 @@ const ProfileBookingPage = () => {
       console.error("Failed to cancel booking", error);
     }
   };
+  
   const tlength = (bookings && bookings.length) || 0;
   const totalPages = Math.ceil(tlength / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -71,7 +71,7 @@ const ProfileBookingPage = () => {
                         booking.TrangThai === 1 ? "success" : "danger"
                       }`}
                     >
-                      {booking.TrangThai === 1 ? "Confirmed" : "Pending"}
+                      {booking.TrangThai === 1 ? "Xác nhận" : "Đã hủy"}
                     </span>
                   </td>
                   <td>
@@ -81,12 +81,16 @@ const ProfileBookingPage = () => {
                     >
                       <i className="far fa-eye"></i>
                     </Link>
-                    <button
-                      onClick={handleCancelBooking(booking.id_DonDatBan)}
-                      className="btn btn-outline-danger btn-sm"
-                    >
-                      Cancel
-                    </button>
+                    {booking.TrangThai === 1 && (
+                      <button
+                        onClick={handleCancelBooking(booking.id_DonDatBan)}
+                        className="btn btn-outline-danger btn-sm mr-2"
+                      >
+                        <i className="far fa-trash-alt"></i>
+                      </button>
+                    )}
+                    {/* xuất hóa đơn */}
+                    
                   </td>
                 </tr>
               ))}

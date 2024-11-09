@@ -15,12 +15,15 @@ const BilliardPage = () => {
   const query = new URLSearchParams(location.search);
   const pageQuery = parseInt(query.get("page")) || 1;
   const badgeQuery = query.get("badge") || "";
+  const priceQuery = query.get("price") || "";
   const ratingQuery = parseInt(query.get("rating")) || 0;
   const [sortOption, setSortOption] = useState("1");
 
   const [currentPage, setCurrentPage] = useState(pageQuery);
   const [selectedBadge, setSelectedBadge] = useState(badgeQuery);
   const [selectedRating, setSelectedRating] = useState(ratingQuery);
+  const [selectedPrice, setSelectedPrice] = useState(priceQuery);
+  const [filterCuahangs, setFilterCuahangs] = useState([]);
 
   useEffect(() => {
     dispatch(fetchCuahangs());
@@ -37,6 +40,28 @@ const BilliardPage = () => {
   useEffect(() => {
     setSelectedRating(ratingQuery);
   }, [ratingQuery]);
+
+  useEffect(() => {
+    setSelectedPrice(priceQuery);
+  }, [priceQuery]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const province = params.get("province");
+    const district = params.get("district");
+
+    if (province || district) {
+      const filtered = cuahangs.filter((cuahang) => {
+        return (
+          (!province || cuahang.tinh_thanhpho === province) &&
+          (!district || cuahang.quan_huyen === district)
+        );
+      });
+      setFilterCuahangs(filtered);
+    } else {
+      setFilterCuahangs(cuahangs);
+    }
+  }, [location.search, cuahangs]);
 
   // Calculate the number of stores for each rating
   const ratingCounts = cuahangs.reduce((acc, cuahang) => {
@@ -69,9 +94,20 @@ const BilliardPage = () => {
     setSortOption(e.target.value);
   };
 
-  const sortedCuahangs = [...cuahangs].sort((a, b) => {
+  // handle filter by price
+  const handlePriceChange = (price) => {
+    console.log(price);
+    setSelectedPrice(price);
+    navigate(
+      `?price=${price}${selectedBadge ? `&badge=${selectedBadge}` : ""}${
+        selectedRating ? `&rating=${selectedRating}` : ""
+      }`
+    );
+  };
+
+  const sortedCuahangs = [...filterCuahangs].sort((a, b) => {
     if (sortOption === "2") {
-      return  b.DanhGiaTong - a.DanhGiaTong;
+      return b.DanhGiaTong - a.DanhGiaTong;
     }
     if (sortOption === "3") {
       return a.minGiaBan - b.minGiaBan;
@@ -82,17 +118,33 @@ const BilliardPage = () => {
     return 0;
   });
 
-  const filteredCuahangs = sortedCuahangs.filter((cuahang) => {
+  let filteredCuahangs = sortedCuahangs.filter((cuahang) => {
     const ratingMatch =
       selectedRating === 5
         ? cuahang.DanhGiaTong === 5
         : cuahang.DanhGiaTong >= selectedRating &&
           cuahang.DanhGiaTong < selectedRating + 1;
+
     return (
       (selectedBadge ? cuahang.badge === selectedBadge : true) &&
       (selectedRating ? ratingMatch : true)
     );
   });
+
+  // filter by price
+  if (selectedPrice === 1) {
+    filteredCuahangs = filteredCuahangs.filter(
+      (cuahang) => cuahang.minGiaBan < 100000
+    );
+  } else if (selectedPrice === 2) {
+    filteredCuahangs = filteredCuahangs.filter(
+      (cuahang) => cuahang.minGiaBan >= 100000 && cuahang.minGiaBan < 200000
+    );
+  } else if (selectedPrice === 3) {
+    filteredCuahangs = filteredCuahangs.filter(
+      (cuahang) => cuahang.minGiaBan >= 200000 && cuahang.minGiaBan < 300000
+    );
+  }
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -102,7 +154,7 @@ const BilliardPage = () => {
   );
 
   const totalPages = Math.ceil(filteredCuahangs.length / itemsPerPage);
-  console.log(currentItems);
+
   return (
     <>
       <Breadcrumb title="Billard Club" items="Billard Club" />
@@ -198,6 +250,7 @@ const BilliardPage = () => {
                     </div>
                   </div>
                 </div>
+                {/*  lọc theo mức giá ở đây */}
                 <div className="booking-item">
                   <h4 className="booking-title">Mức giá VNĐ</h4>
                   <div className="billard-star">
@@ -205,45 +258,48 @@ const BilliardPage = () => {
                       <input
                         className="form-check-input"
                         name="billard-price"
-                        type="checkbox"
+                        type="radio"
                         value="1"
+                        onChange={() => handlePriceChange(1)}
                         id="billard-price1"
                       />
                       <label
                         className="form-check-label"
-                        htmlFor="billard-price11"
+                        htmlFor="billard-price1"
                       >
-                        0 - 50 <span>(20)</span>
+                        Dưới {formatMoney(100000)}
                       </label>
                     </div>
                     <div className="form-check">
                       <input
                         className="form-check-input"
                         name="billard-price"
-                        type="checkbox"
+                        type="radio"
                         value="2"
+                        onChange={() => handlePriceChange(2)}
                         id="billard-price2"
                       />
                       <label
                         className="form-check-label"
                         htmlFor="billard-price2"
                       >
-                        50 - 100 <span>(15)</span>
+                        {formatMoney(100000)} - {formatMoney(200000)}
                       </label>
                     </div>
                     <div className="form-check">
                       <input
                         className="form-check-input"
                         name="billard-price"
-                        type="checkbox"
+                        type="radio"
                         value="3"
+                        onChange={() => handlePriceChange(3)}
                         id="billard-price3"
                       />
                       <label
                         className="form-check-label"
                         htmlFor="billard-price3"
                       >
-                        Trên 100 <span>(18)</span>
+                        {formatMoney(200000)} - {formatMoney(300000)}
                       </label>
                     </div>
                   </div>

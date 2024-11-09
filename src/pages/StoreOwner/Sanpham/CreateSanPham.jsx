@@ -128,6 +128,7 @@ export const CreateSanPham = () => {
               </div>
               <div className="col-lg-6">
                 <div className="form-group">
+               
                   <div className="listing-upload-wrapper">
                     <div
                       className="listing-img-upload"

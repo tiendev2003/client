@@ -3,7 +3,8 @@ import axios from "axios";
 import axiosInstance from "../../api/axiosConfig";
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 const initialState = {
-  booking: [],
+ 
+  bookings: [],
   loading: false,
   error: null,
   bookingDetails: {},
@@ -55,7 +56,11 @@ export const cancelBooking = createAsyncThunk(
   "bookings/cancelBooking",
   async (id, { rejectWithValue }) => {
     try {
-      await axiosInstance.delete(`/setOrder-cancel/id-don-db=${id}`);
+      await axiosInstance.put(`/setOrder-cancel/${id}`,{
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+        },
+      });
       return id;
     } catch (error) {
       console.error("Failed to cancel booking", error);
@@ -81,6 +86,24 @@ export const fetchBookingDetails = createAsyncThunk(
   }
 );
 
+// xuất hóa đơn
+export const exportInvoice = createAsyncThunk(
+  "bookings/exportInvoice",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(`/create-invoice/${id}`,{
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+        },
+      });
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const bookSlice = createSlice({
   name: "book",
   initialState,
@@ -93,7 +116,7 @@ const bookSlice = createSlice({
       })
       .addCase(bookTable.fulfilled, (state, action) => {
         state.loading = false;
-        state.booking = action.payload;
+        state.bookings = action.payload;
       })
       .addCase(bookTable.rejected, (state, action) => {
         state.loading = false;
@@ -115,11 +138,9 @@ const bookSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(cancelBooking.fulfilled, (state, action) => {
+      .addCase(cancelBooking.fulfilled, (state) => {
         state.loading = false;
-        state.bookings = state.bookings.filter(
-          (booking) => booking.id_DonDatBan !== action.payload
-        );
+      
       })
       .addCase(cancelBooking.rejected, (state, action) => {
         console.error("Failed to cancel booking", action.payload);
@@ -137,7 +158,8 @@ const bookSlice = createSlice({
       .addCase(fetchBookingDetails.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+      
   },
 });
 

@@ -20,7 +20,7 @@ axiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      localStorage.removeItem("TOKEN");
+      localStorage.removeItem("userToken");
       window.location.reload();
     }
     return Promise.reject(error);

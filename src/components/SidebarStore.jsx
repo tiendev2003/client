@@ -8,12 +8,18 @@ export const SidebarStore = ({ isOpen }) => {
   const { userInfo } = useSelector((state) => state.auth);
 
   return (
-    <aside className={`sidebar dash-sidebar ${isOpen ? "open" : "closed"}`} style={{
-      paddingBottom: "100px",
-    }}>
+    <aside
+      className={`sidebar dash-sidebar ${isOpen ? "open" : "closed"}`}
+      style={{
+        paddingBottom: "100px",
+      }}
+    >
       <div className="dash-sidebar-top">
         <div className="dash-img">
-          <img src={userInfo.AnhDaiDien_NguoiDung ||   "/img/account/user.jpg"} alt="" />
+          <img
+            src={userInfo.AnhDaiDien_NguoiDung || "/img/account/user.jpg"}
+            alt=""
+          />
           <button type="button" className="profile-img-btn">
             <i className="fa fa-camera"></i>
           </button>
@@ -31,6 +37,11 @@ export const SidebarStore = ({ isOpen }) => {
         <li>
           <Link to="/store">
             <i className="fa fa-gauge-high"></i> Báo cáo &amp; Thống kê{" "}
+          </Link>
+        </li>
+        <li>
+          <Link to="/store/order">
+            <i className="fa fa-gauge-high"></i> Đơn đặt bàn
           </Link>
         </li>
         <li className="profile-menu">
@@ -69,10 +80,14 @@ export const SidebarStore = ({ isOpen }) => {
           <div className="collapse" id="profile-menu-7">
             <ul className="profile-menu-list">
               <li>
-                <Link to="/store/manage-category-table/create">Thêm danh mục bàn</Link>
+                <Link to="/store/manage-category-table/create">
+                  Thêm danh mục bàn
+                </Link>
               </li>
               <li>
-                <Link to="/store/manage-category-table">Danh sách danh mục bàn</Link>
+                <Link to="/store/manage-category-table">
+                  Danh sách danh mục bàn
+                </Link>
               </li>
             </ul>
           </div>
@@ -196,12 +211,6 @@ export const SidebarStore = ({ isOpen }) => {
           </div>
         </li>
 
-        <li>
-          <Link to="/store/payments-invoices">
-            <i className="fa-solid fa-file-invoice-dollar"></i> Quản lý thanh
-            toán và hóa đơn
-          </Link>
-        </li>
         <li>
           <Link to="/store/setting">
             <i className="fa fa-cog"></i> Cài đặt

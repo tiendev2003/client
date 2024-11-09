@@ -29,7 +29,7 @@ const LoginPage = () => {
       switch (userInfo.id_QuyenTK) {
        
         case 1:
-          navigate("/admin");
+          navigate("/admin/dashboard");
           break;
         case 2:
           navigate("/store");

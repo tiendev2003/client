@@ -16,6 +16,7 @@ export const CreateBilliardTable = () => {
     HangBan: "",
     id_DMBan: "",
     id_DichVu: "",
+    
   });
   const { loading } = useSelector((state) => state.banforstore);
   const { dichvus } = useSelector((state) => state.dichvu);

@@ -67,11 +67,11 @@ export const getBanForStoreById = createAsyncThunk(
 
 export const updateBanForStore = createAsyncThunk(
   "banforstore/updateBanForStore",
-  async ({ id, banForStoreData }, { rejectWithValue }) => {
+  async (data, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.put(
-        `/ban/update/${id}`,
-        banForStoreData,
+        `/ban/update/${data.id}`,
+        data,
         {
           headers: {
             "Content-Type": "application/json",
@@ -79,6 +79,7 @@ export const updateBanForStore = createAsyncThunk(
           },
         }
       );
+      console.log(response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -90,13 +91,13 @@ export const deleteBanForStore = createAsyncThunk(
   "banforstore/deleteBanForStore",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.delete(`/ban/delete/${id}`, {
+      await axiosInstance.delete(`/ban/delete/${id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("userToken")}`,
         },
       });
-      return response.data;
+      return id;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -139,7 +140,7 @@ const banforstoreSlice = createSlice({
       })
       .addCase(getBanForStoreById.fulfilled, (state, action) => {
         state.loading = false;
-        state.banforstore = action.payload;
+        state.banforstore = action.payload.data;
       })
       .addCase(getBanForStoreById.rejected, (state) => {
         state.loading = false;
