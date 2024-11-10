@@ -1,33 +1,31 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { fetchRoleById, updateRole } from "../../../features/role/roleSlice";
+import { fetchDMAById, updateDMA } from "../../../features/danhmucanh/dmaSlice";
 
-const EditRole = () => {
+const EditDMA = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { role, loading } = useSelector((state) => state.role);
-
   const [formData, setFormData] = useState({
-    TenQ: "tien123",
+    TenDM: "",
     TrangThai: 1,
   });
 
+  const dispatch = useDispatch();
+  const { loading, danhmucanh } = useSelector((state) => state.danhMucAnh);
   useEffect(() => {
-    dispatch(fetchRoleById(id));
+    dispatch(fetchDMAById(id));
   }, [dispatch, id]);
 
   useEffect(() => {
-    if (role) {
-      console.log(role.TenQ);
-      setFormData({
-        TenQ: role.TenQ,
-        TrangThai: role.TrangThai,
-      });
+    if (danhmucanh) {
+      setFormData((prevData) => ({
+        ...prevData,
+        TenDM: danhmucanh.TenDM,
+        TrangThai: danhmucanh.TrangThai,
+      }));
     }
-  }, [role]);
+  }, [danhmucanh]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,25 +38,22 @@ const EditRole = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      
-      await dispatch(updateRole({ id, ...formData })).unwrap();
-      toast.success("Quyền đã được cập nhật thành công");
-      navigate("/admin/management-role");
+      await dispatch(updateDMA({ id, ...formData })).unwrap();
+      toast.success("Danh mục đã được sửa thành công");
     } catch (err) {
-      toast.error(err.message || "Cập nhật quyền thất bại");
+      toast.error(err.message || "Sửa danh mục thất bại");
     }
   };
-
   return (
     <div className="user-profile-card add-listing">
       <div className="user-profile-card-header">
-        <h4 className="user-profile-card-title">Sửa quyền</h4>
+        <h4 className="user-profile-card-title">Sửa danh mục</h4>
         <div className="user-profile-card-header-right">
           <ul className="breadcrumb-menu d-flex gap-3">
             <li>
-              <Link to="/admin/management-role">Danh sách</Link>
+              <Link to="/admin/management-dma">Danh sách</Link>
             </li>
-            /<li className="active">Sửa quyền</li>
+            /<li className="active">Sửa danh mục</li>
           </ul>
         </div>
       </div>
@@ -68,13 +63,13 @@ const EditRole = () => {
             <div className="row align-items-center">
               <div className="col-lg-6">
                 <div className="form-group">
-                  <label>Tên quyền</label>
+                  <label>Tên danh mục</label>
                   <input
                     type="text"
-                    name="TenQ"
+                    name="TenDM"
                     className="form-control"
-                    placeholder="Tên quyền"
-                    value={formData.TenQ}
+                    placeholder="Tên Danh mục"
+                    value={formData.TenDM}
                     onChange={handleChange}
                     required
                   />
@@ -89,14 +84,14 @@ const EditRole = () => {
                     value={formData.TrangThai}
                     onChange={handleChange}
                   >
-                    <option value={1}>Kích hoạt</option>
-                    <option value={0}>Khóa</option>
+                    <option value={1}>Hoạt động</option>
+                    <option value={0}>Không hoạt động</option>
                   </select>
                 </div>
               </div>
               <div className="col-lg-12">
                 <button type="submit" className="theme-btn" disabled={loading}>
-                  {loading ? "Đang cập nhật..." : "Cập nhật quyền"}
+                  {loading ? "Đang sửa..." : "Sửa danh mục"}
                 </button>
               </div>
             </div>
@@ -107,4 +102,4 @@ const EditRole = () => {
   );
 };
 
-export default EditRole;
+export default EditDMA;

@@ -55,8 +55,8 @@ export const updateRole = createAsyncThunk(
   "roles/updateRole",
   async (data, { rejectWithValue }) => {
     try {
-      console.log(data);
-      const response = await axiosInstance.put(`/quyenTK/update/1`, data, {
+      
+      const response = await axiosInstance.put(`/quyenTK/update/${data.id}`, data, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("userToken")}`,
         },

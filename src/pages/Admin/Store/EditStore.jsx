@@ -107,21 +107,21 @@ const EditStore = () => {
       setSelectedProvince(
         province.find(
           (item) => item.name.toString() === cuahangDetail.tinh_thanhpho
-        ).code
+        )?.code
       );
     }
     if (cuahangDetail && district.length > 0) {
       setSelectedDistrict(
         district.find(
           (item) => item.name.toString() === cuahangDetail.quan_huyen
-        ).code
+        )?.code
       );
     }
 
     if (cuahangDetail && ward.length > 0) {
       setSelectedWard(
         ward.find((item) => item.name.toString() === cuahangDetail.phuong_xa)
-          .code
+          ?.code
       );
     }
   }, [province, district, ward, cuahangDetail]);
@@ -135,12 +135,12 @@ const EditStore = () => {
   };
   const handleImageUploadClick = () => {
     fileInputRef.current.click();
-    setOnChangeImage(true);
+  
   };
 
   const handleImageUploadClickGPKD = () => {
     fileInputRefGPKD.current.click();
-    setOnChangeImageGPKD(true);
+ 
   };
 
   const handleFileChange = (e) => {
@@ -148,6 +148,12 @@ const EditStore = () => {
       ...prevData,
       [e.target.name]: e.target.files[0],
     }));
+    if (e.target.name === "AnhDaiDien_CuaHang") {
+      setOnChangeImage(true);
+    }
+    if (e.target.name === "AnhGPKD") {
+      setOnChangeImageGPKD(true);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -180,7 +186,7 @@ const EditStore = () => {
           AnhGPKD: AnhGPKD,
         };
       }
-      setFormData(updatedFormData);
+  
       await dispatch(
         updateStore({ id: cuahangDetail.id, ...updatedFormData })
       ).unwrap();
@@ -189,6 +195,10 @@ const EditStore = () => {
       toast.error(err.message || "Cập nhật thông tin cửa hàng thất bại");
     } finally {
       setLoading(false);
+      setOnChangeImage(false);
+      setOnChangeImageGPKD(false);
+      setFormData(updatedFormData);
+
     }
   };
 
@@ -383,7 +393,20 @@ const EditStore = () => {
                       onClick={handleImageUploadClick}
                     >
                       <span>
-                        {formData.AnhDaiDien_CuaHang ? (
+                      {onChangeImage && (
+                          <img
+                            src={URL.createObjectURL(
+                              formData.AnhDaiDien_CuaHang ?? ""
+                            )}
+                            alt="Preview"
+                            style={{
+                              width: "100px",
+                              height: "100px",
+                              marginTop: "10px",
+                            }}
+                          />
+                        )}
+                        {formData.AnhDaiDien_CuaHang && !onChangeImage ? (
                           <div className="image-preview">
                             <img
                               src={formData.AnhDaiDien_CuaHang}
@@ -424,7 +447,18 @@ const EditStore = () => {
                       onClick={handleImageUploadClickGPKD}
                     >
                       <span>
-                        {formData.AnhGPKD ? (
+                      {onChangeImageGPKD && (
+                          <img
+                            src={URL.createObjectURL(formData.AnhGPKD ?? "")}
+                            alt="Preview"
+                            style={{
+                              width: "100px",
+                              height: "100px",
+                              marginTop: "10px",
+                            }}
+                          />
+                        )}
+                        {formData.AnhGPKD && !onChangeImageGPKD  ? (
                           <div className="image-preview">
                             <img
                               src={formData.AnhGPKD}

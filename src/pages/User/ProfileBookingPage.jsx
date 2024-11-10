@@ -47,6 +47,7 @@ const ProfileBookingPage = () => {
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+  console.log(currentBookings)
   return (
     <div className="user-profile-card">
       <h4 className="user-profile-card-title">My Booking</h4>
@@ -67,37 +68,44 @@ const ProfileBookingPage = () => {
           <tbody>
             {currentBookings &&
               currentBookings.map((booking, index) => (
-                <tr key={booking.id_DonDatBan}>
+                <tr key={index}>
                   <td>{index + 1}</td>
-                  <td>{booking.ChiTietDatBan[0].id_Ban}</td>
-                  <td>{booking.CuaHang.TenCuaHang || "N/A"}</td>
-                  <td>{new Date(booking.ThoiGianTao).toLocaleDateString()}</td>
-                  <td>{booking.CuaHang.Email}</td>
+                  <td>{booking?.ChiTietDatBan[0]?.id_Ban}</td>
+                  <td>{booking?.CuaHang?.TenCuaHang || "N/A"}</td>
+                  <td>{new Date(booking?.ThoiGianTao).toLocaleDateString()}</td>
+                  <td>{booking?.CuaHang?.Email}</td>
                   <td>
-                    {formatMoney(booking.ChiTietDatBan[0].ThongTinBan.GiaBan)}
+                    {formatMoney(booking?.ChiTietDatBan[0]?.ThongTinBan?.GiaBan ?? 0)}
                   </td>
                   <td>
                     {/* 3 trạng thái là chờ xác nhận, hủy và xác nhận sử dụng 3 badge khác nhau */}
-                    {booking.TrangThai === 1 && (
+                    {booking?.TrangThai === 1 && (
                       <span className="badge badge-warning">Pending</span>
                     )}
-                    {booking.TrangThai === 2 && (
+                    {booking?.TrangThai === 2 && (
                       <span className="badge badge-success">Confirmed</span>
                     )}
-                    {booking.TrangThai === 0 && (
+                    {booking?.TrangThai === 3 && (
+                      <span className="badge badge-success">Completed</span>
+                    )}
+                    {booking?.TrangThai === 0 && (
                       <span className="badge badge-danger">Canceled</span>
                     )}
+                    {booking?.TrangThai === 4 && (
+                      <span className="badge badge-danger">Rejected</span>
+                    )}
+                      
                   </td>
                   <td>
                     <Link
-                      to={`/bookings/${booking.id_DonDatBan}`}
+                      to={`/bookings/${booking?.id_DonDatBan}`}
                       className="btn btn-outline-secondary btn-sm mr-2"
                     >
                       <i className="far fa-eye"></i>
                     </Link>
-                    {booking.TrangThai === 1 && (
+                    {booking?.TrangThai === 1 && (
                       <button
-                        onClick={handleCancelBooking(booking.id_DonDatBan)}
+                        onClick={handleCancelBooking(booking?.id_DonDatBan)}
                         className="btn btn-outline-danger btn-sm mr-2"
                       >
                         <i className="far fa-trash-alt"></i>

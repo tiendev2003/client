@@ -23,14 +23,14 @@ const ProfileBookingDetail = () => {
 
   return (
     <div className="user-profile-card">
-      <h4 className="user-profile-card-title">Booking Details</h4>
+      <h4 className="user-profile-card-title">Chi tiết đặt bàn</h4>
      
-      <h5 className="mt-2">Booking Information</h5>
+      <h5 className="mt-2">Thông tin bàn</h5>
 
       <div className="row align-items-center">
         <div className="col-lg-6">
           <div className="form-group">
-            <label>Booking ID</label>
+            <label>Mã đặt</label>
             <input
               type="text"
               className="form-control"
@@ -41,7 +41,7 @@ const ProfileBookingDetail = () => {
         </div>
         <div className="col-lg-6">
           <div className="form-group">
-            <label>Booking Date</label>
+            <label>Ngày đặt</label>
             <input
               type="text"
               className="form-control"
@@ -51,12 +51,12 @@ const ProfileBookingDetail = () => {
           </div>
         </div>
       </div>
-      <h5 className="mt-2">User Information</h5>
+      <h5 className="mt-2">Thông tin khách hàng</h5>
 
       <div className="row align-items-center">
         <div className="col-lg-4">
           <div className="form-group">
-            <label>Name</label>
+            <label>Tên</label>
             <input
               type="text"
               className="form-control"
@@ -78,7 +78,7 @@ const ProfileBookingDetail = () => {
         </div>
         <div className="col-lg-4">
           <div className="form-group">
-            <label>Phone</label>
+            <label>Số điện thoại</label>
             <input
               type="text"
               className="form-control"
@@ -88,12 +88,12 @@ const ProfileBookingDetail = () => {
           </div>
         </div>
       </div>
-      <h5 className="mt-2">Store Information</h5>
+      <h5 className="mt-2">Thông tin cửa hàng</h5>
 
       <div className="row align-items-center">
         <div className="col-lg-6">
           <div className="form-group">
-            <label>Store Name</label>
+            <label>Tên cửa hàng</label>
             <input
               type="text"
               className="form-control"
@@ -104,7 +104,7 @@ const ProfileBookingDetail = () => {
         </div>
         <div className="col-lg-6">
           <div className="form-group">
-            <label>Phone</label>
+            <label>Số điện thoại</label>
             <input
               type="text"
               className="form-control"

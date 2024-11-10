@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "./../../api/axiosConfig";
 const initialState = {
   banforstores: [],
@@ -11,6 +11,7 @@ export const getBanForStore = createAsyncThunk(
   "banforstore/getBanForStore",
   async ({ rejectWithValue }) => {
     try {
+      console.log(213)
       const response = await axiosInstance.get("/ban", {
         headers: {
           "Content-Type": "application/json",

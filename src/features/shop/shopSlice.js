@@ -4,6 +4,7 @@ import axiosClient from "../../api/axiosClient";
 const initialState = {
   cuahangs: [],
   cuahangDetail: {},
+  searchResult: [],
   loading: false,
   error: null,
   success: false,
@@ -72,22 +73,34 @@ export const activeStore = createAsyncThunk(
   }
 );
 
-
 //  create store
 export const createStore = createAsyncThunk(
   "shop/createStore",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await axiosClient.post(`/create-store`, data,{
+      const response = await axiosClient.post(`/create-store`, data, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("userToken")}`,
         },
       });
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const searchStore = createAsyncThunk(
+  "shop/searchStore",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.post(`/search-cua-hang`, data);
       console.log(response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.message);
-    } 
+    }
   }
 );
 
@@ -157,9 +170,29 @@ const shopSlice = createSlice({
       })
       .addCase(activeStore.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload
+        state.error = action.payload;
       })
-      
+      .addCase(createStore.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createStore.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+      })
+      .addCase(searchStore.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(searchStore.fulfilled, (state, action) => {
+        state.loading = false;
+        state.searchResult = action.payload.data;
+        state.success = true;
+      })
+      .addCase(searchStore.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 

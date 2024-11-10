@@ -1,94 +1,194 @@
-import { useEffect, useRef, useState } from 'react';
-import Isotope from 'isotope-layout';
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { fetchCuahangs } from "../features/shop/shopSlice";
+import { formatMoney } from "../utils/formatMoney";
 
 const BillardTag = () => {
-    const [filter, setFilter] = useState('*');
-    const filterBoxRef = useRef(null);
-    const isotopeInstanceRef = useRef(null);
+  const [filter, setFilter] = useState("*");
 
-    const items = [
-        { id: 1, category: 'cat1', title: 'Billard Club', address: '256 Phan Huy Ích, P.12, Q.Gò Vấp, TP.HCM', rate: 5.0, views: '2.5k Lượt xem', price: '90.000đ /Giờ', image: '../assets/img/billard/01.jpeg' },
-        { id: 2, category: 'cat2', title: 'Billard 24h', address: '256 Phan Huy Ích, P.12, Q.Gò Vấp, TP.HCM', rate: 5.0, views: '2.5k Lượt xem', price: '90.000đ /Giờ', image: '../assets/img/billard/01.jpeg' },
-        { id: 3, category: 'cat3', title: 'Billard VIP', address: '256 Phan Huy Ích, P.12, Q.Gò Vấp, TP.HCM', rate: 5.0, views: '2.5k Lượt xem', price: '90.000đ /Giờ', image: '../assets/img/billard/01.jpeg' },
-        { id: 4, category: 'cat4', title: 'Billard yêu thích', address: '256 Phan Huy Ích, P.12, Q.Gò Vấp, TP.HCM', rate: 5.0, views: '2.5k Lượt xem', price: '90.000đ /Giờ', image: '../assets/img/billard/01.jpeg' },
-    ];
+  const dispatch = useDispatch();
 
-    useEffect(() => {
-   
-        isotopeInstanceRef.current = new Isotope(filterBoxRef.current, {
-            itemSelector: '.filter-item',
-            masonry: {
-                columnWidth: 1,
-            },
-        });
+  const { cuahangs } = useSelector((state) => state.shop);
 
-        return () => {
-            if (isotopeInstanceRef.current) {
-                isotopeInstanceRef.current.destroy();
-            }
-        };
-    }, []);
+  useEffect(() => {
+    dispatch(fetchCuahangs());
+  }, [dispatch]);
 
-    const handleFilterChange = (category) => {
-        console.log(`Filtering by: ${category}`); 
-        setFilter(category);
-        if (isotopeInstanceRef.current) {
-            isotopeInstanceRef.current.arrange({ filter: category });
-        }
-    };
+  const handleFilterChange = (category) => {
+    console.log(`Filtering by: ${category}`);
+    setFilter(category);
+  };
+  const filterdData = cuahangs.filter((cuahang) => {
+    if (filter === "*") {
+      return true;
+    } else {
+      return cuahang.badge === filter;
+    }
+  });
 
-    return (
-        <div className="billard-area py-120">
-            <div className="container">
-                <div className="row">
-                    <div className="col-lg-7 mx-auto">
-                        <div className="site-heading text-center mb-30">
-                            <span className="site-title-tagline">Billard Club</span>
-                            <h2 className="site-title">none</h2>
-                        </div>
-                        <div className="filter-controls">
-                            <ul className="filter-btns">
-                                <li className={filter === '*' ? 'active' : ''} onClick={() => handleFilterChange('*')}>Tất cả</li>
-                                <li className={filter === 'cat1' ? 'active' : ''} onClick={() => handleFilterChange('cat1')}>Billard gần bạn</li>
-                                <li className={filter === 'cat2' ? 'active' : ''} onClick={() => handleFilterChange('cat2')}>Billard 24h</li>
-                                <li className={filter === 'cat3' ? 'active' : ''} onClick={() => handleFilterChange('cat3')}>Billard VIP</li>
-                                <li className={filter === 'cat4' ? 'active' : ''} onClick={() => handleFilterChange('cat4')}>Billard yêu thích</li>
-                            </ul>
-                        </div>
-                    </div>
+  return (
+    <>
+      <div className="banner-area py-120">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-6">
+              <div
+                className="banner-item wow fadeInUp animated"
+                data-wow-duration="1s"
+                data-wow-delay=".25s"
+                style={{
+                  visibility: "visible",
+                  animationDuration: "1s",
+                  animationDelay: "0.25s",
+                }}
+              >
+                <div className="banner-img">
+                  <img src="/img/billard/01.jpeg" alt="" />
                 </div>
-                <div className="row filter-box" ref={filterBoxRef}>
-                    {items.map(item => (
-                        <div key={item.id} className={`col-md-6 col-lg-3 filter-item ${item.category}`}>
-                            <div className="billard-item">
-                                <div className="billard-img">
-                                    <span className="badge">Nổi bật</span>
-                                    <img src={item.image} alt={item.title} />
-                                    <a href="#" className="add-wishlist"><i className="far fa-heart" /></a>
-                                </div>
-                                <div className="billard-content">
-                                    <h4 className="billard-title"><a href="#">{item.title}</a></h4>
-                                    <p><i className="fa-solid fa-location-crosshairs" /> {item.address}</p>
-                                    <div className="billard-rate">
-                                        <span className="badge"><i className="fa fa-star" /> {item.rate}</span>
-                                        <span className="billard-rate-review">({item.views})</span>
-                                    </div>
-                                    <div className="billard-bottom">
-                                        <div className="billard-price">
-                                            <span className="billard-price-amount">{item.price}</span>
-                                        </div>
-                                        <div className="billard-text-btn">
-                                            <a href="#">Chi tiết <i className="fas fa-arrow-right" /></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
+                <div className="banner-content">
+                  <h3>
+                    Đặt lần đầu Giảm ngay <span>70%!</span>
+                  </h3>
+                  <p>
+                    Trải nghiệm dịch vụ đẳng cấp với ưu đãi cực sốc cho lần đặt
+                    đầu tiên. Nhanh tay nhận ngay cơ hội giảm giá hấp dẫn!
+                  </p>
+                  <a href="#" className="theme-btn">
+                    Xem thêm<i className="fa fa-arrow-right"></i>
+                  </a>
                 </div>
+              </div>
             </div>
+            <div className="col-lg-6">
+              <div
+                className="banner-item wow fadeInUp animated"
+                data-wow-duration="1s"
+                data-wow-delay=".50s"
+                style={{
+                  visibility: "visible",
+                  animationDuration: "1s",
+                  animationDelay: "0.5s",
+                }}
+              >
+                <div className="banner-img">
+                  <img src="/img/billard/01.jpeg" alt="" />
+                </div>
+                <div className="banner-content">
+                  <h3>
+                    Chào mừng khai trương<span> ưu đãi 70%!</span>
+                  </h3>
+                  <p>
+                    Đặt lịch ngay hôm nay để nhận voucher ưu đãi lên đến 70%.
+                    Đừng bỏ lỡ cơ hội tận hưởng những giây phút thư giãn tuyệt
+                    vời cùng chúng tôi!
+                  </p>
+                  <a href="#" className="theme-btn">
+                    Xem thêm<i className="fa fa-arrow-right"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-    );
+      </div>
+      <div
+        className="billard-area py-120 "
+        style={{
+          minHeight: "100vh",
+        }}
+      >
+        {" "}
+        <div className="row">
+          <div className="col-lg-7 mx-auto">
+            <div className="site-heading text-center mb-30">
+              <span className="site-title-tagline">Billard Club</span>
+              <h2 className="site-title">none</h2>
+            </div>
+            <div className="filter-controls">
+              <ul className="filter-btns">
+                <li
+                  className={filter === "*" ? "active" : ""}
+                  onClick={() => handleFilterChange("*")}
+                >
+                  Tất cả
+                </li>
+                <li
+                  className={filter === "Quán mới" ? "active" : ""}
+                  onClick={() => handleFilterChange("Quán mới")}
+                >
+                  Quán mới
+                </li>
+                <li
+                  className={filter === "Đang khuyến mãi" ? "active" : ""}
+                  onClick={() => handleFilterChange("Đang khuyến mãi")}
+                >
+                  Đang khuyến mãi
+                </li>
+                <li
+                  className={filter === "Nổi bật" ? "active" : ""}
+                  onClick={() => handleFilterChange("Nổi bật")}
+                >
+                  Nổi bật
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div className="container">
+          <div className="row filter-box"  >
+            {filterdData.map((cuahang) => (
+              <div
+                key={cuahang.id}
+                className={`col-md-6 col-lg-3 filter-item ${cuahang.badge}`}
+              >
+                <div className="billard-item">
+                  <div className="billard-img">
+                    <span className="badge badge-discount">
+                      {cuahang.badge}
+                    </span>
+                    <img
+                      src={cuahang.AnhDaiDien_CuaHang}
+                      alt={cuahang.TenCuaHang}
+                    />
+                  </div>
+
+                  <div className="billard-content">
+                    <h4 className="billard-title">
+                      <a href="#">{cuahang.TenCuaHang}</a>
+                    </h4>
+                    <p>
+                      <i className="fa-solid fa-location-crosshairs" />{" "}
+                      {cuahang.DiaChi}
+                    </p>
+                    <div className="billard-rate">
+                      <span className="badge">
+                        <i className="fa fa-star" /> {cuahang.DanhGiaTong}
+                      </span>
+                    </div>
+                    <div className="billard-bottom">
+                      <div className="billard-price">
+                        <span className="billard-price-amount">
+                          {/* Assuming price is a property */}
+                          {formatMoney(cuahang.minGiaBan)}{" "}
+                          <span className="billard-price-type">/Giờ</span>
+                        </span>
+                      </div>
+                      <div className="billard-text-btn">
+                        <Link to={`/billiard/${cuahang.id}`}>
+                          Chi tiết <i className="fas fa-arrow-right" />
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default BillardTag;

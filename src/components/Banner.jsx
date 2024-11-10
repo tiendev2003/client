@@ -8,7 +8,7 @@ const Banner = () => {
                     <div className="col-lg-6">
                         <div className="banner-item wow fadeInUp" data-wow-duration="1s" data-wow-delay=".25s">
                             <div className="banner-img">
-                                <img src="../assets/img/billard/01.jpeg" alt />
+                                <img src="../assets/img/billard/01.jpeg"  alt="" />
                             </div>
                             <div className="banner-content">
                                 <h3>Đặt lần đầu Giảm ngay <span>70%!</span></h3>
@@ -21,7 +21,7 @@ const Banner = () => {
                     <div className="col-lg-6">
                         <div className="banner-item wow fadeInUp" data-wow-duration="1s" data-wow-delay=".50s">
                             <div className="banner-img">
-                                <img src="../assets/img/billard/01.jpeg" alt />
+                                <img src="../assets/img/billard/01.jpeg" alt="" />
                             </div>
                             <div className="banner-content">
                                 <h3>Chào mừng khai trương<span> ưu đãi 70%!</span></h3>

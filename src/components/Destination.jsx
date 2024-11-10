@@ -15,7 +15,7 @@ const Destination = () => {
           <div className="col-md-12 col-lg-6">
             <div className="destination-item wow animate__fadeInUp" data-wow-duration="1s" data-wow-delay=".25s">
               <div className="destination-img">
-                <img src="https://img6.thuthuatphanmem.vn/uploads/2022/02/09/hinh-anh-dep-ve-thanh-pho-ho-chi-minh_031030613.jpg" alt />
+                <img src="https://img6.thuthuatphanmem.vn/uploads/2022/02/09/hinh-anh-dep-ve-thanh-pho-ho-chi-minh_031030613.jpg"  alt="" />
               </div>
               <div className="destination-info">
                 <h4>TP.Hồ Chí Minh</h4>
@@ -39,7 +39,7 @@ const Destination = () => {
           <div className="col-md-6 col-lg-3">
             <div className="destination-item wow animate__fadeInUp" data-wow-duration="1s" data-wow-delay=".50s">
               <div className="destination-img">
-                <img src="https://haycafe.vn/wp-content/uploads/2021/12/hinh-anh-thanh-pho-Ho-Chi-Minh-luc-len-den.jpg" alt />
+                <img src="https://haycafe.vn/wp-content/uploads/2021/12/hinh-anh-thanh-pho-Ho-Chi-Minh-luc-len-den.jpg"  alt="" />
               </div>
               <div className="destination-info">
                 <h4>Bình Dương</h4>
@@ -63,7 +63,7 @@ const Destination = () => {
           <div className="col-md-6 col-lg-3">
             <div className="destination-item wow animate__fadeInUp" data-wow-duration="1s" data-wow-delay=".75s">
               <div className="destination-img">
-                <img src="https://haycafe.vn/wp-content/uploads/2021/12/hinh-anh-thanh-pho-Ho-Chi-Minh-luc-len-den.jpg" alt />
+                <img src="https://haycafe.vn/wp-content/uploads/2021/12/hinh-anh-thanh-pho-Ho-Chi-Minh-luc-len-den.jpg"  alt="" />
               </div>
               <div className="destination-info">
                 <h4>Cần Thơ</h4>
@@ -87,7 +87,7 @@ const Destination = () => {
           <div className="col-md-6 col-lg-3">
             <div className="destination-item wow animate__fadeInUp" data-wow-duration="1s" data-wow-delay=".25s">
               <div className="destination-img">
-                <img src="https://haycafe.vn/wp-content/uploads/2021/12/hinh-anh-thanh-pho-Ho-Chi-Minh-luc-len-den.jpg" alt />
+                <img src="https://haycafe.vn/wp-content/uploads/2021/12/hinh-anh-thanh-pho-Ho-Chi-Minh-luc-len-den.jpg"  alt="" />
               </div>
               <div className="destination-info">
                 <h4>Đà Nẵng</h4>
@@ -111,7 +111,7 @@ const Destination = () => {
           <div className="col-md-6 col-lg-3">
             <div className="destination-item wow animate__fadeInUp" data-wow-duration="1s" data-wow-delay=".50s">
               <div className="destination-img">
-                <img src="https://haycafe.vn/wp-content/uploads/2021/12/hinh-anh-thanh-pho-Ho-Chi-Minh-luc-len-den.jpg" alt />
+                <img src="https://haycafe.vn/wp-content/uploads/2021/12/hinh-anh-thanh-pho-Ho-Chi-Minh-luc-len-den.jpg"  alt="" />
               </div>
               <div className="destination-info">
                 <h4>Hải Phòng</h4>
@@ -135,7 +135,7 @@ const Destination = () => {
           <div className="col-md-12 col-lg-6">
             <div className="destination-item wow animate__fadeInUp" data-wow-duration="1s" data-wow-delay=".75s">
               <div className="destination-img">
-                <img src="https://img6.thuthuatphanmem.vn/uploads/2022/02/09/hinh-anh-dep-ve-thanh-pho-ho-chi-minh_031030613.jpg" alt />
+                <img src="https://img6.thuthuatphanmem.vn/uploads/2022/02/09/hinh-anh-dep-ve-thanh-pho-ho-chi-minh_031030613.jpg"  alt="" />
               </div>
               <div className="destination-info">
                 <h4>Hà Nội</h4>

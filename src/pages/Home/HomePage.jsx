@@ -2,11 +2,9 @@ import {
   BillardPopular,
   BillardPromotion,
   BillardTag,
-  BlogItem,
   Destination,
-  Hero,Download,
-  Search,
-  Testimonial
+  Hero,
+  Search
 } from "../../components";
  
 const HomePage = () => {
@@ -17,10 +15,9 @@ const HomePage = () => {
       <BillardPromotion />
       <Destination />
       <BillardPopular />
-      {/* <BillardTag /> */}
-      <Testimonial />
-      <Download />
-      <BlogItem />
+      <BillardTag />
+    
+      {/* <BlogItem /> */}
     </>
   );
 };

@@ -10,7 +10,7 @@ import DashboardAdmin from "./pages/Admin/Dashboard";
 import SystemConfiguration from "./pages/Admin/SystemConfiguration";
 import UserManagement from "./pages/Admin/Users/UserManagement";
 import { DashboardStore } from "./pages/StoreOwner/DashboardStore";
-import ManagePromotionsStatistics from "./pages/StoreOwner/ManagePromotionsStatistics";
+import ViewOrder from "./pages/StoreOwner/Orders/ViewOrder";
 import { RegisterStoreOwner } from "./pages/StoreOwner/RegisterStoreOwner";
 import { CreateSanPham } from "./pages/StoreOwner/Sanpham/CreateSanPham";
 import { EditSanpham } from "./pages/StoreOwner/Sanpham/EditSanpham";
@@ -22,14 +22,16 @@ import { CreateBilliardTable } from "./pages/StoreOwner/Tables/CreateBilliardTab
 import ManageBilliardTables from "./pages/StoreOwner/Tables/ManageBilliardTables";
 import ProtectedRoute from "./routing/ProtectedRoute";
 
+import CreateDMA from "./pages/Admin/DanhMucAnh/CreateDMA";
+import EditDMA from "./pages/Admin/DanhMucAnh/EditDMA";
+import ManagementDMA from "./pages/Admin/DanhMucAnh/ManagementDMA";
 import CreateRole from "./pages/Admin/Roles/CreateRole";
 import EditRole from "./pages/Admin/Roles/EditRole";
 import ManagementRole from "./pages/Admin/Roles/ManagementRole";
 import CreateStore from "./pages/Admin/Store/CreateStore";
 import EditStore from "./pages/Admin/Store/EditStore";
 import StoreManagement from "./pages/Admin/Store/StoreManagement";
-import ManagementOrder from "./pages/StoreOwner/Orders/ManagementOrder";
-
+import ViewStore from "./pages/Admin/Store/ViewStore";
 import { CreateCTKM } from "./pages/StoreOwner/CTKM/CreateCTKM";
 import { EditCTKM } from "./pages/StoreOwner/CTKM/EditCTKM";
 import { ManageCTKM } from "./pages/StoreOwner/CTKM/ManageCTKM";
@@ -42,6 +44,7 @@ import { ManageDanhMucCTKM } from "./pages/StoreOwner/DanhMucCTKM/ManageDanhMucC
 import { CreateDanhMucSanPham } from "./pages/StoreOwner/DanhMucSanPham/CreateDanhMucSanPham";
 import { EditDanhMucSanPham } from "./pages/StoreOwner/DanhMucSanPham/EditDanhMucSanPham";
 import { ManageDanhMucSanPham } from "./pages/StoreOwner/DanhMucSanPham/ManageDanhMucSanPham";
+import ManagementOrder from "./pages/StoreOwner/Orders/ManagementOrder";
 import { EditService } from "./pages/StoreOwner/Services/EditService";
 import { EditBilliardTable } from "./pages/StoreOwner/Tables/EditBilliardTable";
 
@@ -125,6 +128,10 @@ function App() {
                 path="/admin/management-store/edit/:id"
                 element={<EditStore />}
               />
+              <Route
+                path="/admin/management-store/view/:id"
+                element={<ViewStore />}
+              />
 
               <Route
                 path="/admin/management-role"
@@ -137,6 +144,16 @@ function App() {
               <Route
                 path="/admin/management-role/edit/:id"
                 element={<EditRole />}
+              />
+
+              <Route path="/admin/management-dma" element={<ManagementDMA />} />
+              <Route
+                path="/admin/management-dma/create"
+                element={<CreateDMA />}
+              />
+              <Route
+                path="/admin/management-dma/edit/:id"
+                element={<EditDMA />}
               />
 
               <Route
@@ -243,10 +260,7 @@ function App() {
 
               {/* thống kê */}
 
-              <Route
-                path="/store/promotions-statistics"
-                element={<ManagePromotionsStatistics />}
-              />
+              <Route path="/store/order/view" element={<ViewOrder />} />
               <Route path="/store/order" element={<ManagementOrder />} />
               <Route path="/store/setting" element={<SettingStore />} />
             </Route>

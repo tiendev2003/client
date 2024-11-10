@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Breadcrumb } from "../../components";
-import { fetchCuahangs } from "../../features/shop/shopSlice";
+import { fetchCuahangs, searchStore } from "../../features/shop/shopSlice";
 import { formatMoney } from "../../utils/formatMoney";
 
 const BilliardPage = () => {
   const dispatch = useDispatch();
-  const { cuahangs, loading, error } = useSelector((state) => state.shop);
+  const { cuahangs, loading, error, searchResult } = useSelector(
+    (state) => state.shop
+  );
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -24,6 +26,8 @@ const BilliardPage = () => {
   const [selectedRating, setSelectedRating] = useState(ratingQuery);
   const [selectedPrice, setSelectedPrice] = useState(priceQuery);
   const [filterCuahangs, setFilterCuahangs] = useState([]);
+  const [province, setProvince] = useState([]);
+  const [selectedProvince, setSelectedProvince] = useState("");
 
   useEffect(() => {
     dispatch(fetchCuahangs());
@@ -49,19 +53,45 @@ const BilliardPage = () => {
     const params = new URLSearchParams(location.search);
     const province = params.get("province");
     const district = params.get("district");
+    const ward = params.get("ward");
+    if (
+      province ||
+      district ||
+      (ward && searchResult && searchResult.length > 0)
+    ) {
+      setFilterCuahangs(searchResult);
+    }
+  }, [location.search, searchResult]);
 
-    if (province || district) {
-      const filtered = cuahangs.filter((cuahang) => {
-        return (
-          (!province || cuahang.tinh_thanhpho === province) &&
-          (!district || cuahang.quan_huyen === district)
-        );
-      });
-      setFilterCuahangs(filtered);
+  useEffect(() => {
+    const fetchProvince = async () => {
+      const res = await fetch(
+        "https://provinces.open-api.vn/api/?depth=1"
+      ).then((res) => res.json());
+      setProvince(res);
+    };
+    fetchProvince();
+  }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const province = params.get("province");
+    const district = params.get("district");
+    const ward = params.get("ward");
+
+    if (province || district || ward) {
+      console.log(province, district, ward);
+      dispatch(
+        searchStore({
+          tinh_thanhpho: province == undefined ? "" : province,
+          quan_huyen: district == undefined ? "" : district,
+          phuong_xa: ward == undefined ? "" : ward,
+        })
+      );
     } else {
       setFilterCuahangs(cuahangs);
     }
-  }, [location.search, cuahangs]);
+  }, [location.search, dispatch]);
 
   // Calculate the number of stores for each rating
   const ratingCounts = cuahangs.reduce((acc, cuahang) => {
@@ -131,21 +161,6 @@ const BilliardPage = () => {
     );
   });
 
-  // filter by price
-  if (selectedPrice === 1) {
-    filteredCuahangs = filteredCuahangs.filter(
-      (cuahang) => cuahang.minGiaBan < 100000
-    );
-  } else if (selectedPrice === 2) {
-    filteredCuahangs = filteredCuahangs.filter(
-      (cuahang) => cuahang.minGiaBan >= 100000 && cuahang.minGiaBan < 200000
-    );
-  } else if (selectedPrice === 3) {
-    filteredCuahangs = filteredCuahangs.filter(
-      (cuahang) => cuahang.minGiaBan >= 200000 && cuahang.minGiaBan < 300000
-    );
-  }
-
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredCuahangs.slice(
@@ -176,77 +191,25 @@ const BilliardPage = () => {
                 <div className="booking-item">
                   <h4 className="booking-title">Vị trí</h4>
                   <div className="facility">
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        name="facility"
-                        type="checkbox"
-                        value="1"
-                        id="facility1"
-                      />
-                      <label className="form-check-label" htmlFor="facility1">
-                        TP.Hồ Chí Minh <span>(20)</span>
-                      </label>
-                    </div>
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        name="facility"
-                        type="checkbox"
-                        value="2"
-                        id="facility2"
-                      />
-                      <label className="form-check-label" htmlFor="facility2">
-                        Hà Nội <span>(15)</span>
-                      </label>
-                    </div>
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        name="facility"
-                        type="checkbox"
-                        value="3"
-                        id="facility3"
-                      />
-                      <label className="form-check-label" htmlFor="facility3">
-                        Cần Thơ <span>(18)</span>
-                      </label>
-                    </div>
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        name="facility"
-                        type="checkbox"
-                        value="4"
-                        id="facility4"
-                      />
-                      <label className="form-check-label" htmlFor="facility4">
-                        Bình Dương <span>(35)</span>
-                      </label>
-                    </div>
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        name="facility"
-                        type="checkbox"
-                        value="5"
-                        id="facility5"
-                      />
-                      <label className="form-check-label" htmlFor="facility5">
-                        Hải Phòng <span>(12)</span>
-                      </label>
-                    </div>
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        name="facility"
-                        type="checkbox"
-                        value="6"
-                        id="facility6"
-                      />
-                      <label className="form-check-label" htmlFor="facility6">
-                        Đà Nẵng <span>(18)</span>
-                      </label>
+                    {/* select  */}
+                    <div className="form-group">
+                      <label>Tỉnh/Thành phố</label>
+                      <div className="form-group-icon mt-2">
+                        <select
+                          className="form-control"
+                          name="province"
+                          onChange={(e) => {
+                            navigate(`?province=${e.target.value}`);
+                          }}
+                        >
+                          <option value="">Chọn tỉnh/thành phố</option>
+                          {province.map((item) => (
+                            <option key={item.code} value={item.name}>
+                              {item.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -260,7 +223,7 @@ const BilliardPage = () => {
                         name="billard-price"
                         type="radio"
                         value="1"
-                        onChange={() => handlePriceChange(1)}
+                        onChange={() => handlePriceChange(100000)}
                         id="billard-price1"
                       />
                       <label
@@ -276,7 +239,7 @@ const BilliardPage = () => {
                         name="billard-price"
                         type="radio"
                         value="2"
-                        onChange={() => handlePriceChange(2)}
+                        onChange={() => handlePriceChange(200000)}
                         id="billard-price2"
                       />
                       <label
@@ -292,7 +255,7 @@ const BilliardPage = () => {
                         name="billard-price"
                         type="radio"
                         value="3"
-                        onChange={() => handlePriceChange(3)}
+                        onChange={() => handlePriceChange(300000)}
                         id="billard-price3"
                       />
                       <label

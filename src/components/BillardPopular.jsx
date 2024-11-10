@@ -1,13 +1,12 @@
 import "@slick/slick-theme.css";
 import "@slick/slick.css";
 import "animate.css/animate.min.css";
-import Slider from "react-slick";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from 'react-router-dom';
+import Slider from "react-slick";
 import { fetchCuahangs } from "./../features/shop/shopSlice";
 import { formatMoney } from './../utils/formatMoney';
-import { Link } from 'react-router-dom';
 const BillardPopular = () => {
   const settings = {
     infinite: true,
@@ -52,7 +51,7 @@ const BillardPopular = () => {
   };
   const dispatch = useDispatch();
 
-  const { cuahangs, loading, error } = useSelector((state) => state.shop);
+  const { cuahangs } = useSelector((state) => state.shop);
 
   useEffect(() => {
     dispatch(fetchCuahangs());
@@ -73,35 +72,39 @@ const BillardPopular = () => {
           </div>
         </div>
         <Slider {...settings} className="billard-slider">
-          {billardItems.map((item) => (
-            <div key={item.id} className="billard-item mr-2">
+          {billardItems.map((cuahang,index) => (
+              <div className="billard-item" key={index}>
               <div className="billard-img">
-                <span className="badge">{item.discount}</span>
-                <img src={item.AnhDaiDien_CuaHang} alt={item.TenCuaHang} />
-                
+                <span className="badge badge-discount">{cuahang.badge}</span>
+                <img
+                  src={cuahang.AnhDaiDien_CuaHang}
+                  alt={cuahang.TenCuaHang}
+                />
               </div>
+
               <div className="billard-content">
                 <h4 className="billard-title">
-                  <a href="#">{item.TenCuaHang}</a>
+                  <a href="#">{cuahang.TenCuaHang}</a>
                 </h4>
                 <p>
                   <i className="fa-solid fa-location-crosshairs" />{" "}
-                  {item.DiaChi}
+                  {cuahang.DiaChi}
                 </p>
                 <div className="billard-rate">
                   <span className="badge">
-                    <i className="fa fa-star" /> {item.DanhGiaTong}
+                    <i className="fa fa-star" /> {cuahang.DanhGiaTong}
                   </span>
                 </div>
                 <div className="billard-bottom">
                   <div className="billard-price">
                     <span className="billard-price-amount">
-                      {formatMoney(item.minGiaBan)} 
+                      {/* Assuming price is a property */}
+                      {formatMoney(cuahang.minGiaBan)}{" "}
                       <span className="billard-price-type">/Giờ</span>
                     </span>
                   </div>
                   <div className="billard-text-btn">
-                    <Link to={`/billiard/${item.id}`}>
+                    <Link to={`/billiard/${cuahang.id}`}>
                       Chi tiết <i className="fas fa-arrow-right" />
                     </Link>
                   </div>

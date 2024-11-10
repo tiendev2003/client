@@ -63,7 +63,6 @@ export const SidebarAdmin = ({ isOpen }) => {
                 <li>
                   <Link
                     to="/admin/management-store/create"
-                    exact
                     className={
                       isActive("/admin/management-store/create") ? "active" : ""
                     }
@@ -74,7 +73,6 @@ export const SidebarAdmin = ({ isOpen }) => {
                 <li>
                   <Link
                     to="/admin/management-store"
-                    exact
                     className={
                       isActive("/admin/management-store") ? "active" : ""
                     }
@@ -102,7 +100,6 @@ export const SidebarAdmin = ({ isOpen }) => {
                 <li>
                   <Link
                     to="/admin/management-role/create"
-                    exact
                     className={
                       isActive("/admin/management-role/create") ? "active" : ""
                     }
@@ -113,7 +110,6 @@ export const SidebarAdmin = ({ isOpen }) => {
                 <li>
                   <Link
                     to="/admin/management-role"
-                    exact
                     className={
                       isActive("/admin/management-role") ? "active" : ""
                     }
@@ -124,6 +120,43 @@ export const SidebarAdmin = ({ isOpen }) => {
               </ul>
             </div>
           </li>
+          <li className="profile-menu">
+            <a
+              href="#profile-menu-4"
+              data-bs-toggle="collapse"
+              aria-expanded="true"
+              aria-controls="profile-menu-4"
+              className="collapsed"
+            >
+              <i className="fa-solid fa-images"></i> Quản lí danh mục ảnh
+              <i className="fa-solid fa-caret-down profile-menu-angle"></i>
+            </a>
+            <div className="collapse" id="profile-menu-4">
+              <ul className="profile-menu-list">
+                <li>
+                  <Link
+                    to="/admin/management-dma/create"
+                    className={
+                      isActive("/admin/management-dma/create") ? "active" : ""
+                    }
+                  >
+                    Thêm danh mục
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/admin/management-dma"
+                    className={
+                      isActive("/admin/management-dma") ? "active" : ""
+                    }
+                  >
+                    Danh sách danh mục ảnh
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </li>
+          
 
           <li>
             <a

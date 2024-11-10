@@ -62,7 +62,7 @@ const ProfileSettingPage = () => {
     <>
       <div className="col-lg-12 mb-4">
         <div className="user-profile-card">
-          <h4 className="user-profile-card-title">Update Profile Info</h4>
+          <h4 className="user-profile-card-title">Cập nhật thông tin người dùng</h4>
           <div className="user-profile-form">
             <form onSubmit={handleUserSubmit}>
               <div className="row">
@@ -137,7 +137,7 @@ const ProfileSettingPage = () => {
                   <input
                     type="password"
                     className="form-control"
-                    placeholder="Old Password"
+                    placeholder="********"
                     name="old_password"
                     value={passwordData.old_password}
                     onChange={handlePasswordChange}
@@ -148,7 +148,7 @@ const ProfileSettingPage = () => {
                   <input
                     type="password"
                     className="form-control"
-                    placeholder="New Password"
+                   placeholder="********"
                     value={passwordData.new_password}
                     onChange={handlePasswordChange}
                     name="new_password"
@@ -159,7 +159,7 @@ const ProfileSettingPage = () => {
                   <input
                     type="password"
                     className="form-control"
-                    placeholder="Re-Type Password"
+                 placeholder="********"
                     name="confirm_password"
                     value={passwordData.confirm_password}
                     onChange={handlePasswordChange}

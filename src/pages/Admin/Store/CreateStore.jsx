@@ -116,14 +116,17 @@ const CreateStore = () => {
       }
       updatedFormData = {
         ...updatedFormData,
-        tinh_thanhpho:  province.find((item) => item.code.toString() === selectedProvince).name,
-        quan_huyen:  district.find((item) => item.code.toString() === selectedDistrict).name,
-        phuong_xa:  ward.find((item) => item.code.toString() === selectedWard).name,
+        tinh_thanhpho: province.find(
+          (item) => item.code.toString() === selectedProvince
+        ).name,
+        quan_huyen: district.find(
+          (item) => item.code.toString() === selectedDistrict
+        ).name,
+        phuong_xa: ward.find((item) => item.code.toString() === selectedWard)
+          .name,
       };
-      
-      console.log(updatedFormData);
-      await dispatch(createStore(updatedFormData)).unwrap();
 
+      await dispatch(createStore(updatedFormData)).unwrap();
       toast.success("Cửa hàng đã được tạo thành công");
     } catch (err) {
       console.log(err);
