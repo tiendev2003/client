@@ -10,8 +10,8 @@ import DashboardAdmin from "./pages/Admin/Dashboard";
 import SystemConfiguration from "./pages/Admin/SystemConfiguration";
 import UserManagement from "./pages/Admin/Users/UserManagement";
 import { DashboardStore } from "./pages/StoreOwner/DashboardStore";
+ 
 import ViewOrder from "./pages/StoreOwner/Orders/ViewOrder";
-import { RegisterStoreOwner } from "./pages/StoreOwner/RegisterStoreOwner";
 import { CreateSanPham } from "./pages/StoreOwner/Sanpham/CreateSanPham";
 import { EditSanpham } from "./pages/StoreOwner/Sanpham/EditSanpham";
 import { ManageSanpham } from "./pages/StoreOwner/Sanpham/ManageSanpham";
@@ -44,6 +44,9 @@ import { ManageDanhMucCTKM } from "./pages/StoreOwner/DanhMucCTKM/ManageDanhMucC
 import { CreateDanhMucSanPham } from "./pages/StoreOwner/DanhMucSanPham/CreateDanhMucSanPham";
 import { EditDanhMucSanPham } from "./pages/StoreOwner/DanhMucSanPham/EditDanhMucSanPham";
 import { ManageDanhMucSanPham } from "./pages/StoreOwner/DanhMucSanPham/ManageDanhMucSanPham";
+import { DetailPaymentInvoices } from "./pages/StoreOwner/DetailPaymentInvoices";
+import ManagePaymentsInvoices from "./pages/StoreOwner/ManagePaymentsInvoices";
+import DetailOrder from "./pages/StoreOwner/Orders/DetailOrder";
 import ManagementOrder from "./pages/StoreOwner/Orders/ManagementOrder";
 import { EditService } from "./pages/StoreOwner/Services/EditService";
 import { EditBilliardTable } from "./pages/StoreOwner/Tables/EditBilliardTable";
@@ -262,12 +265,18 @@ function App() {
 
               <Route path="/store/order/view" element={<ViewOrder />} />
               <Route path="/store/order" element={<ManagementOrder />} />
+              <Route path="/store/order/:id" element={<DetailOrder />} />
               <Route path="/store/setting" element={<SettingStore />} />
-            </Route>
-            <Route
-              path="/store/register-update"
-              element={<RegisterStoreOwner />}
+              <Route
+                path="/store/invoice"
+                element={<ManagePaymentsInvoices />}
+              />
+                <Route
+              path="/store/invoice/:id"
+              element={<DetailPaymentInvoices />}
             />
+            </Route>
+          
           </Route>
         </Routes>
       </Suspense>

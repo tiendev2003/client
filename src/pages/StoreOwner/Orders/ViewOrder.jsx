@@ -1,40 +1,29 @@
-import { useEffect, useState } from "react";
+import   { useEffect, useState } from "react";
+import "react-modern-drawer/dist/index.css";
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import {
-  fetchOrders,
-  updateStatusOrder,
-} from "../../../features/orders/orderSlice";
+import { useNavigate, } from "react-router-dom";
+import { fetchOrders } from "../../../features/orders/orderSlice";
 
 const ViewOrder = () => {
   const dispatch = useDispatch();
-  const { orders, order } = useSelector((state) => state.orders);
+  const navigation = useNavigate();
+
+  const { orders } = useSelector((state) => state.orders);
+  const { userInfo } = useSelector((state) => state.auth);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { userInfo } = useSelector((state) => state.auth);
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
   useEffect(() => {
     dispatch(fetchOrders(userInfo.cuahang.id));
   }, [dispatch, userInfo.cuahang.id]);
-  const handleChangeStatus = async (orderId, newStatus) => {
-    if (newStatus === "0") {
-      console.log("Chờ xác nhận");
-    }
-    if (newStatus === "1") {
-      try {
-        await dispatch(updateStatusOrder(orderId)).unwrap();
-        toast.success("Cập nhật trạng thái thành công");
-      } catch (error) {
-        console.error("Update status failed:", error);
-        toast.error("Cập nhật trạng thái thất bại");
-      }
-    }
-    if (newStatus === "2") {
-      console.log("Đã hủy");
-    }
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
   };
+
+  const handleTableClick = (order) => {
+    navigation("/store/order/" + order.id_DonDatBan);
+  };
+
   return (
     <div className="user-profile-card user-profile-listing">
       <div className="user-profile-card-header">
@@ -56,8 +45,12 @@ const ViewOrder = () => {
       </div>
       <div className="table-overview">
         {orders.length > 0 ? (
-          orders.map((order) => (
-            <div key={order.id} className={`table-item ${order.status}`}>
+          orders.map((order, index) => (
+            <div
+              key={index}
+              className={`table-item ${order.status}`}
+              onClick={() => handleTableClick(order)}
+            >
               <img
                 src={
                   order.status === "occupied"
@@ -71,9 +64,7 @@ const ViewOrder = () => {
             </div>
           ))
         ) : (
-          <div className="no-data">
-            <p>Không có dữ liệu</p>
-          </div>
+          <p>Không có đơn đặt bàn nào</p>
         )}
       </div>
     </div>

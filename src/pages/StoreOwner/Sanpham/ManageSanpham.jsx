@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import {
-  fetchProducts,
-  deleteProduct,
-} from "../../../features/sanpham/sanphamSlice";
 import { toast } from "react-toastify";
+import {
+  deleteProduct,
+  fetchProducts,
+} from "../../../features/sanpham/sanphamSlice";
 import { formatMoney } from './../../../utils/formatMoney';
 
 export const ManageSanpham = () => {
@@ -18,7 +18,7 @@ export const ManageSanpham = () => {
   const { products, loading, error } = useSelector((state) => state.products);
 
   useEffect(() => {
-    dispatch(fetchProducts(userInfo.cuahang));
+    dispatch(fetchProducts(userInfo.cuahang.id));
   }, [dispatch, userInfo.cuahang]);
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);

@@ -10,6 +10,7 @@ import danhMucBanReducer from "./features/danhmucban/danhMucBanSlice";
 import danhMucKhuyenMaiReducer from "./features/danhmuckm/danhMucKhuyenMaiSlice";
 import danhMucSanPhamReducer from "./features/danhmucsanpham/danhMucSanPhamSlice";
 import dichvuReducer from "./features/dichvu/dichvuSlice";
+import hoadonReducer from "./features/hoadon/hoadonSlice";
 import orderReducer from "./features/orders/orderSlice";
 import roleSlice from "./features/role/roleSlice";
 import productReducer from "./features/sanpham/sanphamSlice";
@@ -33,6 +34,7 @@ const store = configureStore({
     danhgia: danhgiaSlice,
     orders: orderReducer,
     danhMucAnh: danhMucAnhReducer,
+    hoadon: hoadonReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(authApi.middleware),

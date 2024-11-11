@@ -43,7 +43,7 @@ const BilliardDetailPage = () => {
   const [reviewContent, setReviewContent] = useState("");
   const [onChange, setOnChange] = useState(false);
   const [editingReviewId, setEditingReviewId] = useState(null);
- 
+
   useEffect(() => {
     dispatch(fetchCuahangDetail(id));
   }, [dispatch, id]);
@@ -536,18 +536,20 @@ const BilliardDetailPage = () => {
                               className="billard-detail-review-item "
                               style={{
                                 cursor:
-                                  userInfo.id === item.id_TaiKhoan
+                                  userInfo && userInfo.id === item.id_TaiKhoan
                                     ? "pointer"
                                     : "default",
                               }}
                               onClick={() => {
-                                if (userInfo.id === item.id_TaiKhoan) {
-                                  handleEditClick(
-                                    item.id,
-                                    item.DG_Diem,
-                                    item.DG_NoiDung
-                                  );
-                                } 
+                                if (userInfo) {
+                                  if (userInfo.id === item.id_TaiKhoan) {
+                                    handleEditClick(
+                                      item.id,
+                                      item.DG_Diem,
+                                      item.DG_NoiDung
+                                    );
+                                  }
+                                }
                               }}
                             >
                               <div className="billard-detail-review-author">

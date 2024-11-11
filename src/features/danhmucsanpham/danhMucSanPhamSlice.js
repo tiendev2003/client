@@ -17,6 +17,7 @@ export const getDanhMucs = createAsyncThunk(
           Authorization: `Bearer ${localStorage.getItem("userToken")}`,
         },
       });
+      console.log(response.data)
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);

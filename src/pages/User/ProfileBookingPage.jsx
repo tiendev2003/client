@@ -56,7 +56,6 @@ const ProfileBookingPage = () => {
           <thead>
             <tr>
               <th>No</th>
-              <th>Bàn id</th>
               <th>Cửa hàng</th>
               <th>Ngày đặt</th>
               <th>Email</th>
@@ -70,8 +69,7 @@ const ProfileBookingPage = () => {
               currentBookings.map((booking, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td>{booking?.ChiTietDatBan[0]?.id_Ban}</td>
-                  <td>{booking?.CuaHang?.TenCuaHang || "N/A"}</td>
+                  <td>{booking?.CuaHang?.Email || "N/A"}</td>
                   <td>{new Date(booking?.ThoiGianTao).toLocaleDateString()}</td>
                   <td>{booking?.CuaHang?.Email}</td>
                   <td>

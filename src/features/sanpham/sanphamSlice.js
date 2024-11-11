@@ -67,9 +67,9 @@ export const addProduct = createAsyncThunk(
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
   async (data, { rejectWithValue }) => {
-    console.log(data.id);
+    console.log(data);
     try {
-      const response = await axiosInstance.get(`/SanPham/1`, {
+      const response = await axiosInstance.get(`/SanPham/${data}`,{
         headers: {
           Authorization: `Bearer ${localStorage.getItem("userToken")}`,
         },

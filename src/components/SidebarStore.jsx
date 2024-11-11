@@ -44,6 +44,11 @@ export const SidebarStore = ({ isOpen }) => {
             <i className="fa fa-gauge-high"></i> Đơn đặt bàn
           </Link>
         </li>
+        <li>
+          <Link to="/store/invoice">
+            <i className="fas fa-file-invoice"></i> Hóa đơn
+          </Link>
+        </li>
         <li className="profile-menu">
           <a
             href="#profile-menu-1"

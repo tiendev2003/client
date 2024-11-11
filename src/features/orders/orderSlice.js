@@ -36,6 +36,7 @@ export const detailOrder = createAsyncThunk(
           Authorization: `Bearer ${localStorage.getItem("userToken")}`,
         },
       });
+      console.log(response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -48,6 +49,25 @@ export const updateStatusOrder = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     try {
       await axiosInstance.put(`/setOrder-confirm/${data}`, data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+        },
+      });
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// xuát hóa đơn
+
+export const exportBill = createAsyncThunk(
+  "order/exportBill",
+  async (data, { rejectWithValue }) => {
+    try {
+      await axiosInstance.post(`/create-invoice/${data.id}`, data, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("userToken")}`,
@@ -92,7 +112,7 @@ export const orderSlice = createSlice({
         state.loading = false;
         // remove order by id
         state.orders = state.orders.filter(
-          (order) => order.id !== action.payload
+          (order) => order.id_DonDatBan !== action.payload
         );
       })
       .addCase(updateStatusOrder.rejected, (state) => {
