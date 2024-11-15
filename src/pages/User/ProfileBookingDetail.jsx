@@ -5,7 +5,7 @@ import { fetchBookingDetails } from "../../features/book/bookSlice";
 const ProfileBookingDetail = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { bookingDetails, loading, error } = useSelector(
+  const { bookingDetails, loading,   } = useSelector(
     (state) => state.booking
   );
 
@@ -19,7 +19,7 @@ const ProfileBookingDetail = () => {
   if (!bookingDetails) {
     return <div>No booking details found</div>;
   }
-  const { booking_details, user_details, cuahang_data } = bookingDetails;
+  const {  user_details, cuahang_data } = bookingDetails;
 
   return (
     <div className="user-profile-card">
@@ -34,7 +34,7 @@ const ProfileBookingDetail = () => {
             <input
               type="text"
               className="form-control"
-              value={booking_details?.id_DonDB}
+              value={bookingDetails?.booking?.id_DonDB}
               disabled
             />
           </div>
@@ -45,7 +45,7 @@ const ProfileBookingDetail = () => {
             <input
               type="text"
               className="form-control"
-              value={new Date(booking_details?.ngay_dat).toLocaleDateString()}
+              value={new Date(bookingDetails?.booking?.ngay_dat).toLocaleDateString()}
               disabled
             />
           </div>
@@ -97,7 +97,7 @@ const ProfileBookingDetail = () => {
             <input
               type="text"
               className="form-control"
-              value={cuahang_data?.TenCuaHang}
+              value={cuahang_data?.ten_cua_hang}
               disabled
             />
           </div>
@@ -108,29 +108,19 @@ const ProfileBookingDetail = () => {
             <input
               type="text"
               className="form-control"
-              value={cuahang_data?.SDT}
+              value={cuahang_data?.sdt}
               disabled
             />
           </div>
         </div>
-        <div className="col-lg-6">
-          <div className="form-group">
-            <label>Email</label>
-            <input
-              type="text"
-              className="form-control"
-              value={cuahang_data?.Email}
-              disabled
-            />
-          </div>
-        </div>
+        
         <div className="col-lg-6">
           <div className="form-group">
             <label>Địa chỉ</label>
             <input
               type="text"
               className="form-control"
-              value={cuahang_data?.DiaChi}
+              value={cuahang_data?.dia_chi}
               disabled
             />
           </div>

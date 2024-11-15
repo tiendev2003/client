@@ -22,6 +22,9 @@ import { CreateBilliardTable } from "./pages/StoreOwner/Tables/CreateBilliardTab
 import ManageBilliardTables from "./pages/StoreOwner/Tables/ManageBilliardTables";
 import ProtectedRoute from "./routing/ProtectedRoute";
 
+import CreateBanner from "./pages/Admin/Banner/CreateBanner";
+import EditBanner from "./pages/Admin/Banner/EditBanner";
+import ManagementBanner from "./pages/Admin/Banner/ManagementBanner";
 import CreateDMA from "./pages/Admin/DanhMucAnh/CreateDMA";
 import EditDMA from "./pages/Admin/DanhMucAnh/EditDMA";
 import ManagementDMA from "./pages/Admin/DanhMucAnh/ManagementDMA";
@@ -35,6 +38,7 @@ import ViewStore from "./pages/Admin/Store/ViewStore";
 import { CreateCTKM } from "./pages/StoreOwner/CTKM/CreateCTKM";
 import { EditCTKM } from "./pages/StoreOwner/CTKM/EditCTKM";
 import { ManageCTKM } from "./pages/StoreOwner/CTKM/ManageCTKM";
+import CurrentStore from "./pages/StoreOwner/CurrentStore";
 import { CreateDanhMucBan } from "./pages/StoreOwner/DanhMucBan/CreateDanhMucBan";
 import { EditDanhMucBan } from "./pages/StoreOwner/DanhMucBan/EditDanhMucBan";
 import { ManageDanhMucBan } from "./pages/StoreOwner/DanhMucBan/ManageDanhMucBan";
@@ -158,6 +162,21 @@ function App() {
                 path="/admin/management-dma/edit/:id"
                 element={<EditDMA />}
               />
+              
+
+              <Route
+                path="/admin/banner"
+                element={<ManagementBanner />}
+              />
+              <Route
+                path="/admin/banner/create"
+                element={<CreateBanner />}
+              />
+              <Route
+                path="/admin/banner/eidt/:id"
+                element={<EditBanner />}
+              />
+
 
               <Route
                 path="/admin/content-management"
@@ -262,10 +281,10 @@ function App() {
               />
 
               {/* thống kê */}
-
+              <Route path="/store/location" element={<CurrentStore />} />
               <Route path="/store/order/view" element={<ViewOrder />} />
               <Route path="/store/order" element={<ManagementOrder />} />
-              <Route path="/store/order/:id" element={<DetailOrder />} />
+              <Route path="/store/order/:id/:idban" element={<DetailOrder />} />
               <Route path="/store/setting" element={<SettingStore />} />
               <Route
                 path="/store/invoice"

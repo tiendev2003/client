@@ -1,7 +1,7 @@
-import   { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "react-modern-drawer/dist/index.css";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { fetchOrders } from "../../../features/orders/orderSlice";
 
 const ViewOrder = () => {
@@ -21,8 +21,13 @@ const ViewOrder = () => {
   };
 
   const handleTableClick = (order) => {
+     if (order.TrangThai !== 2) {
+      return;
+    }
+
     navigation("/store/order/" + order.id_DonDatBan);
   };
+  console.log(orders);
 
   return (
     <div className="user-profile-card user-profile-listing">
@@ -48,19 +53,17 @@ const ViewOrder = () => {
           orders.map((order, index) => (
             <div
               key={index}
-              className={`table-item ${order.status}`}
+              className={`table-item ${order.TrangThai}`}
               onClick={() => handleTableClick(order)}
             >
               <img
-                src={
-                  order.status === "occupied"
-                    ? "/public/img/logo/favicon-dark.png"
-                    : "/public/img/logo/favicon-dark.png"
-                }
-                alt={order.status}
-                className="table-icon"
+                src={"/public/img/logo/favicon-dark.png"}
+                alt={order.TrangThai}
+                className={`table-icon `}
               />
-              <span className="table-name">{order.name}</span>
+              <span className="table-name text-black">
+                {order.TenNguoiDung}
+              </span>
             </div>
           ))
         ) : (

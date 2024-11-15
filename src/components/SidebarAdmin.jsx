@@ -13,7 +13,12 @@ export const SidebarAdmin = ({ isOpen }) => {
   };
   return (
     <>
-      <aside className={`sidebar dash-sidebar ${isOpen ? "open" : "closed"}`}>
+      <aside
+        className={`sidebar dash-sidebar ${isOpen ? "open" : "closed"}`}
+        style={{
+          paddingBottom: "100px",
+        }}
+      >
         <div className="dash-sidebar-top">
           <div className="dash-img">
             <img src={userInfo.AnhDaiDien_NguoiDung} alt="" />
@@ -46,7 +51,6 @@ export const SidebarAdmin = ({ isOpen }) => {
               <i className="fa fa-users"></i> Quản lí tài khoản
             </Link>
           </li>
-          
 
           <li className="profile-menu">
             <a
@@ -157,8 +161,14 @@ export const SidebarAdmin = ({ isOpen }) => {
               </ul>
             </div>
           </li>
-          
-
+          <li>
+            <Link
+              to="/admin/banner"
+              className={isActive("/admin/banner") ? "active" : ""}
+            >
+              <i className="fa fa-images"></i> Quản lý Banner
+            </Link>
+          </li>
           <li>
             <a
               href="#"

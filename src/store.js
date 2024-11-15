@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { authApi } from "./features/auth/authServices";
 import authReducer from "./features/auth/authSlice";
 import banForStoreSlice from "./features/banforstore/banForStoreSlice";
+import bannerReducer from "./features/banner/bannerSlice";
 import bookingReducer from "./features/book/bookSlice";
 import ctkmReducer from "./features/ctkm/ctkmSlice";
 import danhgiaSlice from "./features/danhgia/danhgiaSlice";
@@ -34,7 +35,8 @@ const store = configureStore({
     danhgia: danhgiaSlice,
     orders: orderReducer,
     danhMucAnh: danhMucAnhReducer,
-    hoadon: hoadonReducer
+    hoadon: hoadonReducer,
+    banner :bannerReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(authApi.middleware),

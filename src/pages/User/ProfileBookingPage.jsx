@@ -76,23 +76,19 @@ const ProfileBookingPage = () => {
                     {formatMoney(booking?.ChiTietDatBan[0]?.ThongTinBan?.GiaBan ?? 0)}
                   </td>
                   <td>
-                    {/* 3 trạng thái là chờ xác nhận, hủy và xác nhận sử dụng 3 badge khác nhau */}
+                   {/* 0 là Hủy, 1 là Chờ xác nhận, 2 là Đã xác nhận, 3 là Hoàn thành */}
+                    {booking?.TrangThai === 0 && (
+                      <span className="badge badge-danger">Hủy </span>
+                    )}
                     {booking?.TrangThai === 1 && (
-                      <span className="badge badge-warning">Pending</span>
+                      <span className="badge badge-warning"> Chờ xác nhận</span>
                     )}
                     {booking?.TrangThai === 2 && (
-                      <span className="badge badge-success">Confirmed</span>
+                      <span className="badge badge-success">Đã xác nhận</span>
                     )}
                     {booking?.TrangThai === 3 && (
-                      <span className="badge badge-success">Completed</span>
+                      <span className="badge badge-success">Hoàn thành</span>
                     )}
-                    {booking?.TrangThai === 0 && (
-                      <span className="badge badge-danger">Canceled</span>
-                    )}
-                    {booking?.TrangThai === 4 && (
-                      <span className="badge badge-danger">Rejected</span>
-                    )}
-                      
                   </td>
                   <td>
                     <Link

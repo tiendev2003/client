@@ -1,20 +1,28 @@
 import { useEffect, useState } from "react";
+import "react-calendar/dist/Calendar.css";
+import "react-clock/dist/Clock.css";
+import DateTimePicker from "react-datetime-picker";
+import "react-datetime-picker/dist/DateTimePicker.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { getDanhMucs } from "../../../features/danhmucsanpham/danhMucSanPhamSlice";
-import { detailOrder, exportBill } from "../../../features/orders/orderSlice";
+import {
+  addSanPhamToOrder,
+  detailOrder
+} from "../../../features/orders/orderSlice";
 import { formatMoney } from "../../../utils/formatMoney";
 
 const OrderDetails = () => {
   const dispatch = useDispatch();
   const navigation = useNavigate();
-  const { id } = useParams();
+  const { id, idban } = useParams();
   const { order, loading } = useSelector((state) => state.orders);
   const { danhMucs } = useSelector((state) => state.danhMucSanPham);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [currentCategory, setCurrentCategory] = useState(null);
   const { userInfo } = useSelector((state) => state.auth);
+  const [startDate, setStartDate] = useState(new Date());
 
   useEffect(() => {
     dispatch(detailOrder(id));
@@ -26,6 +34,12 @@ const OrderDetails = () => {
     }
   }, [dispatch, userInfo]);
 
+  useEffect(() => {
+    if (order) {
+      console.log(order?.booking?.ngay_dat);
+      setStartDate(order?.booking?.ngay_dat);
+    }
+  }, [order]);
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -46,7 +60,7 @@ const OrderDetails = () => {
       }
     });
   };
-
+  console.log("ban ne", idban);
   const handleSubmit = async () => {
     if (selectedProducts.length === 0) {
       toast.error("Chọn ít nhất một sản phẩm");
@@ -64,13 +78,13 @@ const OrderDetails = () => {
 
     try {
       await dispatch(
-        exportBill({
-          id,
+        addSanPhamToOrder({
+          id: idban,
           ...data,
         })
       ).unwrap();
       toast.success("Xác nhận đơn đặt bàn thành công");
-      navigation("/store/order");
+      
     } catch (error) {
       console.log(error);
       toast.error("Xác nhận đơn đặt bàn thất bại");
@@ -158,18 +172,23 @@ const OrderDetails = () => {
           <div className="order-details-content">
             <p>
               <strong>Ngày Đặt:</strong>{" "}
-              {new Date(order?.booking?.ngay_dat).toLocaleString()}
+              <DateTimePicker
+                onChange={setStartDate}
+                value={startDate}
+                className="form-control  "
+              />
             </p>
+            <div className="form-group-icon"></div>
 
             <h5>Thông Tin Người Dùng</h5>
+            <div className="d-flex    ">
+              <h6 className="mt-1">Tên: </h6>{" "}
+              {order?.user_details?.ten_nguoi_dung}
+            </div>
 
-            <p>
-              <h6>Tên:</h6> {order?.user_details?.ten_nguoi_dung}
-            </p>
-
-            <p>
-              <h6>SĐT:</h6> {order?.user_details?.sdt}
-            </p>
+            <div className="d-flex    ">
+              <h6 className="mt-1">SĐT:</h6> {order?.user_details?.sdt}
+            </div>
 
             <h5>Danh Sách Sản Phẩm Đã Chọn</h5>
             <div className="selected-products-list">

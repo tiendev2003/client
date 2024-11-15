@@ -5410,6 +5410,7 @@ about css
   color: #4f4b8b;
   padding: 6px 6px 6px 15px;
   display: block;
+  width: 100%;
   transition: all 0.5s ease-in-out;
 }
 
@@ -5430,6 +5431,7 @@ about css
   background: #7167ff;
   color: #fff !important;
   border-radius: 8px;
+  width: 100%;
 }
 
 .user-profile-sidebar-list li .badge {
@@ -7083,4 +7085,108 @@ label {
   height: 50px;
   border-radius: 50%;
   margin-right: 10px;
+}
+
+
+/*  */
+.user-profile-card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.user-profile-card-header {
+  margin-bottom: 20px;
+}
+
+.user-profile-card-body {
+  padding: 10px;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.user-profile-sidebar {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.user-profile-sidebar-top {
+  margin-bottom: 20px;
+}
+
+.user-profile-sidebar h5 {
+  margin-top: 20px;
+}
+
+.user-profile-sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.user-profile-sidebar ul li {
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+}
+
+.quantity-input {
+  width: 40px;
+  text-align: center;
+  margin: 0 5px;
+}
+
+.discount-code {
+  margin-top: 20px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.page-item {
+  margin: 0 5px;
+}
+
+.page-link {
+  border: 1px solid #ddd;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.page-link:hover {
+  background-color: #f9f9f9;
+}
+
+.page-item.active .page-link {
+  background-color: #007bff;
+  color: white;
+  border: 1px solid #007bff;
+}
+
+.selected-products-list {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.react-datetime-picker__wrapper{
+border-radius: 10px;
+cursor: pointer;
 }

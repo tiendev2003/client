@@ -1,41 +1,64 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
+  completeOrder,
   fetchOrders,
   updateStatusOrder,
 } from "../../../features/orders/orderSlice";
 import { formatDate } from "../../../utils/dateHelpers";
-
+import { getBanForStore } from "./../../../features/banforstore/banForStoreSlice";
 const ManagementOrder = () => {
   const dispatch = useDispatch();
-  const { navigate } = useNavigate();
   const { orders } = useSelector((state) => state.orders);
   const { userInfo } = useSelector((state) => state.auth);
-
+  const [onChanging, setOnChanging] = useState(false);
   useEffect(() => {
     dispatch(fetchOrders(userInfo.cuahang.id));
   }, [dispatch, userInfo.cuahang.id]);
+  useEffect(() => {
+    dispatch(getBanForStore(1));
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (onChanging) {
+      dispatch(fetchOrders(userInfo.cuahang.id));
+    }
+  }, [onChanging, dispatch, userInfo.cuahang.id]);
+
   const handleChangeStatus = async (orderId, newStatus) => {
     if (newStatus === "0") {
-      console.log("Chờ xác nhận");
+      console.log("Hủy");
     }
-    if (newStatus === "1") {
+    if (newStatus === "2") {
       try {
         await dispatch(updateStatusOrder(orderId)).unwrap();
         toast.success("Cập nhật trạng thái thành công");
       } catch (error) {
         console.error("Update status failed:", error);
         toast.error("Cập nhật trạng thái thất bại");
+      } finally {
+        setOnChanging(!onChanging);
       }
     }
     if (newStatus === "2") {
       console.log("Đã hủy");
     }
   };
-  console.log(orders);
 
+  const handleCompleteOrder = async (orderId) => {
+    try {
+      await dispatch(completeOrder(orderId)).unwrap();
+      toast.success("Cập nhật trạng thái thành công");
+      console.log("orderId", orderId);
+    } catch (error) {
+      console.error("Update status failed:", error);
+      toast.error("Cập nhật trạng thái thất bại");
+    } finally {
+      setOnChanging(!onChanging);
+    }
+  };
   return (
     <div className="user-profile-card user-profile-listing">
       <div className="user-profile-card-header">
@@ -43,6 +66,9 @@ const ManagementOrder = () => {
 
         <Link to="view" className="theme-btn">
           <span className="fa fa-eye"></span>Xem tổng quan
+        </Link>
+        <Link to={"131/54"}>
+        xem
         </Link>
       </div>
       <div className="col-lg-12">
@@ -70,6 +96,7 @@ const ManagementOrder = () => {
                         <select
                           className="form-select"
                           aria-label="Default select example"
+                          value={order.TrangThai}
                           onChange={(e) =>
                             handleChangeStatus(
                               order.id_DonDatBan,
@@ -77,17 +104,30 @@ const ManagementOrder = () => {
                             )
                           }
                         >
-                          <option value="0">Chờ xác nhận</option>
-                          <option value="1">Đã xác nhận</option>
-                          <option value="2">Đã hủy</option>
+                          {/* (0 là Hủy, 1 là Chờ xác nhận, 2 là Đã xác nhận, 3 là Hoàn thành  */}
+                          <option value="0">Hủy</option>
+                          <option value="1">Chờ xác nhận</option>
+                          <option value="2">Đã xác nhận</option>
+                          <option value="3">Hoàn thành</option>
                         </select>
                       </td>
                       <td>
-                        <Link to={`/store/order/${order.id_DonDatBan}`}>
-                          <button className="badge bg-success btn">
-                            <i className="fa-regular fa-eye"></i>
+                        {order.TrangThai == 2 && (
+                          <button
+                            className="badge bg-info btn m-2"
+                            onClick={ () => handleCompleteOrder(order.id_DonDatBan)}
+                          >
+                            {/* icon check */}
+                            <i className="fa fa-check"></i>
                           </button>
-                        </Link>
+                        )}{" "}
+                        {order.TrangThai === 3 && (
+                          <Link to={`/store/order/${order.id_DonDatBan}/${order?.ChiTietDatBan.id_Ban}`}>
+                            <button className="badge bg-success btn">
+                              <i className="fa-regular fa-eye"></i>
+                            </button>
+                          </Link>
+                        )}
                       </td>
                     </tr>
                   );

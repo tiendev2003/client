@@ -80,6 +80,40 @@ export const exportBill = createAsyncThunk(
   }
 );
 
+
+export const addSanPhamToOrder = createAsyncThunk(
+  "order/addSanPhamToOrder",
+  async (data, { rejectWithValue }) => {
+    try {
+      await axiosInstance.post(`/setOrder-addproduct/${data.id}`, data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+        },
+      });
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const  completeOrder = createAsyncThunk(
+  "order/completeOrder",
+  async (id, { rejectWithValue }) => {
+    try {
+      await axiosInstance.put(`/setOrder-finish/${id}`,  {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+        },
+      });
+      return id;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 export const orderSlice = createSlice({
   name: "order",
   initialState,
@@ -108,16 +142,22 @@ export const orderSlice = createSlice({
       .addCase(updateStatusOrder.pending, (state) => {
         state.loading = true;
       })
-      .addCase(updateStatusOrder.fulfilled, (state, action) => {
+      .addCase(updateStatusOrder.fulfilled, (state) => {
         state.loading = false;
-        // remove order by id
-        state.orders = state.orders.filter(
-          (order) => order.id_DonDatBan !== action.payload
-        );
+       
       })
       .addCase(updateStatusOrder.rejected, (state) => {
         state.loading = false;
-      });
+      })
+      .addCase(exportBill.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(exportBill.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(exportBill.rejected, (state) => {
+        state.loading = false;
+      })
   },
 });
 
