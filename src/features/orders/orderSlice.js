@@ -12,7 +12,7 @@ export const fetchOrders = createAsyncThunk(
   "order/fetchOrders",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/getAllOrder/${data}`, {
+      const response = await axiosInstance.get(`/getAllOrder`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("userToken")}`,
@@ -30,7 +30,7 @@ export const detailOrder = createAsyncThunk(
   "order/detailOrder",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/setOrder-detail/${data}`, {
+      const response = await axiosInstance.get(`/details-invoice/${data}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("userToken")}`,
@@ -85,6 +85,7 @@ export const addSanPhamToOrder = createAsyncThunk(
   "order/addSanPhamToOrder",
   async (data, { rejectWithValue }) => {
     try {
+      console.log(data)
       await axiosInstance.post(`/setOrder-addproduct/${data.id}`, data, {
         headers: {
           "Content-Type": "application/json",
@@ -114,6 +115,8 @@ export const  completeOrder = createAsyncThunk(
     }
   }
 );
+
+
 export const orderSlice = createSlice({
   name: "order",
   initialState,
@@ -134,7 +137,7 @@ export const orderSlice = createSlice({
       })
       .addCase(detailOrder.fulfilled, (state, action) => {
         state.loading = false;
-        state.order = action.payload;
+        state.order = action.payload.invoice;
       })
       .addCase(detailOrder.rejected, (state) => {
         state.loading = false;

@@ -284,7 +284,7 @@ function App() {
               <Route path="/store/location" element={<CurrentStore />} />
               <Route path="/store/order/view" element={<ViewOrder />} />
               <Route path="/store/order" element={<ManagementOrder />} />
-              <Route path="/store/order/:id/:idban" element={<DetailOrder />} />
+              <Route path="/store/order/:id" element={<DetailOrder />} />
               <Route path="/store/setting" element={<SettingStore />} />
               <Route
                 path="/store/invoice"

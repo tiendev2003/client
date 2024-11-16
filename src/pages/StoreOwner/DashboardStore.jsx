@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axiosInstance from "../../api/axiosConfig";
 import { getBanForStore } from "../../features/banforstore/banForStoreSlice";

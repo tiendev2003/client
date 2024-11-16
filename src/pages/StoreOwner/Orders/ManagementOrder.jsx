@@ -42,23 +42,23 @@ const ManagementOrder = () => {
         setOnChanging(!onChanging);
       }
     }
-    if (newStatus === "2") {
-      console.log("Đã hủy");
+    if (newStatus === "3") {
+      try {
+        await dispatch(completeOrder(orderId)).unwrap();
+        toast.success("Cập nhật trạng thái thành công");
+        console.log("orderId", orderId);
+      } catch (error) {
+        console.error("Update status failed:", error);
+        toast.error("Cập nhật trạng thái thất bại");
+      } finally {
+        await dispatch(fetchOrders(userInfo.cuahang.id)).unwrap();
+        setOnChanging(true);
+      }
     }
   };
+  
 
-  const handleCompleteOrder = async (orderId) => {
-    try {
-      await dispatch(completeOrder(orderId)).unwrap();
-      toast.success("Cập nhật trạng thái thành công");
-      console.log("orderId", orderId);
-    } catch (error) {
-      console.error("Update status failed:", error);
-      toast.error("Cập nhật trạng thái thất bại");
-    } finally {
-      setOnChanging(!onChanging);
-    }
-  };
+   
   return (
     <div className="user-profile-card user-profile-listing">
       <div className="user-profile-card-header">
@@ -66,9 +66,6 @@ const ManagementOrder = () => {
 
         <Link to="view" className="theme-btn">
           <span className="fa fa-eye"></span>Xem tổng quan
-        </Link>
-        <Link to={"131/54"}>
-        xem
         </Link>
       </div>
       <div className="col-lg-12">
@@ -112,17 +109,11 @@ const ManagementOrder = () => {
                         </select>
                       </td>
                       <td>
-                        {order.TrangThai == 2 && (
-                          <button
-                            className="badge bg-info btn m-2"
-                            onClick={ () => handleCompleteOrder(order.id_DonDatBan)}
-                          >
-                            {/* icon check */}
-                            <i className="fa fa-check"></i>
-                          </button>
-                        )}{" "}
+                         
                         {order.TrangThai === 3 && (
-                          <Link to={`/store/order/${order.id_DonDatBan}/${order?.ChiTietDatBan.id_Ban}`}>
+                          <Link
+                            to={`/store/order/${order?.hoadon?.id}`}
+                          >
                             <button className="badge bg-success btn">
                               <i className="fa-regular fa-eye"></i>
                             </button>

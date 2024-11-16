@@ -28,6 +28,7 @@ const CurrentStore = () => {
   const [discountCode, setDiscountCode] = useState("");
   const [discountAmount, setDiscountAmount] = useState(0);
   const [onChange, setOnChange] = useState(false);
+  const [isDiscountApplied, setIsDiscountApplied] = useState(false);
   useEffect(() => {
     dispatch(getBanForStore(1));
   }, [dispatch]);
@@ -92,6 +93,18 @@ const CurrentStore = () => {
       setDiscountAmount(0.1);
     } else {
       setDiscountAmount(0);
+    }
+  };
+
+  const handleApplyDiscount = () => {
+    if (discountCode === "DISCOUNT10") {
+      setDiscountAmount(0.1);
+      setIsDiscountApplied(true);
+      toast.success("Áp mã giảm giá thành công");
+    } else {
+      setDiscountAmount(0);
+      setIsDiscountApplied(false);
+      toast.error("Mã giảm giá không hợp lệ");
     }
   };
 
@@ -313,15 +326,25 @@ const CurrentStore = () => {
                   ))}
                 </ul>
               </div>
-              <div className="discount-code">
+              <div className="discount-code mt-3">
                 <label htmlFor="discountCode">Mã Giảm Giá:</label>
-                <input
-                  type="text"
-                  id="discountCode"
-                  className="form-control"
-                  value={discountCode}
-                  onChange={handleDiscountCodeChange}
-                />
+                <div className="input-group">
+                  <input
+                    type="text"
+                    id="discountCode"
+                    className="form-control"
+                    value={discountCode}
+                    onChange={handleDiscountCodeChange}
+                    disabled={isDiscountApplied}
+                  />
+                  <button
+                    className="btn btn-outline-secondary"
+                    onClick={handleApplyDiscount}
+                    disabled={isDiscountApplied}
+                  >
+                    Áp Dụng
+                  </button>
+                </div>
               </div>
               <p>
                 <strong>Tổng Tiền:</strong> {formatMoney(totalAmount)}

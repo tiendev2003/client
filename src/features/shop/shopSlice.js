@@ -45,6 +45,17 @@ export const updateStore = createAsyncThunk(
     }
   }
 );
+export const updateMutipleImage = createAsyncThunk(
+  "shop/updateMutipleImage",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.put(`/store/update/${data.id}`, data);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 // đóng băng cửa hàng
 export const blockStore = createAsyncThunk(

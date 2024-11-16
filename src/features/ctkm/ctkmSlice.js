@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../../api/axiosConfig";
 
 const initialState = {
@@ -10,7 +10,7 @@ export const getCTKMs = createAsyncThunk(
   "ctkm/getCTKMs",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/ctkm/${id}`, {
+      const response = await axiosInstance.get(`/ctkm`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("userToken")}`,

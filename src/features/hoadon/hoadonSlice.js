@@ -13,7 +13,7 @@ export const fetchHoadon = createAsyncThunk(
   async ({ rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(
-        "/numberOfInvoice-cuahang/getAll",
+        "/listOfInvoice-store/getAll",
         {
           headers: {
             "Content-Type": "application/json",

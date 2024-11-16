@@ -12,6 +12,7 @@ export const SettingStore = () => {
   const [ward, setWard] = useState([]);
   const [onChangeImage, setOnChangeImage] = useState(false);
   const [onChangeImageGPKD, setOnChangeImageGPKD] = useState(false);
+  const [selectedImages, setSelectedImages] = useState([]);
 
   const [selectedProvince, setSelectedProvince] = useState();
   const [selectedDistrict, setSelectedDistrict] = useState();
@@ -52,6 +53,30 @@ export const SettingStore = () => {
       });
     }
   }, [userInfo.cuahang]);
+  useEffect(() => {
+    if (userInfo.cuahang && province.length > 0) {
+      setSelectedProvince(
+        province.find(
+          (item) => item.name.toString() === userInfo.cuahang.tinh_thanhpho
+        )?.code
+      );
+    }
+    if (userInfo.cuahang && district.length > 0) {
+      setSelectedDistrict(
+        district.find(
+          (item) => item.name.toString() === userInfo.cuahang.quan_huyen
+        )?.code
+      );
+    }
+
+    if (userInfo.cuahang && ward.length > 0) {
+      setSelectedWard(
+        ward.find((item) => item.name.toString() === userInfo.cuahang.phuong_xa)
+          ?.code
+      );
+    }
+  }, [province, district, ward, userInfo.cuahang]);
+
   useEffect(() => {
     const fetchProvince = async () => {
       const res = await fetch(
@@ -136,6 +161,15 @@ export const SettingStore = () => {
       ...prevData,
       [e.target.name]: e.target.files[0],
     }));
+  };
+
+  const handleMultipleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    setSelectedImages((prevImages) => [...prevImages, ...files]);
+  };
+
+  const handleRemoveImage = (index) => {
+    setSelectedImages((prevImages) => prevImages.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e) => {
@@ -430,6 +464,52 @@ export const SettingStore = () => {
                       onChange={handleFileChange}
                       multiple
                     />
+                  </div>
+                </div>
+              </div>
+              <div className="col-lg-12">
+                <div className="form-group">
+                  <label>Hình ảnh chi tiết của quán</label>
+                  <div className="listing-upload-wrapper">
+                    <div className="listing-img-upload" onClick={() => fileInputRef.current.click()}>
+                      <span>
+                        <i className="far fa-images"></i> Upload listing Images
+                      </span>
+                    </div>
+                    <input
+                      type="file"
+                      className="listing-img-file"
+                      id="gallery-photo-add"
+                      ref={fileInputRef}
+                      name="AnhChiTiet"
+                      onChange={handleMultipleFileChange}
+                      multiple
+                    />
+                  </div>
+                  <div className="image-preview-list" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '10px' }}>
+                    {selectedImages.map((image, index) => (
+                      <div key={index} className="image-preview-item" style={{ position: 'relative' }}>
+                        <img
+                          src={URL.createObjectURL(image)}
+                          alt={`Preview ${index}`}
+                          style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveImage(index)}
+                          style={{
+                            position: 'absolute',
+                            top: '5px',
+                            right: '5px',
+                            background: 'transparent',
+                            border: 'none',
+                            cursor: 'pointer',
+                          }}
+                        >
+                          <i className="fas fa-trash" style={{ color: 'red' }}></i>
+                        </button>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
