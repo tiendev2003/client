@@ -105,7 +105,7 @@ const ManagementOrder = () => {
                           <option value="0">Hủy</option>
                           <option value="1">Chờ xác nhận</option>
                           <option value="2">Đã xác nhận</option>
-                          <option value="3">Hoàn thành</option>
+                          <option value="3">Đã nhận bàn</option>
                         </select>
                       </td>
                       <td>

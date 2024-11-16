@@ -6,7 +6,7 @@ import { getBanForStore } from "../../features/banforstore/banForStoreSlice";
 import { bookTable } from "../../features/book/bookSlice";
 import {
   addSanPhamToOrder,
-  updateStatusOrder
+  completeOrder
 } from "../../features/orders/orderSlice";
 import { fetchProducts } from "../../features/sanpham/sanphamSlice";
 import { formatMoney } from "../../utils/formatMoney";
@@ -25,10 +25,7 @@ const CurrentStore = () => {
   const [currentTablePage, setCurrentTablePage] = useState(1);
   const [currentProductPage, setCurrentProductPage] = useState(1);
   const [itemsPerPage] = useState(8);
-  const [discountCode, setDiscountCode] = useState("");
-  const [discountAmount, setDiscountAmount] = useState(0);
   const [onChange, setOnChange] = useState(false);
-  const [isDiscountApplied, setIsDiscountApplied] = useState(false);
   useEffect(() => {
     dispatch(getBanForStore(1));
   }, [dispatch]);
@@ -86,28 +83,6 @@ const CurrentStore = () => {
     setCurrentProductPage(1);
   };
 
-  const handleDiscountCodeChange = (e) => {
-    setDiscountCode(e.target.value);
-    // Giả sử mã giảm giá là "DISCOUNT10" giảm 10%
-    if (e.target.value === "DISCOUNT10") {
-      setDiscountAmount(0.1);
-    } else {
-      setDiscountAmount(0);
-    }
-  };
-
-  const handleApplyDiscount = () => {
-    if (discountCode === "DISCOUNT10") {
-      setDiscountAmount(0.1);
-      setIsDiscountApplied(true);
-      toast.success("Áp mã giảm giá thành công");
-    } else {
-      setDiscountAmount(0);
-      setIsDiscountApplied(false);
-      toast.error("Mã giảm giá không hợp lệ");
-    }
-  };
-
   const handlePlaceOrder = async () => {
     console.log(selectedTable, selectedProducts);
     if (!selectedTable) {
@@ -120,7 +95,7 @@ const CurrentStore = () => {
         bookTable({ id_Cuahang: userInfo.cuahang.id, id_Ban: selectedTable.id })
       ).unwrap();
       
-      await dispatch(updateStatusOrder(detail.data[0].id)).unwrap();
+       await dispatch(completeOrder(detail.data[0].id)).unwrap();
 
       const data = {
         SanPhams: selectedProducts.map((product) => ({
@@ -130,7 +105,7 @@ const CurrentStore = () => {
       };
       await dispatch(
         addSanPhamToOrder({
-          id: detail.data[0].id,
+          id: selectedTable.id,
           ...data,
         })
       ).unwrap();
@@ -143,9 +118,11 @@ const CurrentStore = () => {
       setOnChange(!onChange);
     }
   };
-  const filteredTables = banforstores.filter((table) =>
-    table.TenBan.toLowerCase().includes(searchTable.toLowerCase())
-  );
+  const filteredTables = banforstores
+    .filter((table) => table.TrangThai === 1)
+    .filter((table) =>
+      table.TenBan.toLowerCase().includes(searchTable.toLowerCase())
+    );
 
   const filteredProducts = products.filter((product) =>
     product.TenSanPham.toLowerCase().includes(searchProduct.toLowerCase())
@@ -173,7 +150,6 @@ const CurrentStore = () => {
       (total, product) => total + product.Gia * product.quantity,
       0
     ) + (selectedTable?.GiaBan || 0);
-  const discountedAmount = totalAmount * (1 - discountAmount);
 
   return (
     <div className="  mt-4">
@@ -326,34 +302,8 @@ const CurrentStore = () => {
                   ))}
                 </ul>
               </div>
-              <div className="discount-code mt-3">
-                <label htmlFor="discountCode">Mã Giảm Giá:</label>
-                <div className="input-group">
-                  <input
-                    type="text"
-                    id="discountCode"
-                    className="form-control"
-                    value={discountCode}
-                    onChange={handleDiscountCodeChange}
-                    disabled={isDiscountApplied}
-                  />
-                  <button
-                    className="btn btn-outline-secondary"
-                    onClick={handleApplyDiscount}
-                    disabled={isDiscountApplied}
-                  >
-                    Áp Dụng
-                  </button>
-                </div>
-              </div>
               <p>
                 <strong>Tổng Tiền:</strong> {formatMoney(totalAmount)}
-              </p>
-              <p>
-                <strong>Giảm Giá:</strong> {discountAmount * 100}%
-              </p>
-              <p>
-                <strong>Thành Tiền:</strong> {formatMoney(discountedAmount)}
               </p>
               <button
                 className="btn btn-primary btn-block"

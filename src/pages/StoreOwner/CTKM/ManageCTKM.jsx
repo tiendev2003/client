@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { getCTKMs, deleteCTKM } from './../../../features/ctkm/ctkmSlice';
 import { toast } from 'react-toastify';
+import { deleteCTKM, getCTKMs } from './../../../features/ctkm/ctkmSlice';
 
 export const ManageCTKM = () => {
   const dispatch = useDispatch();
-  const { ctkms, loading, error } = useSelector((state) => state.ctkm);
+  const { ctkms } = useSelector((state) => state.ctkm);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const {userInfo} = useSelector((state) => state.auth);
@@ -82,7 +82,7 @@ export const ManageCTKM = () => {
             </thead>
             <tbody>
               {currentCTKMs.map((ctkm, index) => (
-                <tr key={ctkm.id}>
+                <tr key={index}>
                   <td>{ctkm.id}</td>
                   <td>{ctkm.Ten_PGG}</td>
                   <td>{ctkm.GiaTri_PGG}</td>

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { fetchHoadon } from "../../features/hoadon/hoadonSlice";
 import { formatDate } from "../../utils/dateHelpers";
-import { Link } from "react-router-dom";
 const ManagePaymentsInvoices = () => {
   const dispatch = useDispatch();
   const { hoadon } = useSelector((state) => state.hoadon);
@@ -35,7 +35,7 @@ const ManagePaymentsInvoices = () => {
    return (
     <div className="user-profile-card user-profile-listing">
       <div className="user-profile-card-header">
-        <h4 className="user-profile-card-title">Danh sách đơn đặt bàn</h4>
+        <h4 className="user-profile-card-title">Danh sách hóa đơn</h4>
         <div className="user-profile-card-header-right">
           <div className="user-profile-search">
             <div className="form-group">

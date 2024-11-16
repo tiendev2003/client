@@ -23,9 +23,9 @@ const ManagementBanner = () => {
   };
 
   const handleDelete = async (id) => {
+    console.log(id)
     if (window.confirm("Bạn có chắc chắn muốn xóa quyền này không?")) {
       try {
-        await dispatch(deleteRole(id)).unwrap();
         toast.success("Quyền đã được xóa thành công");
       } catch (err) {
         toast.error(err.message || "Xóa quyền thất bại");

@@ -1,3 +1,5 @@
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 import { useEffect, useState } from "react";
 import "react-calendar/dist/Calendar.css";
 import "react-clock/dist/Clock.css";
@@ -6,11 +8,14 @@ import "react-datetime-picker/dist/DateTimePicker.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { getCTKMs } from "../../../features/ctkm/ctkmSlice";
 import { getDanhMucs } from "../../../features/danhmucsanpham/danhMucSanPhamSlice";
 import {
   addSanPhamToOrder,
+  deleteSanPhamFromOrder,
   detailOrder,
   exportBill,
+  updateSanPhamInOrder,
 } from "../../../features/orders/orderSlice";
 import { fetchProducts } from "../../../features/sanpham/sanphamSlice";
 import { formatMoney } from "../../../utils/formatMoney";
@@ -20,15 +25,20 @@ const OrderDetails = () => {
   const { id } = useParams();
   const { order, loading } = useSelector((state) => state.orders);
   const { danhMucs } = useSelector((state) => state.danhMucSanPham);
+  const { ctkms } = useSelector((state) => state.ctkm);
+
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [currentCategory, setCurrentCategory] = useState(null);
   const { userInfo } = useSelector((state) => state.auth);
   const [startDate, setStartDate] = useState(new Date());
   const { products } = useSelector((state) => state.products);
-  const [discountCode, setDiscountCode] = useState("");
   const [discount, setDiscount] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [finalPrice, setFinalPrice] = useState(0);
+  const [selectedCTKM, setSelectedCTKM] = useState(null);
+  useEffect(() => {
+    dispatch(getCTKMs(userInfo.cuahang.id));
+  }, [dispatch, userInfo.cuahang.id]);
 
   useEffect(() => {
     dispatch(fetchProducts(userInfo.cuahang.id));
@@ -51,15 +61,14 @@ const OrderDetails = () => {
           order.chi_tiet_san_pham
         ).map((product) => ({
           id: product.id_san_pham,
+          idHoaDon: product.id,
           quantity: product.so_luong,
           TenSanPham: product.ten_san_pham,
           Gia: product.gia,
         }));
         setSelectedProducts(initialSelectedProducts);
       }
-    
     }
-
   }, [order]);
 
   useEffect(() => {
@@ -69,7 +78,10 @@ const OrderDetails = () => {
   }, [danhMucs]);
 
   useEffect(() => {
-    const total = selectedProducts.reduce((sum, product) => sum + product.Gia * product.quantity, 0);
+    const total = selectedProducts.reduce(
+      (sum, product) => sum + product.Gia * product.quantity,
+      0
+    );
     setTotalPrice(total);
     setFinalPrice(total - discount);
   }, [selectedProducts, discount]);
@@ -82,99 +94,96 @@ const OrderDetails = () => {
     return <p>Không tìm thấy đơn đặt bàn</p>;
   }
 
-  const handleProductSelect = (product) => {
-    console.log(product);
-    setSelectedProducts((prevSelectedProducts) => {
-      const existingProduct = prevSelectedProducts.find(
-        (p) => p.id === product.id
-      );
-      if (existingProduct) {
-        return prevSelectedProducts.filter((p) => p.id !== product.id);
-      } else {
-        return [
-          ...prevSelectedProducts,
-          {
-            id: product.id,
-            quantity: 1,
-            TenSanPham: product.TenSanPham,
-            Gia: product.Gia,
-          },
-        ];
+  const handleProductSelect = async (product) => {
+    const existingProduct = selectedProducts.find((p) => p.id === product.id);
+    if (!existingProduct) {
+      try {
+        await dispatch(
+          addSanPhamToOrder({
+            SanPhams: [{ id_SanPham: product.id, SoLuong: 1 }],
+            id: order?.chi_tiet_ban[0]?.id_ban,
+          })
+        ).unwrap();
+        toast.success("Thêm sản phẩm thành công");
+        await dispatch(detailOrder(id)).unwrap();
+      } catch (error) {
+        console.log(error);
+        toast.error("Thêm sản phẩm thất bại");
       }
-    });
+    }
   };
 
   const handleSubmit = async () => {
-    if (selectedProducts.length === 0) {
-      toast.error("Chọn ít nhất một sản phẩm");
-      return;
-    }
-
-    const products = selectedProducts.map((product) => ({
-      id_SanPham: product.id,
-      SoLuong: product.quantity,
-    }));
-
-    const data = {
-      SanPhams: products,
-     
-    };
-
     try {
-      console.log(order)
-      await dispatch(
-        addSanPhamToOrder({
-          ...data,
-          id: order?.chi_tiet_ban[0]?.id_ban,
-        })  
-      ).unwrap();
-      await dispatch(
+      const result = await dispatch(
         exportBill({
           id: order?.chi_tiet_ban[0]?.id_ban,
+          id_PGG: selectedCTKM ?? "",
         })
       ).unwrap();
-      toast.success("Xác nhận đơn đặt bàn thành công");
+      console.log(result);
+      toast.success("Xuất hóa đơn thành công");
+      exportToPDF(result.hoaDon);
     } catch (error) {
       console.log(error);
-      toast.error("Xác nhận đơn đặt bàn thất bại");
+      toast.error("Xuất hóa đơn thất bại");
     }
   };
 
-  const handleQuantityChange = (productId, quantity) => {
-    setSelectedProducts((prevSelectedProducts) =>
-      prevSelectedProducts.map((product) =>
-        product.id === productId
-          ? { ...product, quantity: Math.max(1, quantity) }
-          : product
-      )
-    );
+  const exportToPDF = (hoaDon) => {
+    console.log(hoaDon);
+    const doc = new jsPDF();
+    doc.addFileToVFS('./times new roman.ttf', 'base64-encoded-font-data');
+    doc.addFont('./times new roman.ttf', 'Roboto', 'normal');
+    doc.setFont('Roboto');
+
+    doc.text("Hóa Đơn", 20, 10);
+    doc.text(`Cửa Hàng: ${hoaDon.cuahang.TenCuaHang}`, 20, 20);
+    doc.text(`Địa Chỉ: ${hoaDon.cuahang.DiaChi}`, 20, 30);
+    doc.text(`SĐT: ${hoaDon.cuahang.SDT}`, 20, 40);
+    doc.text(`Tên Khách Hàng: ${hoaDon.taikhoan.TenTaiKhoan}`, 20, 50);
+    doc.text(`SĐT Khách Hàng: ${hoaDon.taikhoan.SDT}`, 20, 60);
+    doc.text(`Thời Gian Xuất HĐ: ${new Date(hoaDon.ThoiGianXuatHD).toLocaleString()}`, 20, 70);
+
+    const tableColumn = ["Tên Sản Phẩm/Bàn", "Số Lượng", "Giá", "Tổng"];
+    const tableRows = [];
+
+    hoaDon.hoadonct.forEach(item => {
+      const productData = [
+        item.sanpham ? item.sanpham.TenSanPham : item.ban.TenBan,
+        item.SoLuong,
+        formatMoney(item.sanpham ? item.sanpham.Gia : item.ban.GiaBan),
+        formatMoney(item.Tong)
+      ];
+      tableRows.push(productData);
+    });
+
+    doc.autoTable(tableColumn, tableRows, { startY: 80 });
+    doc.text(`Tổng Hóa Đơn: ${formatMoney(hoaDon.TongHD)}`, 20, doc.autoTable.previous.finalY + 10);
+    doc.text(`Tổng Sau Giảm Giá: ${formatMoney(hoaDon.TongHD_after_discount)}`, 20, doc.autoTable.previous.finalY + 20);
+
+    doc.save(`HoaDon_${hoaDon.id}.pdf`);
   };
 
-  const handleRemoveProduct = (productId) => {
-    setSelectedProducts((prevSelectedProducts) =>
-      prevSelectedProducts.filter((product) => product.id !== productId)
-    );
+  const handleQuantityChange = async (productId, quantity) => {
+    await dispatch(
+      updateSanPhamInOrder({ id: productId, SoLuong: quantity })
+    ).unwrap();
+    await dispatch(detailOrder(id)).unwrap();
+  };
+
+  const handleRemoveProduct = async (productId) => {
+    await dispatch(deleteSanPhamFromOrder(productId)).unwrap();
+    await dispatch(detailOrder(id)).unwrap();
   };
 
   const handleCategoryChange = (category) => {
     setCurrentCategory(category);
   };
 
-  const handleApplyDiscount = () => {
-    // Example discount logic
-    if (discountCode === "DISCOUNT10") {
-      setDiscount(totalPrice * 0.1);
-      toast.success("Áp dụng mã giảm giá thành công");
-    } else {
-      setDiscount(0);
-      toast.error("Mã giảm giá không hợp lệ");
-    }
-  };
-
   const filteredProducts = currentCategory
     ? danhMucs.find((danhMuc) => danhMuc.id === currentCategory)?.sanpham || []
     : [];
-
 
   return (
     <div className="user-profile-card user-profile-listing mt-4 min-vh-100">
@@ -302,7 +311,7 @@ const OrderDetails = () => {
                             onClick={() => {
                               if (selectedProduct.quantity < product.SoLuong) {
                                 handleQuantityChange(
-                                  selectedProduct.id,
+                                  selectedProduct.idHoaDon,
                                   selectedProduct.quantity + 1
                                 );
                               } else {
@@ -316,7 +325,7 @@ const OrderDetails = () => {
                             type="button"
                             className="remove-btn"
                             onClick={() =>
-                              handleRemoveProduct(selectedProduct.id)
+                              handleRemoveProduct(selectedProduct.idHoaDon)
                             }
                           >
                             <i className="far fa-trash-alt"></i>
@@ -331,18 +340,21 @@ const OrderDetails = () => {
               )}
             </div>
             <div className="discount-code mt-3 mb-1">
-              <label htmlFor="discountCode">Mã Giảm Giá:</label>
+              <label htmlFor="ctkmSelect">Chọn Mã Giảm Giá:</label>
               <div className="input-group">
-                <input
-                  type="text"
-                  id="discountCode"
-                  className="form-control border px-3  "
-                  value={discountCode}
-                  onChange={(e) => setDiscountCode(e.target.value)}
-                />
-                <button className="btn btn-outline-secondary" onClick={handleApplyDiscount}>
-                  Áp Dụng
-                </button>
+                <select
+                  id="ctkmSelect"
+                  className="form-control border px-3"
+                  value={selectedCTKM}
+                  onChange={(e) => setSelectedCTKM(e.target.value)}
+                >
+                  <option value="">Chọn mã giảm giá</option>
+                  {ctkms.map((ctkm) => (
+                    <option key={ctkm.id} value={ctkm.id}>
+                      {ctkm.Ten_PGG}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
             <p>
@@ -356,7 +368,7 @@ const OrderDetails = () => {
             </p>
             {/* button submit */}
             <div className="form-group" onClick={handleSubmit}>
-              <button className="btn btn-primary">Xác Nhận</button>
+              <button className="btn btn-primary">Xuất hóa đơn</button>
             </div>
           </div>
         </div>

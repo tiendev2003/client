@@ -21,11 +21,12 @@ const ViewOrder = () => {
   };
 
   const handleTableClick = (order) => {
-     if (order.TrangThai !== 2) {
+     if (order.TrangThai !== 3) {
       return;
     }
+    console.log(order);
 
-    navigation("/store/order/" + order.id_DonDatBan);
+    navigation("/store/order/" + order?.hoadon?.id);
   };
   console.log(orders);
 
@@ -59,7 +60,8 @@ const ViewOrder = () => {
               <img
                 src={"/public/img/logo/favicon-dark.png"}
                 alt={order.TrangThai}
-                className={`table-icon `}
+
+                className={`table-icon ${order.TrangThai === 3 ? " " : "bg-secondary rounded-circle"}`}
               />
               <span className="table-name text-black">
                 {order.TenNguoiDung}

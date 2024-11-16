@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
+import { useDispatch, useSelector } from "react-redux";
 import { getDanhMucs } from "../../../features/danhmucsanpham/danhMucSanPhamSlice";
 import { getDichVu } from "../../../features/dichvu/dichVuSlice";
-import { useDispatch, useSelector } from "react-redux";
 import {
   fetchProductById,
   updateProduct,
@@ -42,7 +42,11 @@ export const EditSanpham = () => {
   useEffect(() => {
     dispatch(getDanhMucs(userInfo.cuahang.id));
     dispatch(getDichVu(userInfo.cuahang.id));
-  }, [dispatch, userInfo.cuahang.id]);
+    dispatch(fetchProductById({
+      id: id,
+      cuahang: userInfo.cuahang.id
+    }));
+  }, [dispatch, userInfo.cuahang.id, id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -51,9 +55,7 @@ export const EditSanpham = () => {
       [name]: value,
     }));
   };
-  useEffect(() => {
-    dispatch(fetchProductById(id));
-  }, [dispatch, id]);
+ 
 
   const handleFileChange = (e) => {
     setFormData((prevData) => ({

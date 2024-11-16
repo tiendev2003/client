@@ -83,15 +83,14 @@ export const fetchProducts = createAsyncThunk(
 );
 export const fetchProductById = createAsyncThunk(
   "products/fetchProductById",
-  async (id, { rejectWithValue }) => {
+  async (data, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/SanPham/details/${id}/1`, {
+      const response = await axiosInstance.get(`/SanPham/details/${data.cuahang}/${data.id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("userToken")}`,
         },
       });
-      console.log(response.data);
-      return response.data;
+       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }

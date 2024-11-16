@@ -67,25 +67,24 @@ export const exportBill = createAsyncThunk(
   "order/exportBill",
   async (data, { rejectWithValue }) => {
     try {
-      await axiosInstance.post(`/create-invoice/${data.id}`, data, {
+   const res=   await axiosInstance.post(`/create-invoice/${data.id}`, data, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("userToken")}`,
         },
       });
-      return data;
+      return res.data.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
   }
 );
 
-
 export const addSanPhamToOrder = createAsyncThunk(
   "order/addSanPhamToOrder",
   async (data, { rejectWithValue }) => {
     try {
-      console.log(data)
+      console.log(data);
       await axiosInstance.post(`/setOrder-addproduct/${data.id}`, data, {
         headers: {
           "Content-Type": "application/json",
@@ -99,11 +98,11 @@ export const addSanPhamToOrder = createAsyncThunk(
   }
 );
 
-export const  completeOrder = createAsyncThunk(
-  "order/completeOrder",
+export const deleteSanPhamFromOrder = createAsyncThunk(
+  "order/deleteSanPhamFromOrder",
   async (id, { rejectWithValue }) => {
     try {
-      await axiosInstance.put(`/setOrder-finish/${id}`,  {
+      await axiosInstance.delete(`/setOrder-deleteProduct/${id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("userToken")}`,
@@ -116,6 +115,46 @@ export const  completeOrder = createAsyncThunk(
   }
 );
 
+export const updateSanPhamInOrder = createAsyncThunk(
+  "order/updateSanPhamInOrder",
+  async (data, { rejectWithValue }) => {
+    try {
+      console.log(data)
+      await axiosInstance.put(
+        `/setOrder-updateProduct/${data.id}`,
+        {
+          SoLuong: data.SoLuong,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+          },
+        }
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const completeOrder = createAsyncThunk(
+  "order/completeOrder",
+  async (id, { rejectWithValue }) => {
+    try {
+      await axiosInstance.put(`/setOrder-finish/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+        },
+      });
+      return id;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
 export const orderSlice = createSlice({
   name: "order",
@@ -147,7 +186,6 @@ export const orderSlice = createSlice({
       })
       .addCase(updateStatusOrder.fulfilled, (state) => {
         state.loading = false;
-       
       })
       .addCase(updateStatusOrder.rejected, (state) => {
         state.loading = false;
@@ -160,7 +198,7 @@ export const orderSlice = createSlice({
       })
       .addCase(exportBill.rejected, (state) => {
         state.loading = false;
-      })
+      });
   },
 });
 
