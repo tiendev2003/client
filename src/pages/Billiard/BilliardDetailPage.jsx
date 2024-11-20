@@ -231,9 +231,9 @@ const BilliardDetailPage = () => {
                         <div className="listing-amenity">
                           <div className="row">
                             {danhMuc.bans.map((ban, idx) => (
-                              <div className="col-lg-4" key={idx}>
+                              <div className="col-lg-4 mt-3" key={idx}>
                                 <div
-                                  className={`listing-amenity-item ${
+                                  className={`listing-amenity-item1 ${
                                     selectedTable?.id === ban.id ? "selected" : ""
                                   }`}
                                   onClick={() => handleTableSelect(ban)}
@@ -247,7 +247,7 @@ const BilliardDetailPage = () => {
                                     alt={ban.TenBan}
                                     style={{ width: "100%", height: "auto" }}
                                   />
-                                  <div className="table-info-overlay">
+                                  <div className="table-info-overlay1">
                                     <p>{ban?.TenBan} - {formatMoney(ban?.GiaBan)}</p>
                                   </div>
                                 </div>

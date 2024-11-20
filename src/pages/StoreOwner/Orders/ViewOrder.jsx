@@ -20,10 +20,22 @@ const ViewOrder = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTable, setSelectedTable] = useState(null);
+  const [playTime, setPlayTime] = useState("");
 
   useEffect(() => {
     dispatch(fetchbanForOrder(userInfo.cuahang.id));
   }, [dispatch, userInfo.cuahang.id]);
+
+  useEffect(() => {
+    if (selectedTable) {
+      // Update play time immediately
+      setPlayTime(calculatePlayTime(selectedTable.dondatbanct[0].ThoiGianBatDau));
+      const interval = setInterval(() => {
+        setPlayTime(calculatePlayTime(selectedTable.dondatbanct[0].ThoiGianBatDau));
+      }, 60000); // Update every minute
+      return () => clearInterval(interval);
+    }
+  }, [selectedTable]);
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -94,7 +106,7 @@ const ViewOrder = () => {
                 alt={ban.TenBan}
                 className="table-image"
               />
-              <div className="table-info-overlay">
+              <div className="table-info-overlay1">
                 <h3>{ban.TenBan}</h3>
                 <p>{tableStatus[ban.TrangThai]}</p>
               </div>
@@ -140,7 +152,7 @@ const ViewOrder = () => {
                 </div>
                 <div className="info-column">
                   <label>Thời gian chơi:</label>
-                  <p>{calculatePlayTime(selectedTable.dondatbanct[0].ThoiGianBatDau)}</p>
+                  <p>{playTime}</p>
                 </div>
               </div>
             </div>
