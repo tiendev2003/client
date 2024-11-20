@@ -51,7 +51,7 @@ const ViewOrder = () => {
   };
 
   const handleTableClick = (order) => {
-    console.log(order);
+    console.log(order.TrangThai==3);
     if (order.TrangThai !== 3) {
       return;
     }

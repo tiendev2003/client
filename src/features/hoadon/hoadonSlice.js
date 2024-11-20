@@ -2,8 +2,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../../api/axiosConfig";
 
 const initialState = {
-  hoadon: [],
   hoadons: [],
+  hoadon: [],
   loading: false,
   error: null,
 };
@@ -21,6 +21,7 @@ export const fetchHoadon = createAsyncThunk(
           },
         }
       );
+      console.log(response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -31,7 +32,7 @@ export const fetchHoadon = createAsyncThunk(
 // fetch id
 export const fetchHoadonId = createAsyncThunk(
   "hoadon/fetchHoadonId",
-  async ({ id, rejectWithValue }) => {
+  async ( id,{ rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(
         `/details-invoice/${id}`,
@@ -42,6 +43,7 @@ export const fetchHoadonId = createAsyncThunk(
           },
         }
       );
+      console.log(response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -73,7 +75,7 @@ const hoadonSlice = createSlice({
       })
       .addCase(fetchHoadonId.fulfilled, (state, action) => {
         state.loading = false;
-        state.hoadons = action.payload.data;
+        state.hoadons = action.payload.invoice;
       })
       .addCase(fetchHoadonId.rejected, (state, action) => {
         state.loading = false;

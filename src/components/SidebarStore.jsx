@@ -45,6 +45,11 @@ export const SidebarStore = ({ isOpen }) => {
           </Link>
         </li>
         <li>
+          <Link to="/store/order/view">
+            <i className="fa fa-gauge-high"></i> Quản lý bàn trạng thái
+           </Link>
+        </li>
+        <li>
           <Link to="/store/order">
             <i className="fa fa-gauge-high"></i> Đơn đặt bàn
           </Link>

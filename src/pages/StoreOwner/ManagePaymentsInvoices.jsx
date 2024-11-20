@@ -32,6 +32,7 @@ const ManagePaymentsInvoices = () => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+    console.log(hoadon);
    return (
     <div className="user-profile-card user-profile-listing">
       <div className="user-profile-card-header">

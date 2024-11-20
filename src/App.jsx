@@ -54,6 +54,7 @@ import DetailOrder from "./pages/StoreOwner/Orders/DetailOrder";
 import ManagementOrder from "./pages/StoreOwner/Orders/ManagementOrder";
 import { EditService } from "./pages/StoreOwner/Services/EditService";
 import { EditBilliardTable } from "./pages/StoreOwner/Tables/EditBilliardTable";
+import MyApp from "./Test";
 
 const HomePage = lazy(() => import("./pages/Home/HomePage"));
 const AboutPage = lazy(() => import("./pages/About/AboutPage"));
@@ -188,6 +189,10 @@ function App() {
               />
             </Route>
           </Route>
+          <Route
+                path="/test"
+                element={<MyApp />}
+              />
           <Route element={<ProtectedRoute allowedRoles={[2]} />}>
             <Route element={<StoreLayout />}>
               <Route path="/store" element={<DashboardStore />} />
@@ -279,6 +284,7 @@ function App() {
                 path="/store/manage-sanpham/edit/:id"
                 element={<EditSanpham />}
               />
+             
 
               {/* thống kê */}
               <Route path="/store/location" element={<CurrentStore />} />

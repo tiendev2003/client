@@ -56,6 +56,7 @@ const ManagementOrder = () => {
       }
     }
   };
+  console.log("orders", orders);
   
 
    
