@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../../api/axiosConfig";
 
 const initialState = {
@@ -9,9 +9,9 @@ const initialState = {
 };
 export const getDanhMucs = createAsyncThunk(
   "danhMucSanPham/getDanhMucs",
-  async (id, { rejectWithValue }) => {
+  async (  { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/dmSP/${id}`, {
+      const response = await axiosInstance.get(`/dmSP`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("userToken")}`,
@@ -30,7 +30,7 @@ export const createDanhMuc = createAsyncThunk(
   async (danhMucData, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post(
-        `dmSP/store/${danhMucData.id}`,
+        `dmSP/store`,
         danhMucData,
         {
           headers: {
@@ -51,7 +51,7 @@ export const getDanhMucById = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(
-        `/dmSP/details/${data.id}/${data.idDanhMuc}`,
+        `/dmSP/details/${data.idDanhMuc}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -72,7 +72,7 @@ export const updateDanhMuc = createAsyncThunk(
     try {
         console.log(data)
       const response = await axiosInstance.put(
-        `/dmSP/update/${data.id}/${data.idDanhMuc}`,
+        `/dmSP/update/${data.idDanhMuc}`,
         data,
         {
           headers: {
@@ -92,7 +92,7 @@ export const deleteDanhMuc = createAsyncThunk(
   "danhMucSanPham/deleteDanhMuc",
   async (data, { rejectWithValue }) => {
     try {
-      await axiosInstance.delete(`/dmSP/delete/${data.id}/${data.idDanhMuc}`, {
+      await axiosInstance.delete(`/dmSP/delete/${data.idDanhMuc}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("userToken")}`,

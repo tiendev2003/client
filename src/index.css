@@ -16,7 +16,7 @@ fonts
 /* ===================
 general css
 ====================== */
-.mr-2{
+.mr-2 {
   margin-right: 0.5rem;
 }
 *,
@@ -29,11 +29,12 @@ general css
   scroll-behavior: inherit !important;
 }
 
-.btn-group-sm>.btn,.btn-sm {
+.btn-group-sm > .btn,
+.btn-sm {
   --bs-btn-padding-y: 0.25rem;
   --bs-btn-padding-x: 0.5rem;
   --bs-btn-font-size: 0.875rem;
-  --bs-btn-border-radius: var(--bs-border-radius-sm)
+  --bs-btn-border-radius: var(--bs-border-radius-sm);
 }
 
 html,
@@ -6408,9 +6409,8 @@ about css
   padding: 2px 3px;
   border-radius: 5px;
   margin: 5px;
-
 }
- 
+
 .select option:hover {
   background-color: #f1f1f1;
 }
@@ -6419,143 +6419,142 @@ about css
   background-color: #f1f1f1;
 }
 
-
-.listing-item{
+.listing-item {
   margin-top: 20px;
   padding-top: 20px;
-  border-top: 1px solid rgba(0, 0, 0, .05);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.listing-feature{
+.listing-feature {
   display: flex;
   gap: 10px;
   margin-bottom: 25px;
 }
 
-.listing-feature-icon{
+.listing-feature-icon {
   width: 45px;
   height: 45px;
   line-height: 45px;
-  background: rgba(113, 103, 255, .2);
+  background: rgba(113, 103, 255, 0.2);
   border-radius: 12px;
   font-size: 18px;
   text-align: center;
-  color: #7167FF;
+  color: #7167ff;
 }
 
-.listing-feature-content span{
-  color: #4F4B8B;
+.listing-feature-content span {
+  color: #4f4b8b;
 }
 
-.listing-highlight{
+.listing-highlight {
   margin: 25px 0;
 }
 
-.listing-highlight h5{
+.listing-highlight h5 {
   margin-bottom: 15px;
 }
 
-.listing-item .list li{
+.listing-item .list li {
   margin-bottom: 15px;
   padding-left: 18px;
   position: relative;
 }
 
-.listing-item .list li::before{
+.listing-item .list li::before {
   content: "\e122";
   position: absolute;
   font-family: "Font Awesome 6 pro";
   font-size: 10px;
-  color: #7167FF;
+  color: #7167ff;
   font-weight: bold;
   top: 6.7px;
   left: 0;
 }
 
-.listing-info{
+.listing-info {
   margin-top: 20px;
   margin-bottom: 20px;
 }
 
-.listing-info h5{
+.listing-info h5 {
   margin-bottom: 15px;
 }
 
-.listing-info .list li{
+.listing-info .list li {
   padding-left: 0;
 }
 
-.listing-info .list li span{
+.listing-info .list li span {
   margin-right: 10px;
-  color: #4F4B8B;
+  color: #4f4b8b;
 }
 
-.listing-info .list li::before{
+.listing-info .list li::before {
   display: none;
 }
 
-.listing-included h5{
+.listing-included h5 {
   margin-bottom: 15px;
 }
 
-.listing-included .list li{
+.listing-included .list li {
   padding-left: 24px;
 }
 
-.listing-included .list li::before{
+.listing-included .list li::before {
   content: "\f00c";
   font-size: 16px;
   top: 0px;
-  color: #09AD95;
+  color: #09ad95;
 }
 
-.listing-notincluded h5{
+.listing-notincluded h5 {
   margin-bottom: 15px;
 }
 
-.listing-notincluded .list li::before{
+.listing-notincluded .list li::before {
   content: "\f00d";
   font-size: 16px;
   top: 0px;
-  color: #F96768;
+  color: #f96768;
 }
 
-.listing-item iframe{
+.listing-item iframe {
   border-radius: 15px;
   margin-bottom: 15px;
 }
 
-.listing-item.faq-area{
+.listing-item.faq-area {
   margin-bottom: 35px;
 }
 
-.listing-item.faq-area .accordion-item{
+.listing-item.faq-area .accordion-item {
   box-shadow: none;
-  border: 1px solid rgba(0, 0, 0, .08);
+  border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-.listing-item.faq-area .accordion-body{
+.listing-item.faq-area .accordion-body {
   padding-top: 0;
 }
 
-.listing-item.faq-area .accordion-button:not(.collapsed){
+.listing-item.faq-area .accordion-button:not(.collapsed) {
   border: none;
 }
 
-.listing-amenity-item .list li::before{
+.listing-amenity-item .list li::before {
   content: "\f00c";
   font-size: 14px;
   top: 0px;
   left: 4px;
-  color: #09AD95;
+  color: #09ad95;
 }
 
-.listing-amenity-item h6{
+.listing-amenity-item h6 {
   margin-bottom: 15px;
   margin-top: 15px;
 }
 
-.listing-amenity-item h6 i{
+.listing-amenity-item h6 i {
   width: 30px;
   height: 30px;
   line-height: 30px;
@@ -6563,134 +6562,134 @@ about css
   border-radius: 50px;
   font-size: 14px;
   text-align: center;
-  color: #7167FF;
-  background: rgba(113, 103, 255, .1);
+  color: #7167ff;
+  background: rgba(113, 103, 255, 0.1);
 }
 
-.listing-amenity-item .list li{
+.listing-amenity-item .list li {
   margin-bottom: 5px;
   padding-left: 25px;
   font-size: 15px;
 }
 
-.listing-stop{
+.listing-stop {
   font-weight: 500;
 }
 
-.listing-stop .badge{
-  background: #09AD95;
+.listing-stop .badge {
+  background: #09ad95;
 }
 
 .listing-flight .flight-booking-time .start-time,
-.listing-flight .flight-booking-time .end-time{
+.listing-flight .flight-booking-time .end-time {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
 .listing-flight .flight-booking-time .start-time-text,
-.listing-flight .flight-booking-time .end-time-text{
-  color: #4F4B8B;
+.listing-flight .flight-booking-time .end-time-text {
+  color: #4f4b8b;
   font-weight: 700;
 }
 
-.listing-flight .flight-destination{
-  color: #4F4B8B;
+.listing-flight .flight-destination {
+  color: #4f4b8b;
   font-weight: 500;
 }
 
-.listing-flight .flight-booking-time{
+.listing-flight .flight-booking-time {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 30px;
 }
 
-.listing-flight .start-time-icon{
+.listing-flight .start-time-icon {
   font-size: 25px;
-  color: #4F4B8B;
+  color: #4f4b8b;
 }
 
-.listing-flight .flight-stop{
+.listing-flight .flight-stop {
   text-align: center;
 }
 
-.listing-flight .flight-stop-number{
-  color: #4F4B8B;
+.listing-flight .flight-stop-number {
+  color: #4f4b8b;
   font-weight: 500;
 }
 
-.listing-flight .flight-stop-arrow{
+.listing-flight .flight-stop-arrow {
   margin-top: 5px;
-  border-top: 2px solid #4F4B8B;
+  border-top: 2px solid #4f4b8b;
   position: relative;
   width: 140px;
 }
 
-.listing-flight .flight-stop-arrow::before{
+.listing-flight .flight-stop-arrow::before {
   content: "";
   position: absolute;
   border-style: solid;
   border-width: 10px 10px 0 0;
-  border-color: #4F4B8B transparent transparent transparent;
+  border-color: #4f4b8b transparent transparent transparent;
   right: -1.5px;
   top: -9.6px;
   transform: scaleY(-1);
 }
 
-.listing-flight .flight-has-stop::after{
+.listing-flight .flight-has-stop::after {
   content: "\e122";
   position: absolute;
   left: 50%;
   top: -15px;
   font-family: "Font Awesome 6 Pro";
-  color:#4F4B8B;
+  color: #4f4b8b;
   font-weight: bold;
 }
 
-.listing-flight .flight-booking-return .flight-has-stop::after{
+.listing-flight .flight-booking-return .flight-has-stop::after {
   top: -16px;
 }
 
-.listing-flight .flight-booking-duration .duration-text{
-  color: #4F4B8B;
+.listing-flight .flight-booking-duration .duration-text {
+  color: #4f4b8b;
   font-weight: 500;
 }
 
-.listing-baggage{
+.listing-baggage {
   margin-top: 30px;
   margin-bottom: 20px;
   padding-top: 30px;
-  border-top: 1px solid rgba(0, 0, 0, .08);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-.listing-baggage-check .form-group{
+.listing-baggage-check .form-group {
   margin-bottom: 25px;
 }
 
-.listing-baggage-check .form-group label{
-  color: #4F4B8B;
+.listing-baggage-check .form-group label {
+  color: #4f4b8b;
   margin-bottom: 5px;
 }
 
-.listing-baggage-check .form-group-icon{
+.listing-baggage-check .form-group-icon {
   position: relative;
 }
 
-.listing-baggage-check .form-group-icon i{
+.listing-baggage-check .form-group-icon i {
   position: absolute;
   left: 18px;
   top: 20px;
 }
 
-.listing-baggage-check .form-control{
+.listing-baggage-check .form-control {
   padding: 15px 18px 15px 45px;
   border-radius: 12px;
   box-shadow: none;
-  color: #4F4B8B;
+  color: #4f4b8b;
 }
 
-.listing-baggage-check .nice-select{
+.listing-baggage-check .nice-select {
   width: 100%;
   height: 55px;
   line-height: 55px;
@@ -6698,21 +6697,21 @@ about css
   border-color: #ced4da;
   padding-left: 45px;
   font-size: 16px;
-  color: #4F4B8B;
+  color: #4f4b8b;
   margin-bottom: 25px;
 }
 
 .listing-baggage-check .form-control:focus,
-.listing-baggage-check .nice-select:focus{
-  border-color: #7167FF;
+.listing-baggage-check .nice-select:focus {
+  border-color: #7167ff;
 }
 
-.listing-baggage-check .nice-select .list{
+.listing-baggage-check .nice-select .list {
   width: 100%;
   border-radius: 12px;
 }
 
-.listing-baggage-check .nice-select:after{
+.listing-baggage-check .nice-select:after {
   width: 9px;
   height: 9px;
   margin-top: -7px;
@@ -6720,13 +6719,13 @@ about css
 }
 
 label {
-  color: #4F4B8B;
+  color: #4f4b8b;
   margin: 0px;
   font-weight: 600;
-  font-family: 'Barlow', sans-serif;
+  font-family: "Barlow", sans-serif;
   line-height: 1.2;
 }
-/* From Uiverse.io by Bodyhc */ 
+/* From Uiverse.io by Bodyhc */
 .checkbox-wrapper-35 .switch {
   display: none;
 }
@@ -6742,7 +6741,7 @@ label {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 12px;
   line-height: 15px;
   position: relative;
@@ -6753,8 +6752,8 @@ label {
 }
 
 .checkbox-wrapper-35 .switch + label::before,
-  .checkbox-wrapper-35 .switch + label::after {
-  content: '';
+.checkbox-wrapper-35 .switch + label::after {
+  content: "";
   display: block;
 }
 
@@ -6771,7 +6770,8 @@ label {
 .checkbox-wrapper-35 .switch + label::after {
   background-color: #fff;
   border-radius: 13px;
-  box-shadow: 0 3px 1px 0 rgba(37, 34, 71, 0.05), 0 2px 2px 0 rgba(37, 34, 71, 0.1), 0 3px 3px 0 rgba(37, 34, 71, 0.05);
+  box-shadow: 0 3px 1px 0 rgba(37, 34, 71, 0.05),
+    0 2px 2px 0 rgba(37, 34, 71, 0.1), 0 3px 3px 0 rgba(37, 34, 71, 0.05);
   height: 13px;
   left: 1px;
   position: absolute;
@@ -6785,7 +6785,7 @@ label {
 
 .checkbox-wrapper-35 .switch + label .switch-x-text {
   display: block;
-  margin-right: .3em;
+  margin-right: 0.3em;
 }
 
 .checkbox-wrapper-35 .switch + label .switch-x-toggletext {
@@ -6798,14 +6798,15 @@ label {
 }
 
 .checkbox-wrapper-35 .switch + label .switch-x-unchecked,
-  .checkbox-wrapper-35 .switch + label .switch-x-checked {
+.checkbox-wrapper-35 .switch + label .switch-x-checked {
   left: 0;
   position: absolute;
   top: 0;
   -webkit-transition: opacity 0.125s ease-out, -webkit-transform 0.125s ease-out;
   transition: opacity 0.125s ease-out, -webkit-transform 0.125s ease-out;
   transition: transform 0.125s ease-out, opacity 0.125s ease-out;
-  transition: transform 0.125s ease-out, opacity 0.125s ease-out, -webkit-transform 0.125s ease-out;
+  transition: transform 0.125s ease-out, opacity 0.125s ease-out,
+    -webkit-transform 0.125s ease-out;
 }
 
 .checkbox-wrapper-35 .switch + label .switch-x-unchecked {
@@ -6846,14 +6847,9 @@ label {
   transform: none;
 }
 
-
 /* chartjs */
- 
-  
- 
 
 .dashboard-item {
-  
   background-color: #f0f0f0;
   padding: 20px;
   border-radius: 8px;
@@ -6871,7 +6867,7 @@ label {
 
 /* 
  */
- .user-profile-card {
+.user-profile-card {
   background-color: #f9f9f9;
   border-radius: 10px;
   padding: 20px;
@@ -6889,7 +6885,6 @@ label {
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
-   
 }
 
 .table-item {
@@ -6961,19 +6956,19 @@ label {
 
 /*  */
 
-.search-form .passenger-total{
+.search-form .passenger-total {
   border-radius: 12px;
   padding: 2.4px 0px;
-  color: #4F4B8B;
+  color: #4f4b8b;
   font-size: 19px;
   font-weight: 500;
 }
 
-.search-form .passenger-box{
+.search-form .passenger-box {
   cursor: pointer;
 }
 
-.search-form .passenger-box .dropdown-menu{
+.search-form .passenger-box .dropdown-menu {
   background: #fff;
   border: none;
   border-radius: 10px;
@@ -6984,62 +6979,62 @@ label {
   box-shadow: 0 0 40px 5px rgb(0 0 0 / 5%);
 }
 
-.search-form .static-dropdown.passenger-box .dropdown-menu{
+.search-form .static-dropdown.passenger-box .dropdown-menu {
   right: 0px !important;
-} 
+}
 
-.search-form .passenger-box .dropdown-item:hover{
+.search-form .passenger-box .dropdown-item:hover {
   background: transparent;
 }
 
-.search-form .passenger-item{
+.search-form .passenger-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding-top: 5px;
   padding-bottom: 12px;
-  border-bottom: 1px solid rgba(0, 0, 0, .05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.search-form .passenger-qty{
+.search-form .passenger-qty {
   display: flex;
   align-items: center;
   gap: 5px;
 }
 
-.search-form .passenger-qty button{
+.search-form .passenger-qty button {
   border: none;
   width: 35px;
   height: 35px;
   line-height: 32px;
   border-radius: 50px;
-  background: rgba(113, 103, 255, .15);
+  background: rgba(113, 103, 255, 0.15);
 }
 
-.search-form .passenger-qty button i{
+.search-form .passenger-qty button i {
   position: unset !important;
   font-size: 16px !important;
 }
 
-.search-form .passenger-qty input{
+.search-form .passenger-qty input {
   width: 25px;
   text-align: center;
   border: none;
   outline: none;
   font-weight: 500;
-  color: #4F4B8B;
+  color: #4f4b8b;
 }
 
-.search-form .passenger-class-info .form-check{
+.search-form .passenger-class-info .form-check {
   margin-top: 10px;
 }
 
-.search-form .passenger-class-info .form-check-input{
+.search-form .passenger-class-info .form-check-input {
   box-shadow: none;
   margin-top: 7px;
 }
 
-.search-form .search-btn .theme-btn{
+.search-form .search-btn .theme-btn {
   position: absolute;
   border-radius: 50px;
   border: 5px solid #fff;
@@ -7074,19 +7069,20 @@ label {
   margin-top: 15px;
 }
 
-.user-info, .store-info {
+.user-info,
+.store-info {
   display: flex;
   align-items: center;
   margin-top: 10px;
 }
 
-.user-avatar, .store-avatar {
+.user-avatar,
+.store-avatar {
   width: 50px;
   height: 50px;
   border-radius: 50%;
   margin-right: 10px;
 }
-
 
 /*  */
 .user-profile-card {
@@ -7186,7 +7182,12 @@ label {
   overflow-y: auto;
 }
 
-.react-datetime-picker__wrapper{
-border-radius: 10px;
-cursor: pointer;
+.react-datetime-picker__wrapper {
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.listing-amenity-item.selected {
+   border-radius:10px;
+  border: 5px solid #7167ff;
 }

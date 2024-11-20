@@ -29,7 +29,7 @@ export const updateProduct = createAsyncThunk(
   async (productData, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.put(
-        `/SanPham/update/1/${productData.id}`,
+        `/SanPham/update/${productData.id}`,
         productData,
         {
           headers: {
@@ -49,7 +49,7 @@ export const addProduct = createAsyncThunk(
     try {
       console.log(productData);
       const response = await axiosInstance.post(
-        `/SanPham/store/${productData.cuahangid}`,
+        `/SanPham/store`,
         productData,
         {
           headers: {
@@ -69,7 +69,7 @@ export const fetchProducts = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     console.log(data);
     try {
-      const response = await axiosInstance.get(`/SanPham/${data}`,{
+      const response = await axiosInstance.get(`/SanPham`,{
         headers: {
           Authorization: `Bearer ${localStorage.getItem("userToken")}`,
         },
@@ -85,7 +85,7 @@ export const fetchProductById = createAsyncThunk(
   "products/fetchProductById",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/SanPham/details/${data.cuahang}/${data.id}`, {
+      const response = await axiosInstance.get(`/SanPham/details/${data.id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("userToken")}`,
         },
@@ -100,7 +100,7 @@ export const deleteProduct = createAsyncThunk(
   "products/deleteProduct",
   async (id, { rejectWithValue }) => {
     try {
-      await axiosInstance.delete(`/SanPham/delete/1/${id}`);
+      await axiosInstance.delete(`/SanPham/delete/${id}`);
       return id;
     } catch (error) {
       return rejectWithValue(error.response.data);

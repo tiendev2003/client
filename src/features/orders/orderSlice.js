@@ -4,6 +4,7 @@ import axiosInstance from "../../api/axiosConfig";
 const initialState = {
   orders: [],
   order: {},
+  banForOrder: [],
   loading: false,
   error: null,
 };
@@ -156,6 +157,23 @@ export const completeOrder = createAsyncThunk(
   }
 );
 
+export const fetchbanForOrder = createAsyncThunk(
+  "order/banForOrder",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(`/listoftable`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const orderSlice = createSlice({
   name: "order",
   initialState,
@@ -198,7 +216,18 @@ export const orderSlice = createSlice({
       })
       .addCase(exportBill.rejected, (state) => {
         state.loading = false;
-      });
+      })
+      .addCase(fetchbanForOrder.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchbanForOrder.fulfilled, (state, action) => {
+        state.loading = false;
+        state.banForOrder = action.payload.data;
+      })
+      .addCase(fetchbanForOrder.rejected, (state) => {
+        state.loading = false;
+
+      })
   },
 });
 

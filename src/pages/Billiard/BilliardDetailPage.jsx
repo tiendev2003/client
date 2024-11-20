@@ -95,7 +95,7 @@ const BilliardDetailPage = () => {
     }
     try {
       await dispatch(bookTable({ id_Cuahang: id, id_Ban })).unwrap();
-      toast.success("Đặt bàn thành công");
+      toast.success("Đặt bàn thành công.Quý khách vui lòng đến trong 15 phút, quá 15’ huỷ đặt bàn");
     } catch (error) {
       console.log(error);
       toast.error("Đặt bàn thất bại");
@@ -232,22 +232,23 @@ const BilliardDetailPage = () => {
                           <div className="row">
                             {danhMuc.bans.map((ban, idx) => (
                               <div className="col-lg-4" key={idx}>
-                                <div className="listing-amenity-item">
-                                  <div className="form-check mb-2">
-                                    <input
-                                      className="form-check-input"
-                                      type="radio"
-                                      name="table"
-                                      onChange={() => handleTableSelect(ban)}
-                                      id={`table-${ban.id}`}
-                                      disabled={ban.TrangThai === 0}
-                                    />
-                                    <label
-                                      className="form-check-label"
-                                      htmlFor={`table-${ban.id}`}
-                                    >
-                                      {ban?.TenBan} - {formatMoney(ban?.GiaBan)}
-                                    </label>
+                                <div
+                                  className={`listing-amenity-item ${
+                                    selectedTable?.id === ban.id ? "selected" : ""
+                                  }`}
+                                  onClick={() => handleTableSelect(ban)}
+                                  style={{
+                                    cursor: "pointer",
+                                    
+                                  }}
+                                >
+                                  <img
+                                    src={"/img/ban.png"}  
+                                    alt={ban.TenBan}
+                                    style={{ width: "100%", height: "auto" }}
+                                  />
+                                  <div className="table-info-overlay">
+                                    <p>{ban?.TenBan} - {formatMoney(ban?.GiaBan)}</p>
                                   </div>
                                 </div>
                               </div>
@@ -766,3 +767,4 @@ const BilliardDetailPage = () => {
 };
 
 export default BilliardDetailPage;
+
