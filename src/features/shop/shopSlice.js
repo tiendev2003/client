@@ -105,6 +105,7 @@ export const createStore = createAsyncThunk(
 export const searchStore = createAsyncThunk(
   "shop/searchStore",
   async (data, { rejectWithValue }) => {
+    console.log(data)
     try {
       const response = await axiosClient.post(`/search-cua-hang`, data);
       console.log(response.data);

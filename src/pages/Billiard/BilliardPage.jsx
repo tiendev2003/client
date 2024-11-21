@@ -75,23 +75,24 @@ const BilliardPage = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const province = params.get("province");
-    const district = params.get("district");
-    const ward = params.get("ward");
+    let province = params.get("province");
+    let district = params.get("district");
+    let ward = params.get("ward");
 
     if (province || district || ward) {
-      console.log(province, district, ward);
+      
+      
       dispatch(
         searchStore({
-          tinh_thanhpho: province == undefined ? "" : province,
-          quan_huyen: district == undefined ? "" : district,
+          tinh_thanhpho: province == undefined ? "" : province.replace(/^(Tỉnh|Thành phố)\s*/, "").trim(),
+          quan_huyen: district == undefined ? "" : district.replace(/^(Huyện|Quận)\s*/, "").trim(),
           phuong_xa: ward == undefined ? "" : ward,
         })
       );
     } else {
       setFilterCuahangs(cuahangs);
     }
-  }, [location.search, dispatch]);
+  }, [location.search, dispatch, cuahangs]);
 
   // Calculate the number of stores for each rating
   const ratingCounts = cuahangs.reduce((acc, cuahang) => {
