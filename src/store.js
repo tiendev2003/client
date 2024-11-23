@@ -7,6 +7,7 @@ import bookingReducer from "./features/book/bookSlice";
 import ctkmReducer from "./features/ctkm/ctkmSlice";
 import danhgiaSlice from "./features/danhgia/danhgiaSlice";
 import danhMucAnhReducer from "./features/danhmucanh/dmaSlice";
+import danhmucaqcReducer from "./features/danhmucaqc/danhmucaqcSlice";
 import danhMucBanReducer from "./features/danhmucban/danhMucBanSlice";
 import danhMucKhuyenMaiReducer from "./features/danhmuckm/danhMucKhuyenMaiSlice";
 import danhMucSanPhamReducer from "./features/danhmucsanpham/danhMucSanPhamSlice";
@@ -36,7 +37,8 @@ const store = configureStore({
     orders: orderReducer,
     danhMucAnh: danhMucAnhReducer,
     hoadon: hoadonReducer,
-    banner :bannerReducer
+    banner :bannerReducer,
+    danhmucaqc :danhmucaqcReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(authApi.middleware),

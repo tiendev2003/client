@@ -15,7 +15,7 @@ export const createDanhgia = createAsyncThunk(
       // lấy id của sản phẩm từ data
       const id = data.get("id");
 
-      const response = await axiosInstance.post(`/comment/store/${id}`, data, {
+      const response = await axiosInstance.post(`/comment/${id}`, data, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("userToken")}`,
         },
@@ -32,8 +32,8 @@ export const updateDanhGia = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     try {
       const id = data.get("id");
-      const response = await axiosInstance.put(
-        `/comment/update/${id}`,
+      const response = await axiosInstance.patch(
+        `/comment/${id}`,
         data,
         {
           headers: {
@@ -53,7 +53,7 @@ export const deleteDanhGia = createAsyncThunk(
   "danhgia/deleteDanhGia",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.delete(`/comment/delete/${id}`, {
+      const response = await axiosInstance.delete(`/comment/${id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("userToken")}`,

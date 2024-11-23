@@ -33,3 +33,22 @@ export const registerUser = createAsyncThunk(
     }
   }
 );
+
+export const loginWithGoogle = createAsyncThunk(
+  "auth/loginWithGoogle",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await axiosClient.get(
+        "/auth/google/redirect"
+      ); // Adjust the API endpoint as needed
+      console.log(data);
+      return data;
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);

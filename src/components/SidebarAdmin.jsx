@@ -161,6 +161,42 @@ export const SidebarAdmin = ({ isOpen }) => {
               </ul>
             </div>
           </li>
+          <li className="profile-menu">
+            <a
+              href="#profile-menu-5"
+              data-bs-toggle="collapse"
+              aria-expanded="true"
+              aria-controls="profile-menu-5"
+              className="collapsed"
+            >
+              <i className="fa-solid fa-images"></i> Quản lý dm ảnh quảng cáo
+              <i className="fa-solid fa-caret-down profile-menu-angle"></i>
+            </a>
+            <div className="collapse" id="profile-menu-5">
+              <ul className="profile-menu-list">
+                <li>
+                  <Link
+                    to="/admin/management-dmaqc/create"
+                    className={
+                      isActive("/admin/management-dmaqc/create") ? "active" : ""
+                    }
+                  >
+                    Thêm danh mục
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/admin/management-dmaqc"
+                    className={
+                      isActive("/admin/management-dmaqc") ? "active" : ""
+                    }
+                  >
+                    Danh sách danh mục ảnh
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </li>
           <li>
             <Link
               to="/admin/banner"

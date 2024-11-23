@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { Breadcrumb } from "../../components";
-import { loginUser } from "../../features/auth/authAction";
+import { loginUser, loginWithGoogle } from "../../features/auth/authAction";
 
 const validationSchema = yup.object().shape({
   Email: yup.string().required("Email là bắt buộc"),
@@ -46,6 +46,11 @@ const LoginPage = () => {
   const onSubmit = async (data) => {
     dispatch(loginUser(data));
   };
+
+  const handleGoogleLogin = async () => {
+    dispatch(loginWithGoogle());
+  };
+
   return (
     <>
       <Breadcrumb title="Đăng nhập" items="Đăng nhập" />
@@ -104,9 +109,9 @@ const LoginPage = () => {
                       Ghi nhớ
                     </label>
                   </div>
-                  <a href="forgot-password.html" className="forgot-pass">
+                  <Link to={"/quen-mat-khau"} className="forgot-pass">
                     Quên mật khẩu?
-                  </a>
+                  </Link>
                 </div>
                 <div className="d-flex align-items-center">
                   <button
@@ -127,7 +132,7 @@ const LoginPage = () => {
                   <a href="#" className="btn-fb">
                     <i className="fa-brands fa-facebook"></i> Facebook
                   </a>
-                  <a href="#" className="btn-gl">
+                  <a href="#" className="btn-gl" onClick={handleGoogleLogin}>
                     <i className="fa-brands fa-google"></i> Google
                   </a>
                 </div>

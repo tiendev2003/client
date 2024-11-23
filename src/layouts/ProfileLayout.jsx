@@ -1,10 +1,11 @@
 import PropTypes from "prop-types";
-import { Link, NavLink, Outlet } from "react-router-dom";
-import { Breadcrumb } from "../components";
-import { useSelector, useDispatch } from "react-redux";
-import { uploadAvatar ,updateUserInfo} from "./../features/user/userSlice";
-import { toast } from "react-toastify";
 import { useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, NavLink, Outlet } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Breadcrumb } from "../components";
+import { logout } from "../features/auth/authSlice";
+import { updateUserInfo, uploadAvatar } from "./../features/user/userSlice";
 
 const ProfileLayout = () => {
   const dispatch = useDispatch();
@@ -112,7 +113,9 @@ const ProfileLayout = () => {
                     </NavLink>
                   </li>
                   <li>
-                    <Link to="#">
+                    <Link to="#" onClick={()=>{
+                      dispatch(logout());
+                    }}>
                       <i className="fa fa-sign-out"></i> Đăng xuất
                     </Link>
                   </li>

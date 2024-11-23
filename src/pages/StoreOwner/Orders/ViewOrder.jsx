@@ -21,6 +21,7 @@ const ViewOrder = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTable, setSelectedTable] = useState(null);
   const [playTime, setPlayTime] = useState("");
+  const [filterStatus, setFilterStatus] = useState("");
 
   useEffect(() => {
     dispatch(fetchbanForOrder(userInfo.cuahang.id));
@@ -39,6 +40,10 @@ const ViewOrder = () => {
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
+  };
+
+  const handleStatusChange = (e) => {
+    setFilterStatus(e.target.value);
   };
 
   const calculatePlayTime = (startTime) => {
@@ -70,9 +75,11 @@ const ViewOrder = () => {
     navigation("/store/order/" + selectedTable?.hoadonct?.id_HoaDon);
   };
 
-  const filteredTables = banForOrder.filter((ban) =>
-    ban.TenBan.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredTables = banForOrder.filter((ban) => {
+    const matchesSearchQuery = ban.TenBan.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus = filterStatus ? ban.TrangThai === parseInt(filterStatus) : true;
+    return matchesSearchQuery && matchesStatus;
+  });
 
   return (
     <div className="user-profile-card user-profile-listing">
@@ -90,6 +97,15 @@ const ViewOrder = () => {
               />
               <i className="fa fa-search"></i>
             </div>
+          </div>
+          <div className="form-group">
+            <select className="form-control" value={filterStatus} onChange={handleStatusChange}>
+              <option value="">Tất cả trạng thái</option>
+              <option value="1">Bàn Trống</option>
+              <option value="2">Bàn đã được đặt</option>
+              <option value="3">Bàn đang sử dụng</option>
+              <option value="0">Bàn đang sửa</option>
+            </select>
           </div>
         </div>
       </div>

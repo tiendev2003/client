@@ -28,6 +28,9 @@ import ManagementBanner from "./pages/Admin/Banner/ManagementBanner";
 import CreateDMA from "./pages/Admin/DanhMucAnh/CreateDMA";
 import EditDMA from "./pages/Admin/DanhMucAnh/EditDMA";
 import ManagementDMA from "./pages/Admin/DanhMucAnh/ManagementDMA";
+import CreateDMAQC from "./pages/Admin/DanhMucQC/CreateDMAQC";
+import EditDMAQC from "./pages/Admin/DanhMucQC/EditDMAQC";
+import ManagementDMQC from "./pages/Admin/DanhMucQC/ManagementDMQC";
 import CreateRole from "./pages/Admin/Roles/CreateRole";
 import EditRole from "./pages/Admin/Roles/EditRole";
 import ManagementRole from "./pages/Admin/Roles/ManagementRole";
@@ -54,6 +57,7 @@ import DetailOrder from "./pages/StoreOwner/Orders/DetailOrder";
 import ManagementOrder from "./pages/StoreOwner/Orders/ManagementOrder";
 import { EditService } from "./pages/StoreOwner/Services/EditService";
 import { EditBilliardTable } from "./pages/StoreOwner/Tables/EditBilliardTable";
+import OAuthRoute from "./routing/OAuthRoute";
 import MyApp from "./Test";
 
 const HomePage = lazy(() => import("./pages/Home/HomePage"));
@@ -86,6 +90,7 @@ function App() {
     <Router>
       <Suspense fallback={<LoadingSpinner />}>
         <Routes>
+          <Route path="/api/auth/google/callback" element={<OAuthRoute />}/>
           <Route element={<MainLayout />}>
             <Route index path="/" element={<HomePage />} />
             <Route path="/gioi-thieu" element={<AboutPage />} />
@@ -122,6 +127,18 @@ function App() {
               <Route
                 path="/admin/management-user"
                 element={<UserManagement />}
+              />
+              <Route
+                path="/admin/management-dmaqc"
+                element={<ManagementDMQC />}
+              />
+              <Route
+                path="/admin/management-dmaqc/create"
+                element={<CreateDMAQC />}
+              />
+              <Route
+                path="/admin/management-dmaqc/edit/:id"
+                element={<EditDMAQC />}
               />
 
               <Route
