@@ -31,49 +31,92 @@ export const DetailPaymentInvoices = () => {
   useEffect(() => {
     dispatch(getCTKMs());
   }, [dispatch]);
-  const exportToPDF = (hoaDon) => {
+  const exportToPDF = (data) => {
+  
+    const { hoaDon } = data;
+  
+    // Thông tin cửa hàng
+    const storeName = userInfo.cuahang.TenCuaHang || "Không có";
+    const storePhone = userInfo.cuahang?.SDT || "Không có";
+    const storeAddress = userInfo.cuahang?.DiaChi || "Không có";
+  
+    // Thông tin khách hàng
+    const customerName = hoaDon.taikhoan?.TenTaiKhoan || "Không có";
+    const customerPhone = hoaDon.taikhoan?.SDT || "Không có";
+  
+    // Danh sách chi tiết hóa đơn
+    const invoiceDetails = hoaDon.hoadonct.map((item, index) => {
+      const productName = item.sanpham?.TenSanPham || item.ban?.TenBan || "Không có";
+      const unitPrice = item.sanpham?.Gia || item.ban?.GiaBan || 0;
+      const quantity = item.SoLuong < 1 ? 1 : item.SoLuong;
+      const isLongDecimal = (value) => {
+        const decimalPart = value.toString().split(".")[1]; // Lấy phần thập phân
+        return decimalPart && decimalPart.length > 2; // Kiểm tra số chữ số thập phân > 2
+      };
+      const totalPrice =isLongDecimal(item.Tong)  ?item.ban?.GiaBan  : item.Tong || 0;
+  
+      return [
+        index + 1,
+        productName,
+        unitPrice  + " đ",
+        quantity,
+        totalPrice  + " đ",
+      ];
+    });
+  
+    // Tạo PDF
     const docDefinition = {
       content: [
-        { text: "Hóa Đơn", style: "header" },
-        `Cửa Hàng: ${userInfo.cuahang.TenCuaHang}`,
-        `Địa Chỉ: ${userInfo.cuahang.DiaChi}`,
-        `SĐT: ${userInfo.cuahang.SDT}`,
-        `Tên Khách Hàng: ${hoaDon.taikhoan.TenTaiKhoan}`,
-        `SĐT Khách Hàng: ${hoaDon.taikhoan.SDT}`,
-        `Thời Gian Xuất HĐ: ${new Date(
-          hoaDon.ThoiGianXuatHD
-        ).toLocaleString()}`,
+        { text: storeName, style: "header", alignment: "center" },
+        { text: `${storeAddress}\n${storePhone}`, alignment: "center" },
+        { text: "PHIẾU THANH TOÁN", style: "subheader", alignment: "center", margin: [0, 10, 0, 10] },
+        { text: `Khách hàng: ${customerName} - ${customerPhone}`, margin: [0, 10, 0, 10] },
+        { text: `Thời gian xuất hóa đơn: ${new Date(hoaDon.ThoiGianXuatHD) }` },
+  
         {
           table: {
+            headerRows: 1,
+            widths: [30, "*", 50, 30, 60],
             body: [
-              ["Tên Sản Phẩm/Bàn", "Số Lượng", "Giá", "Tổng"],
-              ...hoaDon.hoadonct.map((item) => [
-                item.sanpham ? item.sanpham.TenSanPham : item.ban.TenBan,
-                item.SoLuong,
-                formatMoney(item.sanpham ? item.sanpham.Gia : item.ban.GiaBan),
-                formatMoney(item.Tong),
-              ]),
+              ["Stt", "Tên món", "Đơn giá", "SL", "Thành tiền"],
+              ...invoiceDetails,
             ],
           },
+          layout: "lightHorizontalLines",
+          margin: [0, 10, 0, 10],
         },
-        `Tổng Hóa Đơn: ${formatMoney(hoaDon.TongHD)}`,
-        `Tổng Sau Giảm Giá: ${formatMoney(hoaDon.TongHD_after_discount)}`,
+  
+        {
+          columns: [
+            { text: "Tổng hóa đơn gốc:", bold: true },
+            { text: `${data.originalTongHD } đ`, alignment: "right" },
+          ],
+        },
+        {
+          columns: [
+            { text: "Tổng sau giảm giá:", bold: true },
+            { text: `${data.TongHD_after_discount } đ`, alignment: "right" },
+          ],
+        },
+        {
+          columns: [
+            { text: "Số giờ chơi:", bold: true },
+            { text: hoaDon.SoGioChoi, alignment: "right" },
+          ],
+        },
+  
+        { text: "\nChân thành cảm ơn quý khách!", alignment: "center", margin: [0, 20, 0, 0] },
       ],
-      defaultStyle: {
-        font: "Roboto",
-      },
       styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 0, 0, 10],
-        },
+        header: { fontSize: 18, bold: true },
+        subheader: { fontSize: 14, bold: true },
       },
     };
+    pdfMake.createPdf(docDefinition).download(`HoaDon_${1}.pdf`);
 
-    pdfMake.createPdf(docDefinition).download(`HoaDon_${hoaDon.id}.pdf`);
+     
   };
-
+  
   const handleSubmit = async () => {
     try {
       console.log(hoadons.chi_tiet_ban[0].id_ban);
@@ -84,8 +127,7 @@ export const DetailPaymentInvoices = () => {
           id_PGG: selectedCTKM ?? "",
         })
       ).unwrap();
-      console.log(result);
-      exportToPDF(result);
+       exportToPDF(result);
       toast.success("Xuất hóa đơn thành công");
     } catch (error) {
       toast.error("Xuất hóa đơn thất bại");

@@ -7,7 +7,7 @@ import "react-calendar/dist/Calendar.css";
 import "react-clock/dist/Clock.css";
 import "react-datetime-picker/dist/DateTimePicker.css";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { getCTKMs } from "../../../features/ctkm/ctkmSlice";
 import { getDanhMucs } from "../../../features/danhmucsanpham/danhMucSanPhamSlice";
@@ -16,8 +16,7 @@ import {
   addSanPhamToOrder,
   deleteSanPhamFromOrder,
   detailOrder,
-  exportBill,
-  updateSanPhamInOrder,
+  updateSanPhamInOrder
 } from "../../../features/orders/orderSlice";
 import { fetchProducts } from "../../../features/sanpham/sanphamSlice";
 import { formatMoney } from "../../../utils/formatMoney";
@@ -33,6 +32,7 @@ if (pdfFonts && pdfFonts.pdfMake && pdfFonts.pdfMake.vfs) {
 const OrderDetails = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
+  const navigate = useNavigate();
   const { order, loading } = useSelector((state) => state.orders);
   const { danhMucs } = useSelector((state) => state.danhMucSanPham);
   const { ctkms } = useSelector((state) => state.ctkm);
@@ -153,107 +153,9 @@ const OrderDetails = () => {
   };
 
   const handleSubmit = async () => {
-    try {
-      const result = await dispatch(
-        exportBill({
-          id: order?.chi_tiet_ban[0]?.id_ban,
-          id_PGG: selectedCTKM ?? "",
-        })
-      ).unwrap();
-      console.log("hoa don",result);
-      toast.success("Xuất hóa đơn thành công");
-      exportToPDF(result);
-    } catch (error) {
-      console.log(error);
-      toast.error("Xuất hóa đơn thất bại");
-    }
+    navigate(`/store/invoice/${id}`);
   };
-  const exportToPDF = (data) => {
-  
-      const { hoaDon } = data;
-    
-      // Thông tin cửa hàng
-      const storeName = userInfo.cuahang.TenCuaHang || "Không có";
-      const storePhone = userInfo.cuahang?.SDT || "Không có";
-      const storeAddress = userInfo.cuahang?.DiaChi || "Không có";
-    
-      // Thông tin khách hàng
-      const customerName = hoaDon.taikhoan?.TenTaiKhoan || "Không có";
-      const customerPhone = hoaDon.taikhoan?.SDT || "Không có";
-    
-      // Danh sách chi tiết hóa đơn
-      const invoiceDetails = hoaDon.hoadonct.map((item, index) => {
-        const productName = item.sanpham?.TenSanPham || item.ban?.TenBan || "Không có";
-        const unitPrice = item.sanpham?.Gia || item.ban?.GiaBan || 0;
-        const quantity = item.SoLuong < 1 ? 1 : item.SoLuong;
-        const isLongDecimal = (value) => {
-          const decimalPart = value.toString().split(".")[1]; // Lấy phần thập phân
-          return decimalPart && decimalPart.length > 2; // Kiểm tra số chữ số thập phân > 2
-        };
-        const totalPrice =isLongDecimal(item.Tong)  ?item.ban?.GiaBan  : item.Tong || 0;
-    
-        return [
-          index + 1,
-          productName,
-          unitPrice  + " đ",
-          quantity,
-          totalPrice  + " đ",
-        ];
-      });
-    
-      // Tạo PDF
-      const docDefinition = {
-        content: [
-          { text: storeName, style: "header", alignment: "center" },
-          { text: `${storeAddress}\n${storePhone}`, alignment: "center" },
-          { text: "PHIẾU THANH TOÁN", style: "subheader", alignment: "center", margin: [0, 10, 0, 10] },
-          { text: `Khách hàng: ${customerName} - ${customerPhone}`, margin: [0, 10, 0, 10] },
-          { text: `Thời gian xuất hóa đơn: ${new Date(hoaDon.ThoiGianXuatHD) }` },
-    
-          {
-            table: {
-              headerRows: 1,
-              widths: [30, "*", 50, 30, 60],
-              body: [
-                ["Stt", "Tên món", "Đơn giá", "SL", "Thành tiền"],
-                ...invoiceDetails,
-              ],
-            },
-            layout: "lightHorizontalLines",
-            margin: [0, 10, 0, 10],
-          },
-    
-          {
-            columns: [
-              { text: "Tổng hóa đơn gốc:", bold: true },
-              { text: `${data.originalTongHD } đ`, alignment: "right" },
-            ],
-          },
-          {
-            columns: [
-              { text: "Tổng sau giảm giá:", bold: true },
-              { text: `${data.TongHD_after_discount } đ`, alignment: "right" },
-            ],
-          },
-          {
-            columns: [
-              { text: "Số giờ chơi:", bold: true },
-              { text: hoaDon.SoGioChoi, alignment: "right" },
-            ],
-          },
-    
-          { text: "\nChân thành cảm ơn quý khách!", alignment: "center", margin: [0, 20, 0, 0] },
-        ],
-        styles: {
-          header: { fontSize: 18, bold: true },
-          subheader: { fontSize: 14, bold: true },
-        },
-      };
-      pdfMake.createPdf(docDefinition).download(`HoaDon_${1}.pdf`);
-
-       
-    };
-    
+ 
 
   const handleQuantityChange = async (productId, quantity) => {
     await dispatch(
@@ -481,7 +383,7 @@ const OrderDetails = () => {
 
               {/* button submit */}
               <div className="form-group" onClick={handleSubmit}>
-                <button className="btn btn-primary">Xuất hóa đơn</button>
+                <button className="btn btn-primary">Xác nhận hóa đơn</button>
               </div>
             </div>
           </div>

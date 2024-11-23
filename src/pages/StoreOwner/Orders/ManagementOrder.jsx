@@ -14,6 +14,9 @@ const ManagementOrder = () => {
   const { orders } = useSelector((state) => state.orders);
   const { userInfo } = useSelector((state) => state.auth);
   const [onChanging, setOnChanging] = useState(false);
+  const [filterStatus, setFilterStatus] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   useEffect(() => {
     dispatch(fetchOrders(userInfo.cuahang.id));
   }, [dispatch, userInfo.cuahang.id]);
@@ -58,16 +61,41 @@ const ManagementOrder = () => {
   };
   console.log("orders", orders);
   
+  const filteredOrders = orders.filter(order => 
+    filterStatus === "" || order.TrangThai.toString() === filterStatus
+  );
 
-   
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
+  const currentOrders = filteredOrders.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   return (
     <div className="user-profile-card user-profile-listing">
       <div className="user-profile-card-header">
         <h4 className="user-profile-card-title">Danh sách đơn đặt bàn</h4>
-
-        <Link to="view" className="theme-btn">
-          <span className="fa fa-eye"></span>Xem tổng quan
-        </Link>
+        <div className="user-profile-card-header-right">
+          
+        <select
+          className="form-select"
+          aria-label="Filter select example"
+          value={filterStatus}
+          onChange={(e) => setFilterStatus(e.target.value)}
+        >
+          <option value="">Tất cả</option>
+          <option value="0">Hủy</option>
+          <option value="1">Chờ xác nhận</option>
+          <option value="2">Đã xác nhận</option>
+          <option value="3">Đã nhận bàn</option>
+        </select>
+     
+        </div>
+     
       </div>
       <div className="col-lg-12">
         <div className="table-responsive">
@@ -82,8 +110,8 @@ const ManagementOrder = () => {
               </tr>
             </thead>
             <tbody>
-              {orders &&
-                orders.map((order, index) => {
+              {currentOrders &&
+                currentOrders.map((order, index) => {
                   return (
                     <tr key={index}>
                       <td>{index}</td>
@@ -124,7 +152,7 @@ const ManagementOrder = () => {
                     </tr>
                   );
                 })}
-              {orders.length === 0 && (
+              {currentOrders.length === 0 && (
                 <tr className="text-center">
                   <td colSpan="5">Bạn không có đơn đặt bàn nào</td>
                 </tr>
@@ -133,6 +161,57 @@ const ManagementOrder = () => {
           </table>
         </div>
       </div>
+      {filteredOrders.length > 0 && (
+        <div className="pagination-area my-3">
+          <div aria-label="Page navigation example">
+            <ul className="pagination mt-0">
+              <li
+                className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
+              >
+                <button
+                  className="page-link"
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  aria-label="Previous"
+                >
+                  <span aria-hidden="true">
+                    <i className="fa fa-angle-double-left"></i>
+                  </span>
+                </button>
+              </li>
+              {Array.from({ length: totalPages }, (_, index) => (
+                <li
+                  key={index + 1}
+                  className={`page-item ${
+                    currentPage === index + 1 ? "active" : ""
+                  }`}
+                >
+                  <button
+                    className="page-link"
+                    onClick={() => handlePageChange(index + 1)}
+                  >
+                    {index + 1}
+                  </button>
+                </li>
+              ))}
+              <li
+                className={`page-item ${
+                  currentPage === totalPages ? "disabled" : ""
+                }`}
+              >
+                <button
+                  className="page-link"
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  aria-label="Next"
+                >
+                  <span aria-hidden="true">
+                    <i className="fa fa-angle-double-right"></i>
+                  </span>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
