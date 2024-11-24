@@ -191,7 +191,7 @@ function App() {
                 element={<CreateBanner />}
               />
               <Route
-                path="/admin/banner/eidt/:id"
+                path="/admin/banner/edit/:id"
                 element={<EditBanner />}
               />
 

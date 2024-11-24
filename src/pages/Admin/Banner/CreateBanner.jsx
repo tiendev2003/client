@@ -38,7 +38,7 @@ const CreateBanner = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.image_url =="" || formData.link_url=="") {
+    if (formData.image_url ==""  ) {
       toast.error("Vui lòng chọn ảnh banner");
       return;
     }
@@ -86,7 +86,7 @@ const CreateBanner = () => {
         <div className="user-profile-card-header-right">
           <ul className="breadcrumb-menu d-flex gap-3">
             <li>
-              <Link to="/admin/management-banner">Danh sách</Link>
+              <Link to="/admin/banner">Danh sách</Link>
             </li>
             /<li className="active">Tạo Banner</li>
           </ul>

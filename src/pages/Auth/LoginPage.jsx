@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { Breadcrumb } from "../../components";
-import { loginUser, loginWithGoogle } from "../../features/auth/authAction";
+import { loginUser } from "../../features/auth/authAction";
 
 const validationSchema = yup.object().shape({
   Email: yup.string().required("Email là bắt buộc"),
@@ -48,7 +48,15 @@ const LoginPage = () => {
   };
 
   const handleGoogleLogin = async () => {
-    dispatch(loginWithGoogle());
+    try {
+      
+      const response = await fetch("http://127.0.0.1:8000/api/auth/google/redirect")
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+     
+
   };
 
   return (

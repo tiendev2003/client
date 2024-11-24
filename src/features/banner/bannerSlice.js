@@ -45,9 +45,10 @@ export const updateBanners = createAsyncThunk(
   "banner/updateBanner",
   async (data, { rejectWithValue }) => {
     try {
+      console.log(data);
       const response = await axiosInstance.put(
         `/anhquangcao/${data.id}`,
-        data,
+        data.data,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("userToken")}`,

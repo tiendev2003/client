@@ -34,7 +34,7 @@ const ManagementBanner = () => {
   };
 
   const filteredRoles = banners.filter((role) =>
-    role.TenHinhAnh.toLowerCase().includes(searchQuery.toLowerCase())
+    role.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredRoles.length / itemsPerPage);
@@ -71,8 +71,8 @@ const ManagementBanner = () => {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Tên ảnh </th>
                 <th>Ảnh </th>
+                <th>Tên ảnh </th>
                 <th>Trạng thái</th>
                 <th>Hành động</th>
               </tr>
@@ -83,12 +83,12 @@ const ManagementBanner = () => {
                   <td>{role.id}</td>
                   <td>
                     <img
-                      src={role.HinhAnh_URL}
-                      alt={role.TenHinhAnh}
+                      src={role.link_url}
+                      alt={role.title}
                       style={{ width: "100px" }}
                     />
                   </td>
-                  <td>{role.TenHinhAnh}</td>
+                  <td>{role.title}</td>
                   <td>
                     <span
                       className={`badge ${
