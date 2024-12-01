@@ -111,8 +111,12 @@ export const DashboardStore = () => {
     const date = new Date(item.Created_at);
     return (
       (filterOrder.day ? date.getDate() === parseInt(filterOrder.day) : true) &&
-      (filterOrder.month ? date.getMonth() + 1 === parseInt(filterOrder.month) : true) &&
-      (filterOrder.year ? date.getFullYear() === parseInt(filterOrder.year) : true)
+      (filterOrder.month
+        ? date.getMonth() + 1 === parseInt(filterOrder.month)
+        : true) &&
+      (filterOrder.year
+        ? date.getFullYear() === parseInt(filterOrder.year)
+        : true)
     );
   });
 
@@ -135,7 +139,7 @@ export const DashboardStore = () => {
       },
     ],
   };
-
+ 
   const handleYearChange = (date) => {
     setFilter({
       ...filter,
@@ -256,7 +260,27 @@ export const DashboardStore = () => {
                 </label>
               </div>
             </div>
-            <Bar data={chartData} />
+            <Bar
+              data={chartData}
+              options={{
+                responsive: true,
+                plugins: {
+                  legend: { position: "top" },
+                  decimation: { enabled: true },
+                  filler: { propagate: true, drawTime: "afterDatasetsDraw" },
+                  title: {
+                    display: true,
+                    position: "bottom",
+                     text: "Tổng Quan Doanh Thu và Hóa Đơn của Cửa Hàng",
+                  },
+                  colors: ["rgba(75, 192, 192, 0.6)"],
+                },
+                scales: {
+                  y: { beginAtZero: true },
+                  x: { beginAtZero: true },
+                },
+              }}
+            />
           </div>
           <div className="col-md-6">
             <h4>Order Chart</h4> {/* Added label for order chart */}
@@ -265,7 +289,9 @@ export const DashboardStore = () => {
                 <label className="form-label">
                   Year:
                   <DatePicker
-                    selected={filterOrder.year ? new Date(filterOrder.year, 0) : null}
+                    selected={
+                      filterOrder.year ? new Date(filterOrder.year, 0) : null
+                    }
                     onChange={handleYearChangeOrder}
                     showYearPicker
                     dateFormat="yyyy"
@@ -298,7 +324,11 @@ export const DashboardStore = () => {
                   <DatePicker
                     selected={
                       filterOrder.day
-                        ? new Date(filterOrder.year, filterOrder.month - 1, filterOrder.day)
+                        ? new Date(
+                            filterOrder.year,
+                            filterOrder.month - 1,
+                            filterOrder.day
+                          )
                         : null
                     }
                     onChange={handleDayChangeOrder}
@@ -310,7 +340,24 @@ export const DashboardStore = () => {
                 </label>
               </div>
             </div>
-            <Bar data={orderChartData} />
+            <Bar data={orderChartData} options={{
+              responsive: true,
+              plugins: {
+                legend: { position: "top" },
+                decimation: { enabled: true },
+                filler: { propagate: true, drawTime: "afterDatasetsDraw" },
+                title: {
+                  display: true,
+                  position: "bottom",
+                  text: "Tổng Quan Đơn Hàng của Cửa Hàng",
+                },
+                colors: ["rgba(153, 102, 255, 0.6)"],
+              },
+              scales: {
+                y: { beginAtZero: true },
+                x: { beginAtZero: true },
+              },
+            }} />
           </div>
         </div>
       </div>
