@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useParams, useNavigate, Link } from "react-router-dom";
-import { getDichVu } from "./../../../features/dichvu/dichvuSlice";
-import { getDanhMucs } from "./../../../features/danhMucBan/danhMucBanSlice";
 import {
   getBanForStoreById,
   updateBanForStore,
 } from "./../../../features/banforstore/banForStoreSlice";
+import { getDanhMucs } from "./../../../features/danhMucBan/danhMucBanSlice";
+import { getDichVu } from "./../../../features/dichvu/dichvuSlice";
 
 export const EditBilliardTable = () => {
   const { id } = useParams();
@@ -114,7 +114,7 @@ export const EditBilliardTable = () => {
               </div>
               <div className="col-lg-6">
                 <div className="form-group">
-                  <label>Hãng bàn</label>
+                  <label>Loại bàn</label>
                   <input
                     type="text"
                     name="HangBan"

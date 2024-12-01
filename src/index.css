@@ -7209,3 +7209,44 @@ label {
 .listing-amenity-item1.selected {
   border: 5px solid #007bff;
 }
+
+.react-datepicker__time-container
+  .react-datepicker__time
+  .react-datepicker__time-box
+  ul.react-datepicker__time-list {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.react-datepicker__time-container
+  .react-datepicker__time
+  .react-datepicker__time-box {
+  width: 80px;
+}.react-datepicker__input-container > input {
+  background-color: hsl(0, 0%, 100%);
+  border-color: hsl(0, 0%, 80%);
+  border-radius: 4px;
+  border-style: solid;
+  border-width: 1px;
+  padding: 7px 8px;
+  width: 100%;
+}
+.react-datepicker__input-container > input:focus {
+  outline: 1px solid var(--bs-blue);
+}
+
+.react-datepicker__month-container
+  .react-datepicker__month
+  .react-datepicker__week
+  .react-datepicker__day--keyboard-selected {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+.react-datepicker__month-container
+  .react-datepicker__month
+  .react-datepicker__week
+  .react-datepicker__day--in-range {
+  background-color: var(--secondary-color);
+  color: #fff;
+}

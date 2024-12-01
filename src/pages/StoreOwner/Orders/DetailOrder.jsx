@@ -353,7 +353,7 @@ const OrderDetails = () => {
                   <p>Chọn một sản phẩm để xem chi tiết</p>
                 )}
               </div>
-              <div className="discount-code mt-3 mb-1">
+              {/* <div className="discount-code mt-3 mb-1">
                 <label htmlFor="ctkmSelect">Chọn Mã Giảm Giá:</label>
                 <div className="input-group">
                   <select
@@ -370,7 +370,7 @@ const OrderDetails = () => {
                     ))}
                   </select>
                 </div>
-              </div>
+              </div> */}
               <p>
                 <strong>Tổng Tiền:</strong> {formatMoney(totalPrice)}
               </p>

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import {
-  getBanForStore,
-  deleteBanForStore,
-} from "./../../../features/banforstore/banForStoreSlice";
 import { toast } from "react-toastify";
+import {
+  deleteBanForStore,
+  getBanForStore,
+} from "./../../../features/banforstore/banForStoreSlice";
 import { getDichVu } from "./../../../features/dichvu/dichvuSlice";
 
 const ManageBilliardTables = () => {
@@ -81,7 +81,7 @@ const ManageBilliardTables = () => {
                 <th>ID</th>
                 <th>Tên bàn</th>
                 <th>Giá bàn</th>
-                <th>Hãng bàn</th>
+                <th>Loại bàn</th>
 
                 <th>Dịch vụ</th>
                 <th>Trạng thái</th>

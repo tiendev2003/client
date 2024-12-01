@@ -1,137 +1,306 @@
-# Hệ thống Website Đặt Bàn Bi-a
+**NOTE**
+- Ngày bắt đầu: ngày đầu tiên tạo hóa đơn hoặc ngày đầu tiên tạo gì đó (hóa đơn, tài khoản, đặt bàn,...)
+- Ngày bắt đầu: ngày cuối cùng hóa đơn được tạo hoặc ngày cuối cùng gì đó được tạo (hóa đơn, tài khoản, đặt bàn,...)
+# API Documentation for Client and Store Statistics
 
-## Mục lục
-- [Giới thiệu](#giới-thiệu)
-- [Cấu trúc Router](#cấu-trúc-router)
-- [Bảo mật](#bảo-mật)
+## 1. **API Dành cho Khách Hàng (Client)**
+
+### 1.1 Tổng quan
+- **Endpoint**: `/api/client/overview`
+- **Method**: GET
+- **Parameters**:
+  - `start_date`: Ngày bắt đầu trong khoảng thời gian.
+  - `end_date`: Ngày kết thúc trong khoảng thời gian.
+- **Response**:
+  ```json
+  {
+      "start_date": "2024-01-01",
+      "end_date": "2024-01-31",
+      "total_orders": 50,
+      "total_successful_plays": 45,
+      "total_canceled_orders": 5,
+      "total_spending": 5000000
+  }
+  ```
+- **Mô tả giá trị trả về**:
+  - `start_date`: Ngày bắt đầu trong khoảng thời gian lọc.
+  - `end_date`: Ngày kết thúc trong khoảng thời gian lọc.
+  - `total_orders`: Tổng lượt đặt (thành công + hủy).
+  - `total_successful_plays`: Tổng lượt chơi thành công.
+  - `total_canceled_orders`: Tổng lượt đặt bị hủy.
+  - `total_spending`: Tổng số tiền đã chi tiêu.
+
+---
+
+### 1.2 Chi tiết Khách Hàng với Cửa Hàng
+- **Endpoint**: `/api/client/store-details`
+- **Method**: GET
+- **Parameters**:
+  - `user_id`: ID của khách hàng.
+  - `start_date`: Ngày bắt đầu trong khoảng thời gian.
+  - `end_date`: Ngày kết thúc trong khoảng thời gian.
+- **Response**:
+  ```json
+  [
+      {
+          "user_id": 1,
+          "store_name": "Billiard MBM",
+          "total_orders": 20,
+          "total_successful_plays": 18,
+          "total_canceled_orders": 2,
+          "total_spending": 2000000,
+          "average_spending_per_play": 111111,
+          "average_spending_per_day": 66667,
+          "start_date": "2024-01-01",
+          "end_date": "2024-01-31"
+      }
+  ]
+  ```
+- **Mô tả giá trị trả về**:
+  - `user_id`: ID của khách hàng.
+  - `store_name`: Tên cửa hàng.
+  - `total_orders`: Tổng lượt đặt (thành công + hủy).
+  - `total_successful_plays`: Tổng lượt chơi thành công.
+  - `total_canceled_orders`: Tổng lượt đặt bị hủy.
+  - `total_spending`: Tổng số tiền đã chi tiêu.
+  - `average_spending_per_play`: Trung bình chi tiêu mỗi lượt chơi = Tổng số tiền / lượt chơi thành công.
+  - `average_spending_per_day`: Trung bình chi tiêu mỗi ngày = Tổng số tiền / (end_date - start_date).
+  - `start_date`: Ngày bắt đầu trong khoảng thời gian.
+  - `end_date`: Ngày kết thúc trong khoảng thời gian.
+
+---
 
 
-## Giới thiệu
-Hệ thống website đặt bàn bi-a là nền tảng kết nối người chơi bi-a với các câu lạc bộ/quán bi-a. 
-Hệ thống cho phép đặt bàn trực tuyến, quản lý đặt bàn, và tương tác giữa người chơi và chủ quán.
+## 2. **API Dành cho Cửa Hàng (Store)**
 
-## Cấu trúc Router
+### 2.1 Tổng quan
+- **Endpoint**: `/api/store/overview`
+- **Method**: GET
+- **Parameters**:
+  - `start_date`: Ngày bắt đầu trong khoảng thời gian.
+  - `end_date`: Ngày kết thúc trong khoảng thời gian.
+- **Response**:
+  ```json
+  {
+      "start_date": "2024-01-01",
+      "end_date": "2024-01-31",
+      "total_users": 150,
+      "total_orders": 500,
+      "total_successful_orders": 450,
+      "total_canceled_orders": 50,
+      "total_new_users": 30,
+      "average_users_per_order": 0.3,
+      "average_users_per_day": 5
+  }
+  ```
+- **Mô tả giá trị trả về**:
+  - `start_date`: Ngày bắt đầu trong khoảng thời gian.
+  - `end_date`: Ngày kết thúc trong khoảng thời gian.
+  - `total_users`: Tổng số khách hàng (distinct).
+  - `total_orders`: Tổng lượt đặt (thành công + hủy).
+  - `total_successful_orders`: Tổng lượt đặt thành công.
+  - `total_canceled_orders`: Tổng lượt đặt bị hủy.
+  - `total_new_users`: Tổng khách hàng mới.
+  - `average_users_per_order`: Trung bình số khách hàng mỗi lượt đặt = Tổng khách hàng / lượt đặt.
+  - `average_users_per_day`: Trung bình số khách hàng mỗi ngày = Tổng khách hàng / (end_date - start_date).
 
-### 1. Khách vãng lai
-#### Trang thông tin
-- `/gioi-thieu`: Trang giới thiệu về website
-- `/lien-he`: Thông tin liên hệ và hỗ trợ
-- `/tin-tuc`: Tin tức và blog về billiard
-- `/huong-dan-su-dung`: Hướng dẫn sử dụng website
-- `/dieu-khoan-su-dung`: Điều khoản và điều kiện
-- `/chinh-sach-bao-mat`: Chính sách bảo mật
+---
 
-#### Tìm kiếm và xem quán
-- `/tim-quan`: Tìm kiếm quán billiard
-- `/tim-quan/bo-loc`: Bộ lọc tìm kiếm nâng cao
-- `/quan/:id-:slug`: Thông tin chi tiết quán
-- `/quan/:id/ban-do`: Vị trí quán trên bản đồ
-- `/quan/:id/danh-gia`: Xem đánh giá và bình luận
 
-#### Đăng ký & Đăng nhập
-- `/dang-ky`: Đăng ký tài khoản mới
-- `/dang-nhap`: Đăng nhập hệ thống
-- `/quen-mat-khau`: Khôi phục mật khẩu
+# API Documentation for Admin Statistics
 
-### 2. Khách hàng đã đăng ký
-#### Quản lý tài khoản
-- `/thong-tin-ca-nhan`: Cập nhật thông tin cá nhân
-- `/doi-mat-khau`: Thay đổi mật khẩu
-- `/xac-thuc-2-buoc`: Bảo mật 2 lớp
-- `/dang-xuat`: Đăng xuất
+## 1. **API Thống kê chung**
+## 1. API cho Tài Khoản (Account)
 
-#### Đặt bàn & Thanh toán
-- `/dat-ban`: Đặt bàn mới
-- `/huy-dat-ban/:id`: Hủy đặt bàn
-- `/lich-su-dat-ban`: Lịch sử đặt bàn
-- `/thanh-toan`: Thanh toán trực tuyến
-- `/lich-su-thanh-toan`: Lịch sử thanh toán
+### 1.1 Tổng quan Tài Khoản
+- **Endpoint**: `/api/admin/account-overview`
+- **Method**: GET
+- **Parameters**:
+  - `start_date`: Ngày tạo đầu tiên trong khoảng thời gian.
+  - `end_date`: Ngày cập nhật cuối cùng trong khoảng thời gian.
+- **Response**:
+  ```json
+  {
+      "start_date": "2024-01-01",
+      "end_date": "2024-01-31",
+      "total_users": 1500,
+      "new_users": 200,
+      "total_shops": 200,
+      "new_shops": 25
+  }
+  ```
+- **Mô tả giá trị trả về**:
+  - `start_date`: Ngày tạo đầu tiên trong khoảng thời gian lọc.
+  - `end_date`: Ngày cập nhật cuối cùng trong khoảng thời gian lọc.
+  - `total_users`: Tổng số người dùng trong hệ thống.
+  - `new_users`: Số người dùng mới đăng ký trong khoảng thời gian.
+  - `total_shops`: Tổng số cửa hàng.
+  - `new_shops`: Số cửa hàng mới thêm vào trong khoảng thời gian.
 
-#### Tương tác & Tiện ích
-- `/danh-gia-quan/:id`: Đánh giá và bình luận
-- `/quan/:id/chi-duong`: Chỉ đường đến quán
-- `/uu-dai-cua-toi`: Ưu đãi và điểm thưởng
-- `/yeu-thich`: Danh sách quán yêu thích
-- `/thong-bao`: Thông báo hệ thống
-- `/ho-tro`: Gửi yêu cầu hỗ trợ
+---
 
-<!-- #### Tính năng xã hội
-- `/chia-se/:id`: Chia sẻ thông tin quán
-- `/moi-ban-be`: Giới thiệu bạn bè
-- `/khuyen-mai-gioi-thieu`: Ưu đãi giới thiệu -->
+## 2. API cho Đặt Hàng (Order)
 
-### 3. Quản lý cửa hàng
-#### Quản lý tài khoản
-- `/quan-ly/dang-nhap`: Đăng nhập
-- `/quan-ly/dang-xuat`: Đăng xuất
-- `/quan-ly/cap-nhat-thong-tin-quan`: Cập nhật thông tin quán
+### 2.1 Tổng quan Đặt Hàng
+- **Endpoint**: `/api/admin/order-overview`
+- **Method**: GET
+- **Parameters**:
+  - `start_date`: Ngày tạo đầu tiên trong khoảng thời gian.
+  - `end_date`: Ngày cập nhật cuối cùng trong khoảng thời gian.
+- **Response**:
+  ```json
+  {
+      "start_date": "2024-01-01",
+      "end_date": "2024-01-31",
+      "total_orders": 5000,
+      "successful_orders": 4500,
+      "canceled_orders": 500,
+      "total_revenue": 300000000
+  }
+  ```
+- **Mô tả giá trị trả về**:
+  - `start_date`: Ngày tạo đầu tiên trong khoảng thời gian lọc.
+  - `end_date`: Ngày cập nhật cuối cùng trong khoảng thời gian lọc.
+  - `total_orders`: Tổng số lượt đặt bàn.
+  - `successful_orders`: Số lượt đặt bàn thành công.
+  - `canceled_orders`: Số lượt đặt bàn bị hủy.
+  - `total_revenue`: Tổng doanh thu từ các đơn đặt bàn.
 
-#### Quản lý hoạt động
-- `/quan-ly/quan-ly-ban`: Quản lý bàn billiard
-- `/quan-ly/cap-nhat-tinh-trang-ban`: Cập nhật trạng thái bàn
-- `/quan-ly/xac-nhan-dat-ban/:id`: Xác nhận đặt bàn
-- `/quan-ly/quan-ly-khuyen-mai`: Quản lý khuyến mãi
-<!-- - `/quan-ly/phan-hoi-danh-gia`: Phản hồi đánh giá -->
-- `/quan-ly/quan-ly-thanh-toan`: Quản lý thanh toán
+## 2. **API Thống kê cửa hàng**
+### 2.1 Doanh thu theo ngày
+- **Endpoint**: `/api/admin/shop-revenue`
+- **Method**: GET
+- **Parameters**:
+  - `shop_id` (optional): ID cửa hàng cụ thể.
+  - `start_date`, `end_date`: Khoảng thời gian.
+- **Response**:
+  ```json
+  {
+      "start_date": "2024-01-01",
+      "end_date": "2024-01-31",
+      "shop_id": 1,
+      "shop_name": "Billiard MBM",
+      "daily_revenue": [
+          {
+              "date": "2024-01-01",
+              "total_revenue": 1000000,
+              "total_orders": 50
+          },
+          {
+              "date": "2024-01-02",
+              "total_revenue": 1200000,
+              "total_orders": 60
+          }
+      ]
+  }
+  ```
+- **Mô tả giá trị trả về**:
+  - `start_date`, `end_date`: Khoảng thời gian lọc.
+  - `shop_id`: ID của cửa hàng.
+  - `shop_name`: Tên cửa hàng.
+  - `daily_revenue`: Danh sách doanh thu theo từng ngày, gồm:
+    - `date`: Ngày thống kê.
+    - `total_revenue`: Tổng doanh thu trong ngày.
+    - `total_orders`: Tổng lượt đặt bàn trong ngày.
 
-#### Báo cáo & Thống kê
-- `/quan-ly/thong-ke-dat-ban`: Thống kê đặt bàn
-- `/quan-ly/bao-cao-doanh-thu`: Báo cáo doanh thu
-- `/quan-ly/sao-ke`: Sao kê thanh toán
+### 2.2 Tỷ lệ hủy đặt bàn
+- **Endpoint**: `/api/admin/shop-cancel-rate`
+- **Method**: GET
+- **Parameters**:
+  - `shop_id` (optional): ID cửa hàng cụ thể.
+  - `start_date`, `end_date`: Khoảng thời gian.
+- **Response**:
+  ```json
+  {
+      "start_date": "2024-01-01",
+      "end_date": "2024-01-31",
+      "shop_id": 1,
+      "shop_name": "Billiard MBM",
+      "canceled_orders": 10,
+      "total_orders": 100,
+      "cancel_rate": 10.0
+  }
+  ```
+- **Mô tả giá trị trả về**:
+  - `start_date`, `end_date`: Khoảng thời gian lọc.
+  - `shop_id`, `shop_name`: ID và tên cửa hàng.
+  - `canceled_orders`: Số lượt đặt bị hủy.
+  - `total_orders`: Tổng số lượt đặt.
+  - `cancel_rate`: Tỷ lệ hủy đặt bàn (%).
 
-<!-- #### Quản lý nhân sự
-- `/quan-ly/nhan-vien`: Quản lý nhân viên
-- `/quan-ly/lich-lam-viec`: Quản lý ca làm việc -->
+## 3. **API Thống kê người dùng**
+### 3.1 Người dùng hoạt động tích cực
+- **Endpoint**: `/api/admin/active-users`
+- **Method**: GET
+- **Parameters**:
+  - `start_date`, `end_date`: Khoảng thời gian.
+- **Response**:
+  ```json
+  {
+      "start_date": "2024-01-01",
+      "end_date": "2024-01-31",
+      "active_users": [
+          {
+              "user_id": 1,
+              "user_name": "Nguyen Van A",
+              "total_orders": 20,
+              "total_spending": 300000,
+              "average_order_value": 15000
+          }
+      ]
+  }
+  ```
+- **Mô tả giá trị trả về**:
+  - `start_date`, `end_date`: Khoảng thời gian lọc.
+  - `active_users`: Danh sách người dùng hoạt động tích cực, gồm:
+    - `user_id`: ID của người dùng.
+    - `user_name`: Tên người dùng.
+    - `total_orders`: Tổng số lượt đặt bàn.
+    - `total_spending`: Tổng chi tiêu.
+    - `average_order_value`: Giá trị trung bình mỗi lượt đặt.
 
-#### Quản lý kho
-- `/quan-ly/kho`: Quản lý kho và thiết bị
+## 4. **API Báo cáo**
+### 4.1 Báo cáo doanh thu
+- **Endpoint**: `/api/admin/export-revenue-report`
+- **Method**: GET
+- **Parameters**:
+  - `start_date`, `end_date`: Khoảng thời gian.
+  - `format`: Định dạng tệp (`pdf` hoặc `excel`).
+- **Response**:
+  ```json
+  {
+      "start_date": "2024-01-01",
+      "end_date": "2024-01-31",
+      "file_url": "https://example.com/revenue-report.pdf"
+  }
+  ```
+- **Mô tả giá trị trả về**:
+  - `start_date`, `end_date`: Khoảng thời gian lọc.
+  - `file_url`: Đường dẫn tải về file báo cáo.
 
-### 4. Quản trị viên
-#### Quản lý hệ thống
-- `/quan-tri/dang-nhap`: Đăng nhập
-- `/quan-tri/dang-xuat`: Đăng xuất
-- `/quan-tri/quan-ly-tai-khoan`: Quản lý tài khoản
-- `/quan-tri/quan-ly-quyen`: Quản lý phân quyền
-<!-- - `/quan-tri/cau-hinh-he-thong`: Cấu hình hệ thống -->
-
-#### Quản lý nội dung
-- `/quan-tri/quan-ly-quan`: Quản lý danh sách quán
-- `/quan-tri/phe-duyet-quan`: Phê duyệt quán mới
-- `/quan-tri/quan-ly-noi-dung`: Quản lý nội dung
-<!-- - `/quan-tri/he-thong-thong-bao`: Quản lý thông báo -->
-
-<!-- #### Báo cáo & Giám sát
-- `/quan-tri/thong-ke`: Báo cáo thống kê
-- `/quan-tri/nhat-ky-he-thong`: Xem log hệ thống
-- `/quan-tri/bao-cao-loi`: Quản lý báo cáo lỗi
-- `/quan-tri/sao-luu`: Sao lưu dữ liệu -->
-
-### 5. API Endpoints
-- Prefix: `/api/v1/`
-- Ví dụ: 
-  - `/api/v1/auth/login`
-  - `/api/v1/bookings`
-  - `/api/v1/clubs`
-
-### 6. Error Pages
-- `/404`: Trang không tìm thấy
-- `/403`: Không có quyền truy cập
-- `/500`: Lỗi server
-- `/bao-tri`: Trang bảo trì
-
-## Bảo mật
-1. Authentication & Authorization
-   - JWT hoặc session-based authentication
-   - Middleware kiểm tra quyền truy cập
-   - Xác thực 2 lớp cho tài khoản quan trọng
-
-2. Bảo vệ Forms & API
-   - CSRF token cho forms
-   - Rate limiting cho API
-   - Input validation và sanitization
-   - XSS protection
-
-3. Logging & Monitoring
-   - Audit logging cho hoạt động quan trọng
-   - Error logging
-   - Performance monitoring
+## 5. **API Thống kê hệ thống**
+### 5.1 Hiệu suất hệ thống
+- **Endpoint**: `/api/admin/system-performance`
+- **Method**: GET
+- **Parameters**:
+  - `start_date`, `end_date`: Khoảng thời gian.
+- **Response**:
+  ```json
+  {
+      "start_date": "2024-01-01",
+      "end_date": "2024-01-31",
+      "active_users": 500,
+      "active_shops": 120,
+      "api_requests": 10000,
+      "average_response_time": "150ms",
+      "uptime_percentage": 99.9
+  }
+  ```
+- **Mô tả giá trị trả về**:
+  - `start_date`, `end_date`: Khoảng thời gian lọc.
+  - `active_users`: Số lượng người dùng đang hoạt động.
+  - `active_shops`: Số lượng cửa hàng đang hoạt động.
+  - `api_requests`: Tổng số lượt yêu cầu API.
+  - `average_response_time`: Thời gian phản hồi trung bình.
+  - `uptime_percentage`: Tỉ lệ uptime của hệ thống.
+   

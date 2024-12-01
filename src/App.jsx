@@ -22,6 +22,7 @@ import { CreateBilliardTable } from "./pages/StoreOwner/Tables/CreateBilliardTab
 import ManageBilliardTables from "./pages/StoreOwner/Tables/ManageBilliardTables";
 import ProtectedRoute from "./routing/ProtectedRoute";
 
+import NewTest from "./NewTest";
 import CreateBanner from "./pages/Admin/Banner/CreateBanner";
 import EditBanner from "./pages/Admin/Banner/EditBanner";
 import ManagementBanner from "./pages/Admin/Banner/ManagementBanner";
@@ -58,8 +59,8 @@ import ManagementOrder from "./pages/StoreOwner/Orders/ManagementOrder";
 import { EditService } from "./pages/StoreOwner/Services/EditService";
 import { EditBilliardTable } from "./pages/StoreOwner/Tables/EditBilliardTable";
 import OAuthRoute from "./routing/OAuthRoute";
-import MyApp from "./Test";
-
+import RevenueChart from "./Test";
+ 
 const HomePage = lazy(() => import("./pages/Home/HomePage"));
 const AboutPage = lazy(() => import("./pages/About/AboutPage"));
 const BlogPage = lazy(() => import("./pages/Blog/BlogPage"));
@@ -90,7 +91,7 @@ function App() {
     <Router>
       <Suspense fallback={<LoadingSpinner />}>
         <Routes>
-          <Route path="/api/auth/google/callback" element={<OAuthRoute />}/>
+          <Route path="/googleCallback" element={<OAuthRoute />}/>
           <Route element={<MainLayout />}>
             <Route index path="/" element={<HomePage />} />
             <Route path="/gioi-thieu" element={<AboutPage />} />
@@ -208,7 +209,11 @@ function App() {
           </Route>
           <Route
                 path="/test"
-                element={<MyApp />}
+                element={<NewTest />}
+              />
+          <Route
+                path="/test1"
+                element={<RevenueChart />}
               />
           <Route element={<ProtectedRoute allowedRoles={[2]} />}>
             <Route element={<StoreLayout />}>
